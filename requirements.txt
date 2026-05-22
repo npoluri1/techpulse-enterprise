@@ -1,9 +1,42 @@
+# Core
+python-dotenv>=1.0.0
+
+# Web Framework
+streamlit>=1.31.0
+
+# LLM
+google-genai>=1.0.0
+
+# Vector DB (FREE)
+chromadb>=0.4.22
+
+# Lighter embedding fallback (sentence-transformers removed to avoid PyTorch build issues)
+# ChromaDB uses onnxruntime internally; embeddings fall back to hash-based if missing
+
+# Database
+sqlalchemy>=2.0.25
+
+# Web Scraping / RSS
+httpx>=0.26.0
+feedparser>=6.0.11
+beautifulsoup4>=4.12.2
+lxml>=5.1.0
 requests>=2.31.0
-beautifulsoup4>=4.12.0
-feedparser>=6.0.10
+
+# Async
+aiohttp>=3.9.1
+
+# Data & Visualization
+pandas>=2.1.4
+plotly>=5.18.0
+
+# Utilities
+dateparser>=1.2.0
+pydantic>=2.5.0
+tqdm>=4.66.1
 pyyaml>=6.0
 schedule>=1.2.0
-python-dotenv>=1.0.0
 rich>=13.0.0
-flask>=3.0.0
+
+# Background tasks
 apscheduler>=3.10.0
