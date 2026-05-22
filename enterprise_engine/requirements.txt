@@ -1,41 +1,11 @@
-# ============================================================
-# TechPulse Enterprise - Free & Open Source Requirements
-# ============================================================
-# Core
 python-dotenv>=1.0.0
-
-# Web Framework
-fastapi>=0.109.0
-uvicorn[standard]>=0.25.0
 streamlit>=1.31.0
-
-# LLM (use google-genai, not google-generativeai)
-google-genai>=1.0.0
-
-# Vector DB & Embeddings (FREE)
-chromadb>=0.4.22
-sentence-transformers>=2.2.2
-
-# Database
 sqlalchemy>=2.0.25
-
-# Web Scraping / RSS
 httpx>=0.26.0
 feedparser>=6.0.11
 beautifulsoup4>=4.12.2
-lxml>=5.1.0
-
-# Async
-aiohttp>=3.9.1
-
-# Data & Visualization
+requests>=2.31.0
 pandas>=2.1.4
 plotly>=5.18.0
-
-# Utilities
 dateparser>=1.2.0
-pydantic>=2.5.0
-tqdm>=4.66.1
-
-# API
-requests>=2.31.0
+google-genai>=1.0.0

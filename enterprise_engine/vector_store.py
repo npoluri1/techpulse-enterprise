@@ -11,18 +11,18 @@ try:
     import chromadb
     from chromadb.config import Settings
     HAS_CHROMA = True
-except ImportError:
+except Exception:
     HAS_CHROMA = False
     chromadb = None
-    logger.warning("ChromaDB not installed. Vector search disabled.")
+    logger.warning("ChromaDB not available. Vector search disabled.")
 
 try:
     from sentence_transformers import SentenceTransformer
     HAS_SENTENCE_TRANSFORMERS = True
-except ImportError:
+except Exception:
     HAS_SENTENCE_TRANSFORMERS = False
     SentenceTransformer = None
-    logger.warning("sentence-transformers not installed. Using fallback embeddings.")
+    logger.warning("sentence-transformers not available. Using fallback embeddings.")
 
 try:
     import numpy as np
