@@ -9,8 +9,8 @@ fastapi>=0.109.0
 uvicorn[standard]>=0.25.0
 streamlit>=1.31.0
 
-# LLM
-google-generativeai>=0.4.0
+# LLM (use google-genai, not google-generativeai)
+google-genai>=1.0.0
 
 # Vector DB & Embeddings (FREE)
 chromadb>=0.4.22
