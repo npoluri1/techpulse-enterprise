@@ -151,6 +151,37 @@ def get_articles_by_industry(session, industry: str, limit=20):
     ][:limit]
 
 
+def get_articles_by_region(session, region: str, limit=20):
+    all_articles = session.query(Article).filter(
+        Article.final_score > 0
+    ).order_by(Article.final_score.desc()).limit(200).all()
+    return [
+        a for a in all_articles
+        if a.region_tags and any(region.lower() in r.lower() for r in a.region_tags)
+    ][:limit]
+
+
+def get_source_breakdown(session):
+    rows = session.query(Article.source).filter(Article.final_score > 0).all()
+    counts = {}
+    for (source,) in rows:
+        key = source.split(":")[0] if ":" in source else source
+        counts[key] = counts.get(key, 0) + 1
+    return sorted(counts.items(), key=lambda x: x[1], reverse=True)
+
+
+def get_entity_mentions(session, limit=15):
+    rows = session.query(Article.key_entities).filter(
+        Article.final_score > 0, Article.key_entities != None
+    ).limit(100).all()
+    counts = {}
+    for (entities,) in rows:
+        if entities:
+            for e in entities:
+                counts[e] = counts.get(e, 0) + 1
+    return sorted(counts.items(), key=lambda x: x[1], reverse=True)[:limit]
+
+
 def get_alerts(session, limit=20, unsent_only=False):
     q = session.query(Alert).order_by(Alert.severity.desc(), Alert.created_at.desc())
     if unsent_only:

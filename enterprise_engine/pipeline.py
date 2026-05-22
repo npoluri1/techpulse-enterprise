@@ -26,7 +26,7 @@ class EnterprisePipeline:
         self.curator = CurationAgent()
         self.reporter = ReportGenerator(self.rag)
 
-    def run_full(self) -> dict:
+    def run_full(self, country: str = "Global") -> dict:
         run_id = f"run_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
         session = get_session()
         pipeline_run = PipelineRun(
@@ -38,8 +38,8 @@ class EnterprisePipeline:
         session.commit()
 
         try:
-            logger.info(f"[Pipeline] {run_id} started")
-            raw = self.fetcher.fetch_all()
+            logger.info(f"[Pipeline] {run_id} started (country={country})")
+            raw = self.fetcher.fetch_all(country=country)
             pipeline_run.articles_fetched = len(raw)
             logger.info(f"[Pipeline] Fetched {len(raw)} articles")
 

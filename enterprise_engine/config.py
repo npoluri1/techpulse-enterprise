@@ -75,4 +75,41 @@ class FreeConfig:
         "electric vehicles", "5G", "IoT", "digital transformation",
     ]
 
+    # === COUNTRY / REGION SETTINGS ===
+    COUNTRIES: dict = {
+        "Global": {"code": "", "name": "Global"},
+        "US": {"code": "us", "name": "United States"},
+        "UK": {"code": "gb", "name": "United Kingdom"},
+        "India": {"code": "in", "name": "India"},
+        "China": {"code": "cn", "name": "China"},
+        "Japan": {"code": "jp", "name": "Japan"},
+        "South Korea": {"code": "kr", "name": "South Korea"},
+        "Germany": {"code": "de", "name": "Germany"},
+        "France": {"code": "fr", "name": "France"},
+        "Canada": {"code": "ca", "name": "Canada"},
+        "Australia": {"code": "au", "name": "Australia"},
+        "Singapore": {"code": "sg", "name": "Singapore"},
+        "UAE": {"code": "ae", "name": "UAE"},
+        "Israel": {"code": "il", "name": "Israel"},
+        "Brazil": {"code": "br", "name": "Brazil"},
+    }
+
+    COUNTRY_KEYWORDS: dict = {
+        "US": ["US", "United States", "America", "Silicon Valley", "California", "New York"],
+        "UK": ["UK", "United Kingdom", "Britain", "London", "England"],
+        "India": ["India", "Bangalore", "Mumbai", "Delhi", "Bengaluru", "Indian startup"],
+        "China": ["China", "Beijing", "Shanghai", "Shenzhen", "Chinese"],
+        "Japan": ["Japan", "Tokyo", "Japanese"],
+        "South Korea": ["South Korea", "Korea", "Seoul", "Samsung"],
+        "Germany": ["Germany", "Berlin", "German", "Munich"],
+        "France": ["France", "Paris", "French"],
+        "Canada": ["Canada", "Toronto", "Vancouver", "Montreal"],
+        "Australia": ["Australia", "Sydney", "Melbourne"],
+        "Singapore": ["Singapore"],
+        "UAE": ["UAE", "Dubai", "Abu Dhabi"],
+        "Israel": ["Israel", "Tel Aviv"],
+        "Brazil": ["Brazil", "São Paulo", "Latin America"],
+    }
+
+
 config = FreeConfig()

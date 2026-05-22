@@ -119,10 +119,10 @@ class FreeSourceFetcher:
             "Accept-Language": "en-US,en;q=0.9",
         })
 
-    def fetch_all(self) -> List[dict]:
+    def fetch_all(self, country: str = "Global") -> List[dict]:
         items = []
         items.extend(self.fetch_rss_feeds())
-        items.extend(self.fetch_newsapi())
+        items.extend(self.fetch_newsapi(country=country))
         if config.SERPER_API_KEY:
             items.extend(self.fetch_serper())
         items.extend(self.fetch_reddit_trending())
@@ -159,16 +159,22 @@ class FreeSourceFetcher:
                 logger.warning(f"[RSS] Failed {feed_url}: {e}")
         return items
 
-    def fetch_newsapi(self) -> List[dict]:
+    def fetch_newsapi(self, country: str = "Global") -> List[dict]:
         if not config.NEWSAPI_KEY:
             logger.warning("[NewsAPI] No API key configured")
             return []
         items = []
-        for query in config.NEWSAPI_QUERIES[:5]:
+        country_code = config.COUNTRIES.get(country, {}).get("code", "")
+        country_keywords = config.COUNTRY_KEYWORDS.get(country, [])
+
+        for query in config.NEWSAPI_QUERIES[:4]:
             try:
+                q = query
+                if country_keywords:
+                    q = f"{query} {' OR '.join(country_keywords[:3])}"
                 url = "https://newsapi.org/v2/everything"
                 params = {
-                    "q": query,
+                    "q": q,
                     "language": "en",
                     "sortBy": "publishedAt",
                     "pageSize": 10,
@@ -189,6 +195,31 @@ class FreeSourceFetcher:
                 logger.debug(f"[NewsAPI] {query}: {len(data.get('articles', []))} articles")
             except Exception as e:
                 logger.warning(f"[NewsAPI] Query '{query}' failed: {e}")
+
+        if country_code:
+            try:
+                url = "https://newsapi.org/v2/top-headlines"
+                params = {
+                    "country": country_code,
+                    "category": "technology",
+                    "pageSize": 15,
+                    "apiKey": config.NEWSAPI_KEY,
+                }
+                resp = self.client.get(url, params=params)
+                data = resp.json()
+                for article in data.get("articles", []):
+                    item = NewsItem(
+                        title=article.get("title", ""),
+                        url=article.get("url", ""),
+                        source=f"NewsAPI:{article.get('source', {}).get('name', 'Unknown')}",
+                        source_type="api",
+                        summary=article.get("description", ""),
+                        published=article.get("publishedAt", ""),
+                    )
+                    items.append(item.to_dict())
+                logger.debug(f"[NewsAPI] Top headlines {country_code}: {len(data.get('articles', []))} articles")
+            except Exception as e:
+                logger.warning(f"[NewsAPI] Top headlines {country_code} failed: {e}")
         return items
 
     def fetch_serper(self) -> List[dict]:

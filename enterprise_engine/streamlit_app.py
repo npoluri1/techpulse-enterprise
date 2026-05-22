@@ -23,7 +23,11 @@ st.set_page_config(
 
 from enterprise_engine.config import config
 from enterprise_engine.pipeline import EnterprisePipeline
-from enterprise_engine.models import init_db, get_session, get_top_articles, get_articles_by_industry, get_alerts, get_pipeline_stats
+from enterprise_engine.models import (
+    init_db, get_session, get_top_articles, get_articles_by_industry,
+    get_articles_by_region, get_alerts, get_pipeline_stats,
+    get_source_breakdown, get_entity_mentions,
+)
 from enterprise_engine.industry_categories import get_all_industries, INDUSTRY_CATEGORIES
 
 init_db()
@@ -211,6 +215,8 @@ if "pipeline_running" not in st.session_state:
     st.session_state.pipeline_running = False
 if "results" not in st.session_state:
     st.session_state.results = None
+if "selected_country" not in st.session_state:
+    st.session_state.selected_country = "Global"
 
 total_industries = sum(len(v["sub_industries"]) for v in INDUSTRY_CATEGORIES.values())
 
@@ -228,12 +234,18 @@ with st.sidebar:
 
     st.markdown("---")
 
+    st.markdown("### Country Focus")
+    country_keys = list(config.COUNTRIES.keys())
+    selected_idx = country_keys.index(st.session_state.selected_country) if st.session_state.selected_country in country_keys else 0
+    selected_country = st.selectbox("Filter by country", country_keys, index=selected_idx, label_visibility="collapsed")
+    st.session_state.selected_country = selected_country
+
     col1, col2 = st.columns(2)
     with col1:
         if st.button("▶ Run Pipeline", width='stretch'):
             st.session_state.pipeline_running = True
-            with st.spinner("Running intelligence pipeline..."):
-                result = pipeline.run_full()
+            with st.spinner(f"Running intelligence pipeline ({selected_country})..."):
+                result = pipeline.run_full(country=selected_country)
                 st.session_state.results = result
                 st.session_state.pipeline_running = False
             st.rerun()
@@ -266,6 +278,7 @@ with st.sidebar:
         ("Embeddings", "MiniLM-L6-v2"),
         ("Database", "SQLite"),
         ("Sources", "NewsAPI + RSS"),
+        ("Country", st.session_state.selected_country),
     ]:
         st.markdown(f"**{label}** `{value}`")
 
@@ -312,23 +325,57 @@ with tabs[0]:
 
     try:
         session = get_session()
-        articles = get_top_articles(session, limit=15)
+        region = st.session_state.selected_country
+        if region and region != "Global":
+            articles = get_articles_by_region(session, region, limit=15)
+        else:
+            articles = get_top_articles(session, limit=15)
+        sources = get_source_breakdown(session)
+        entities = get_entity_mentions(session)
         session.close()
+
+        c1, c2 = st.columns(2)
+        with c1:
+            if sources:
+                st.markdown("### Top Sources")
+                src_df = pd.DataFrame(sources[:6], columns=["Source", "Count"])
+                fig = px.pie(src_df, values="Count", names="Source", title="Articles by Source",
+                            color_discrete_sequence=px.colors.sequential.Tealgrn)
+                fig.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)",
+                                font_color="#c0c0d0", height=280, margin=dict(l=0, r=0, t=40, b=0),
+                                showlegend=True, legend=dict(orientation="h", y=-0.3))
+                st.plotly_chart(fig, width='stretch')
+        with c2:
+            if entities:
+                st.markdown("### Key Entities")
+                ent_df = pd.DataFrame(entities[:8], columns=["Entity", "Mentions"])
+                fig = px.bar(ent_df.sort_values("Mentions", ascending=True),
+                            x="Mentions", y="Entity", orientation="h",
+                            color="Mentions", color_continuous_scale="tealgrn",
+                            text_auto=True)
+                fig.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)",
+                                plot_bgcolor="rgba(0,0,0,0)", font_color="#c0c0d0",
+                                height=280, margin=dict(l=0, r=0, t=40, b=0), showlegend=False)
+                st.plotly_chart(fig, width='stretch')
+
+        st.markdown("### Top Articles by Relevance")
         if articles:
-            st.markdown("### Top Articles by Relevance")
-            for a in articles[:8]:
+            for a in articles[:10]:
                 score = a.final_score or 0
                 color = "#00d4aa" if score >= 75 else "#f0a030" if score >= 50 else "#666"
                 bar_pct = min(score, 100)
                 tags = ", ".join(a.industry_tags[:3]) if a.industry_tags else "General"
+                regions = ", ".join(a.region_tags[:2]) if a.region_tags else ""
+                summary = (a.summary[:150] + "...") if a.summary else ""
                 st.markdown(f"""
                 <div class="card" style="padding: 14px 18px;">
                     <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px;">
                         <div style="flex: 1; min-width: 0;">
                             <a href="{a.url}" target="_blank" style="font-weight: 600; font-size: 1.05rem;">{a.title}</a>
                             <div style="color: #888; font-size: 0.8rem; margin-top: 6px;">
-                                {a.source}  ·  {tags}
+                                {a.source}  ·  {tags}{'  ·  ' + regions if regions else ''}
                             </div>
+                            <div style="color: #666; font-size: 0.8rem; margin-top: 4px;">{summary}</div>
                             <div style="margin-top: 8px; height: 4px; background: #2a2a5a; border-radius: 2px; max-width: 300px;">
                                 <div style="height: 100%; width: {bar_pct}%; background: {color}; border-radius: 2px;"></div>
                             </div>
@@ -403,6 +450,30 @@ with tabs[1]:
                       font_color="#c0c0d0", height=500, margin=dict(l=0, r=0, t=40, b=0))
     fig.update_traces(textposition="outside")
     st.plotly_chart(fig, width='stretch')
+
+    st.markdown("---")
+    st.markdown("### Regional Activity")
+    try:
+        session = get_session()
+        all_arts = get_top_articles(session, limit=100)
+        session.close()
+        region_data = {}
+        for a in all_arts:
+            if a.region_tags:
+                for r in a.region_tags:
+                    region_data[r] = region_data.get(r, 0) + 1
+        if region_data:
+            rd_df = pd.DataFrame([{"Region": k, "Articles": v} for k, v in region_data.items()])
+            fig = px.bar(rd_df.sort_values("Articles", ascending=True),
+                        x="Articles", y="Region", orientation="h",
+                        title="Articles by Region",
+                        color="Articles", color_continuous_scale="tealgrn", text_auto=True)
+            fig.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)",
+                            plot_bgcolor="rgba(0,0,0,0)", font_color="#c0c0d0",
+                            height=350, margin=dict(l=0, r=0, t=40, b=0), showlegend=False)
+            st.plotly_chart(fig, width='stretch')
+    except Exception as e:
+        st.caption(f"Region stats: {e}")
 
 
 # ===================== TAB 3: ALERTS =====================
