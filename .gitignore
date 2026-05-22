@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (recreated on pipeline run)
+enterprise_engine/data/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# ChromaDB
+chroma_data/
+
+# Logs
+*.log
+
+# Notebooks (optional)
+*.ipynb

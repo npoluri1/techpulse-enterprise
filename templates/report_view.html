@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report View - TechPulse Daily</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .back-link { color: #76b900; font-weight: 600; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 4px; }
+        .back-link:hover { text-decoration: underline; }
+        .btn-download { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #76b900; color: #fff; border-radius: 10px; font-size: 0.8rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-download:hover { background: #68a500; box-shadow: 0 2px 12px rgba(118,185,0,0.2); }
+        .card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 32px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.03);
+        }
+        h1 { font-size: 1.6rem; margin-bottom: 24px; color: #1d1d1f; font-weight: 700; letter-spacing: -0.02em; }
+        .pill-scroll { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 12px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .pill-scroll::-webkit-scrollbar { display: none; }
+        .pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 18px; font-size: 0.75rem; font-weight: 500; cursor: pointer; border: 1px solid rgba(0,0,0,0.06); background: #fff; color: #86868b; transition: all 0.2s; user-select: none; }
+        .pill:hover { background: #f5f5f7; }
+        .pill.active { background: #76b900; color: #fff; border-color: #76b900; }
+        .pill .count { font-size: 0.65rem; opacity: 0.6; margin-left: 3px; }
+        .domain-section { margin-bottom: 30px; }
+        .domain-section.hidden { display: none; }
+        .domain-title { font-size: 1.1rem; color: #76b900; margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 8px; font-weight: 600; }
+        .article { margin-bottom: 20px; padding: 16px; background: #f5f5f7; border-radius: 14px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.2s; }
+        .article:hover { background: #eaeaea; }
+        .article-title { font-weight: 600; margin-bottom: 6px; font-size: 0.95rem; color: #1d1d1f; }
+        .article-title a { color: #1d1d1f; text-decoration: none; }
+        .article-title a:hover { color: #76b900; }
+        .article-meta { font-size: 0.8rem; color: #86868b; margin-bottom: 4px; }
+        .article-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #0071e3; text-decoration: none; margin-top: 4px; font-weight: 500; }
+        .article-link:hover { text-decoration: underline; }
+        .article-summary { font-size: 0.85rem; color: #515154; margin-top: 6px; }
+        @media (max-width: 480px) { body { padding: 20px 12px; } .card { padding: 20px; } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="top-bar">
+            <a href="/" class="back-link">← Back to Dashboard</a>
+            <a id="downloadBtn" href="#" class="btn-download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download
+            </a>
+        </div>
+        <div class="card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+                <h1 style="margin-bottom:0;">{{ filename.split('-')[-1].replace('.md','') if filename else 'Daily AI Tech Report' }}</h1>
+                <span id="totalCount" class="count-badge" style="font-size:0.75rem;padding:5px 12px;"></span>
+            </div>
+            <div id="pillContainer" class="pill-scroll"></div>
+            <div id="reportContent"></div>
+        </div>
+    </div>
+    <style>
+        .count-badge { display:inline-flex;align-items:center;gap:3px;color:#86868b;padding:5px 10px;background:#f5f5f7;border:1px solid rgba(0,0,0,0.04);border-radius:10px;white-space:nowrap;font-size:0.65rem; }
+    </style>
+    <script>
+        const reportData = {{ report_data | tojson }};
+        const filename = {{ filename | tojson }};
+
+        document.getElementById('downloadBtn').href = '/api/reports/' + encodeURIComponent(filename) + '/download';
+
+        function render(data) {
+            const container = document.getElementById('reportContent');
+            if (!data || !data.domains || data.domains.length === 0) {
+                container.innerHTML = '<p style="color:#86868b;text-align:center;padding:40px 0;">No articles found in this report.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            data.domains.forEach((domain, di) => {
+                const section = document.createElement('div');
+                section.className = 'domain-section' + (di === 0 ? '' : ' hidden');
+                section.dataset.domain = domain.name;
+
+                let html = '<div class="domain-title">' + domain.name + ' (' + domain.count + ')</div>';
+                domain.highlights.forEach(item => {
+                    html += '<div class="article">';
+                    html += '<div class="article-title">' + (item.url ? '<a href="' + item.url + '" target="_blank" rel="noopener">' + escapeHtml(item.title) + '</a>' : escapeHtml(item.title)) + '</div>';
+                    if (item.source) html += '<div class="article-meta">' + escapeHtml(item.source) + '</div>';
+                    if (item.url) html += '<a href="' + item.url + '" target="_blank" rel="noopener" class="article-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Open Original Article</a>';
+                    if (item.summary) html += '<div class="article-summary">' + escapeHtml(item.summary) + '</div>';
+                    html += '</div>';
+                });
+                section.innerHTML = html;
+                container.appendChild(section);
+            });
+
+            document.getElementById('totalCount').textContent = data.domains.length + ' industries · ' + data.total_items + ' articles';
+        }
+
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text || '';
+            return d.innerHTML;
+        }
+
+        function buildPills(data) {
+            const container = document.getElementById('pillContainer');
+            if (!data || !data.domains) return;
+
+            const all = document.createElement('span');
+            all.className = 'pill active';
+            all.textContent = 'All Industries';
+            all.onclick = function() {
+                document.querySelectorAll('#pillContainer .pill').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.domain-section').forEach(s => s.classList.remove('hidden'));
+            };
+            container.appendChild(all);
+
+            data.domains.forEach(d => {
+                const pill = document.createElement('span');
+                pill.className = 'pill';
+                pill.innerHTML = d.name + ' <span class="count">' + d.count + '</span>';
+                pill.onclick = function() {
+                    document.querySelectorAll('#pillContainer .pill').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.domain-section').forEach(s => s.classList.add('hidden'));
+                    document.querySelectorAll('.domain-section[data-domain="' + d.name + '"]').forEach(s => s.classList.remove('hidden'));
+                };
+                container.appendChild(pill);
+            });
+        }
+
+        render(reportData);
+        buildPills(reportData);
+    </script>
+</body>
+</html>

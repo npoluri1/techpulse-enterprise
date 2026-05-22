@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>TechPulse Daily</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+        @media (min-width: 1024px) { .container { padding: 28px 36px; } }
+        @media (max-width: 480px) { .container { padding: 12px; } }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 16px; gap: 8px; }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+        .brand-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #76b900, #8bcf1a, #a8e63d);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 15px; font-weight: 800;
+            box-shadow: 0 2px 12px rgba(118,185,0,0.3);
+        }
+        .brand-text { font-size: 1.2rem; font-weight: 700; color: #1d1d1f; letter-spacing: -0.02em; }
+        .brand-text span { font-weight: 400; color: #86868b; }
+        @media (min-width: 768px) { .brand-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 11px; } .brand-text { font-size: 1.4rem; } }
+
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; white-space: nowrap; border: 1px solid rgba(0,0,0,0.06); }
+        .status-idle { background: #fff; color: #86868b; border-color: rgba(0,0,0,0.06); }
+        .status-running { background: #fff8e1; color: #b8860b; border-color: rgba(255,149,0,0.25); animation: pulse 1.5s infinite; box-shadow: 0 0 16px rgba(255,149,0,0.08); }
+        .status-success { background: #f0f9e8; color: #5c8a00; border-color: rgba(118,185,0,0.25); box-shadow: 0 0 16px rgba(118,185,0,0.08); }
+        .status-error { background: #fef0f0; color: #c41e3a; border-color: rgba(255,59,48,0.25); }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .status-idle .status-dot { background: #c7c7cc; }
+        .status-running .status-dot { background: #ff9500; box-shadow: 0 0 6px #ff9500; }
+        .status-success .status-dot { background: #76b900; box-shadow: 0 0 6px rgba(118,185,0,0.5); }
+        .status-error .status-dot { background: #ff3b30; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @media (min-width: 768px) { .status-pill { padding: 6px 16px; font-size: 0.75rem; } }
+
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .section-title { font-size: 0.65rem; font-weight: 600; color: #86868b; text-transform: uppercase; letter-spacing: 0.1em; }
+
+        .pill-scroll { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .pill-scroll::-webkit-scrollbar { display: none; }
+        .pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border-radius: 18px; font-size: 0.7rem; font-weight: 500; cursor: pointer; border: 1px solid rgba(0,0,0,0.06); background: #fff; color: #86868b; transition: all 0.2s; user-select: none; }
+        .pill:hover { background: #f5f5f7; border-color: rgba(0,0,0,0.12); }
+        .pill.active { background: #76b900; color: #fff; border-color: #76b900; box-shadow: 0 2px 12px rgba(118,185,0,0.25); }
+        .pill .count { font-size: 0.6rem; opacity: 0.5; }
+        .pill.active .count { opacity: 0.8; color: rgba(255,255,255,0.8); }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.03);
+        }
+        @media (min-width: 768px) { .card { padding: 22px; margin-bottom: 16px; border-radius: 18px; } }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 8px; }
+        .card-title { font-size: 0.95rem; font-weight: 600; color: #1d1d1f; letter-spacing: -0.01em; }
+        .card-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: linear-gradient(180deg, #76b900, #a8e63d); border-radius: 2px; margin-right: 10px; vertical-align: middle; }
+        @media (min-width: 768px) { .card-title { font-size: 1.05rem; } }
+
+        .stats-row { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+        .stat-item { flex: 1; min-width: 60px; background: #f5f5f7; border-radius: 12px; padding: 10px 12px; border: 1px solid rgba(0,0,0,0.04); }
+        .stat-val { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; color: #1d1d1f; line-height: 1; }
+        .stat-lbl { font-size: 0.65rem; color: #86868b; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+        @media (min-width: 768px) { .stat-val { font-size: 1.9rem; } }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; gap: 16px; } }
+        @media (min-width: 1024px) { .grid-2 { grid-template-columns: 1.2fr 1.8fr; } }
+
+        .meta-row { display: flex; align-items: center; gap: 10px; font-size: 0.7rem; color: #86868b; flex-wrap: wrap; margin-bottom: 4px; }
+        .meta-row .dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(0,0,0,0.15); flex-shrink: 0; }
+
+        .btn-group { display: flex; gap: 6px; align-items: center; }
+        .btn-fetch { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px 9px 16px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; background: linear-gradient(135deg, #76b900, #8bcf1a); color: #fff; transition: all 0.25s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 2px 16px rgba(118,185,0,0.25); letter-spacing: -0.01em; user-select: none; }
+        .btn-fetch:hover { transform: scale(1.03); box-shadow: 0 4px 28px rgba(118,185,0,0.4); }
+        .btn-fetch:active { transform: scale(0.97); }
+        .btn-fetch:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; background: #e5e5ea; color: #8e8e93; }
+        .btn-fetch svg { width: 15px; height: 15px; flex-shrink: 0; }
+        .btn-fetch.fetching { background: linear-gradient(135deg, #ff9500, #ffb84d); box-shadow: 0 2px 16px rgba(255,149,0,0.25); pointer-events: none; color: #fff; }
+        .btn-fetch.fetching:hover { transform: none; }
+        .btn-stop { display: inline-flex; align-items: center; gap: 5px; padding: 9px 14px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; border: 1.5px solid #ff3b30; background: #fff; color: #ff3b30; transition: all 0.25s cubic-bezier(0.16,1,0.3,1); user-select: none; }
+        .btn-stop:hover { background: #fef0f0; box-shadow: 0 2px 12px rgba(255,59,48,0.12); }
+        .btn-stop:active { transform: scale(0.95); }
+        .btn-stop svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 8px 16px; border-radius: 10px; font-size: 0.75rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn-primary { background: #76b900; color: #fff; }
+        .btn-primary:hover { background: #68a500; box-shadow: 0 2px 12px rgba(118,185,0,0.2); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-secondary { background: #f5f5f7; color: #1d1d1f; border: 1px solid rgba(0,0,0,0.06); }
+        .btn-secondary:hover { background: #eaeaea; }
+        .btn-success { background: #34c759; color: #fff; }
+        .btn-success:hover { background: #2db84d; box-shadow: 0 2px 12px rgba(52,199,89,0.2); }
+        .btn-sm { padding: 6px 14px; font-size: 0.7rem; border-radius: 8px; }
+        .btn-xs { padding: 4px 10px; font-size: 0.6rem; border-radius: 6px; }
+        @media (min-width: 768px) { .btn { padding: 9px 18px; font-size: 0.813rem; } .btn-sm { padding: 6px 16px; font-size: 0.75rem; } .btn-fetch { padding: 10px 22px 10px 18px; font-size: 0.875rem; } .btn-fetch svg { width: 16px; height: 16px; } .btn-stop { padding: 10px 16px; } }
+
+        .form-group { margin-bottom: 8px; }
+        .form-group label { display: block; margin-bottom: 3px; font-size: 0.65rem; font-weight: 500; color: #86868b; text-transform: uppercase; letter-spacing: 0.04em; }
+        .form-control { width: 100%; padding: 8px 12px; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; font-size: 0.8rem; color: #1d1d1f; background: #f5f5f7; outline: none; transition: border 0.2s, box-shadow 0.2s; font-family: inherit; }
+        .form-control:focus { border-color: #76b900; box-shadow: 0 0 0 3px rgba(118,185,0,0.12); }
+        .form-row { display: flex; gap: 8px; }
+        .form-row .form-group { flex: 1; }
+
+        .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #e5e5ea; transition: 0.3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; transition: 0.3s; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        input:checked + .slider { background: #76b900; box-shadow: 0 0 12px rgba(118,185,0,0.2); }
+        input:checked + .slider:before { transform: translateX(18px); background: #fff; }
+
+        .notif-item { background: #f5f5f7; border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.04); }
+        .notif-header { display: flex; align-items: center; gap: 10px; }
+        .notif-icon { width: 30px; height: 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .notif-name { font-weight: 600; font-size: 0.8rem; color: #1d1d1f; flex: 1; }
+        .notif-fields { display: none; margin-top: 12px; }
+        .notif-fields.open { display: block; }
+
+        a { color: #76b900; text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; }
+
+        .domain-group { }
+        .domain-group.hidden { display: none; }
+        .news-item { padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.04); }
+        .news-item:last-child { border-bottom: none; }
+        .news-title { font-size: 0.8rem; font-weight: 500; color: #1d1d1f; line-height: 1.5; }
+        .news-title a { color: #1d1d1f; }
+        .news-title a:hover { color: #76b900; }
+        .news-source { font-size: 0.65rem; color: #86868b; margin-top: 3px; }
+
+        .empty-state { text-align: center; padding: 36px 16px; color: #86868b; font-size: 0.8rem; }
+
+        .toast { position: fixed; bottom: 16px; left: 16px; right: 16px; max-width: 360px; margin: 0 auto; padding: 12px 20px; border-radius: 14px; font-size: 0.8rem; font-weight: 500; color: #fff; opacity: 0; transform: translateY(80px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.2); text-align: center; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { background: #76b900; color: #fff; }
+        .toast-error { background: #ff3b30; color: #fff; }
+        .toast-info { background: #0071e3; color: #fff; }
+
+        .sched-display { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .sched-time { font-size: 0.85rem; font-weight: 600; color: #1d1d1f; }
+        .next-run { font-size: 0.7rem; color: #86868b; }
+        .next-run strong { color: #1d1d1f; }
+        .count-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.65rem; color: #86868b; padding: 3px 8px; background: #f5f5f7; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; white-space: nowrap; }
+
+        .date-select { padding:6px 10px; border:1px solid rgba(0,0,0,0.08); border-radius:8px; font-size:0.7rem; font-family:inherit; background:#f5f5f7; color:#1d1d1f; outline:none; cursor:pointer; max-width:130px; }
+        .date-select:focus { border-color:#76b900; }
+        .date-select option { background:#fff; color:#1d1d1f; }
+
+        .month-group { margin-bottom:6px; }
+        .month-header { display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; cursor:pointer; user-select:none; transition:background 0.15s; font-size:0.8rem; border:1px solid rgba(0,0,0,0.03); background:#f5f5f7; }
+        .month-header:hover { background:#eaeaea; }
+        .month-arrow { font-size:0.6rem; color:rgba(0,0,0,0.2); transition:transform 0.2s; }
+        .month-header.open .month-arrow { transform:rotate(90deg); }
+        .month-label { font-weight:600; color:#1d1d1f; }
+        .month-count { font-weight:400; color:#86868b; margin-left:6px; font-size:0.68rem; }
+        .month-body { display:none; padding:6px 0 2px; }
+        .month-header.open + .month-body { display:block; }
+
+        hr { border: 0; border-top: 1px solid rgba(0,0,0,0.06); margin: 14px 0; }
+        @media (min-width: 768px) { hr { margin: 16px 0; } }
+
+        .collapse-toggle { background:none; border:none; cursor:pointer; padding:2px; color:rgba(0,0,0,0.2); display:flex; align-items:center; transition:transform 0.2s, color 0.2s; font-size:0.7rem; }
+        .collapse-toggle:hover { color:rgba(0,0,0,0.4); }
+        .collapse-toggle.open { transform:rotate(90deg); }
+        .collapse-body { overflow:hidden; transition:max-height 0.3s ease, opacity 0.25s ease; max-height:0; opacity:0; }
+        .collapse-body.open { max-height:800px; opacity:1; }
+        .notif-summary { display:flex; gap:12px; padding:6px 0 8px; flex-wrap:wrap; }
+        .notif-summary-item { display:inline-flex; align-items:center; gap:4px; font-size:0.7rem; color:#86868b; }
+        .notif-summary-item svg { flex-shrink:0; }
+
+        .pagination { display:flex; align-items:center; justify-content:center; gap:6px; padding:14px 0 4px; flex-wrap:wrap; }
+        .page-btn { padding:6px 12px; border:1px solid rgba(0,0,0,0.06); border-radius:8px; background:#fff; font-size:0.7rem; color:#86868b; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+        .page-btn:hover { background:#f5f5f7; border-color:rgba(0,0,0,0.12); color:#1d1d1f; }
+        .page-btn.active { background:#76b900; color:#fff; border-color:#76b900; }
+        .page-btn:disabled { opacity:0.3; cursor:default; }
+        .page-info { font-size:0.7rem; color:#86868b; padding:0 8px; }
+
+        .arc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; padding:2px 0; }
+        .arc-card { display:flex; flex-direction:column; gap:6px; padding:14px; border-radius:14px; background:#f5f5f7; border:1px solid rgba(0,0,0,0.04); transition:all 0.2s; position:relative; }
+        .arc-card:hover { background:#eaeaea; border-color:rgba(0,0,0,0.08); transform:translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .arc-top { display:flex; align-items:center; justify-content:space-between; }
+        .arc-day { font-size:1.2rem; font-weight:700; color:#1d1d1f; line-height:1.1; letter-spacing:-0.02em; }
+        .arc-date { font-size:0.65rem; color:#86868b; }
+        .arc-size { font-size:0.55rem; color:rgba(0,0,0,0.2); }
+        .arc-actions { display:flex; gap:4px; }
+        .arc-btn { display:inline-flex; align-items:center; justify-content:center; gap:3px; padding:5px 10px; border-radius:6px; font-size:0.65rem; font-weight:500; cursor:pointer; border:none; text-decoration:none; transition:all 0.15s; }
+        .arc-btn-view { background:#76b900; color:#fff; }
+        .arc-btn-view:hover { background:#68a500; }
+        .arc-btn-dl { background:#fff; color:#86868b; border:1px solid rgba(0,0,0,0.06); }
+        .arc-btn-dl:hover { background:#f5f5f7; color:#1d1d1f; }
+        @media (min-width: 768px) { .arc-grid { grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; } .arc-card { padding:16px; } .arc-day { font-size:1.3rem; } }
+        @media (min-width: 1024px) { .arc-grid { grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); } }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="brand">
+                <div class="brand-icon">TP</div>
+                <div class="brand-text">TechPulse <span>Daily</span></div>
+            </a>
+            <div id="statusBadge" class="status-pill status-{{ status.status if status.status != 'idle' else 'idle' }}">
+                <span class="status-dot"></span>
+                <span>{{ status.message }}</span>
+            </div>
+        </nav>
+
+        <div class="meta-row">
+            <span id="metaDate">{{ latest_summary.generated.split(' ')[0] if latest_summary and latest_summary.generated else '' }}</span>
+            <span class="dot"></span>
+            <span id="metaDomains">{{ latest_summary.domains | length if latest_summary and latest_summary.domains else 0 }} domains</span>
+            <span class="dot"></span>
+            <span id="metaArticles">{{ latest_summary.total_items if latest_summary and latest_summary.total_items else 0 }} articles</span>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Industries</span>
+            <span class="count-badge" id="selectedCount">All</span>
+        </div>
+        <div class="card" style="padding:10px 14px;margin-bottom:14px;">
+            <div class="pill-scroll" id="pillContainer"></div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Actions</span>
+                    <div class="btn-group">
+                        <button id="triggerBtn" class="btn-fetch" onclick="triggerFetch()"{% if not can_fetch %} disabled{% endif %}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            <span>Fetch{% if lock_reason %} (Locked){% endif %}</span>
+                        </button>
+                        <button id="stopBtn" class="btn-stop" onclick="cancelFetch()" style="display:none;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                            <span>Stop</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item"><div class="stat-val" id="statDomains">{{ latest_summary.domains | length if latest_summary and latest_summary.domains else 0 }}</div><div class="stat-lbl">Domains</div></div>
+                    <div class="stat-item"><div class="stat-val" id="statArticles">{{ latest_summary.total_items if latest_summary and latest_summary.total_items else 0 }}</div><div class="stat-lbl">Articles</div></div>
+                    <div class="stat-item"><div class="stat-val" id="statHistorical">{{ historical_summary.total_items if historical_summary and historical_summary.total_items else latest_summary.total_items if latest_summary else 0 }}</div><div class="stat-lbl">Total</div></div>
+                </div>
+                <div id="lastRun" class="next-run" style="margin-bottom:10px;">{% if status.time %}Last: {{ status.time }}{% endif %}</div>
+                <div id="prevRun" class="next-run" style="margin-bottom:10px;">{% if status.previous_run %}Previous: {{ status.previous_run }}{% endif %}</div>
+                <hr>
+                <div class="sched-display">
+                    <div>
+                        <div style="font-size: 0.65rem; color: #86868b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;">Daily Schedule</div>
+                        <div class="sched-time" id="scheduleDisplay">{{ '%02d' | format(schedule.hour | int) }}:{{ '%02d' | format(schedule.minute | int) }}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.65rem; color: #86868b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;">Next Run</div>
+                        <div class="next-run" id="nextRunInfo" style="font-size: 0.75rem; font-weight: 500;">Calculating...</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <label class="switch">
+                            <input type="checkbox" id="scheduleToggle" {% if schedule.enabled %}checked{% endif %} onchange="toggleSchedule()">
+                            <span class="slider"></span>
+                        </label>
+                        <span id="scheduleLabel" style="font-size:0.75rem; font-weight:600; color:{{ '#76b900' if schedule.enabled else '#86868b' }};">{{ 'Scheduled' if schedule.enabled else 'Disabled' }}</span>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="saveSchedule()" style="padding:5px 12px;">Update</button>
+                </div>
+                <div class="form-row" style="margin-top:10px; background: #f5f5f7; padding: 8px; border-radius: 10px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:0.6rem;">Hour</label>
+                        <input type="number" id="scheduleHour" class="form-control" value="{{ schedule.hour }}" min="0" max="23">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:0.6rem;">Minute</label>
+                        <input type="number" id="scheduleMinute" class="form-control" value="{{ schedule.minute }}" min="0" max="59">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="padding:14px;">
+                <div class="card-header" style="margin-bottom:0;">
+                    <span class="card-title">Notifications</span>
+                    <button id="notifToggle" class="collapse-toggle open" onclick="toggleNotifications()" title="Toggle notifications section">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <div id="notifSummary" class="notif-summary">
+                    <span class="notif-summary-item">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                        <span id="sumEmail">{{ '✅ ' + notifications.email.to if notifications.email.enabled and notifications.email.to else '⛔ Not set' }}</span>
+                    </span>
+                    <span class="notif-summary-item">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <span id="sumWhatsApp">{{ '✅ ' + notifications.whatsapp.phone if notifications.whatsapp.enabled and notifications.whatsapp.phone else '⛔ Not set' }}</span>
+                    </span>
+                </div>
+                <div id="notifBody" class="collapse-body open">
+                <div class="notif-item">
+                    <div class="notif-header">
+                        <div class="notif-icon" style="background:#e8f0fe;color:#0071e3;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                        </div>
+                        <span class="notif-name">Email</span>
+                        <label class="switch">
+                            <input type="checkbox" id="emailToggle" {% if notifications.email.enabled %}checked{% endif %} onchange="toggleChannel('email')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="notif-fields{{ ' open' if notifications.email.enabled }}" id="emailFields">
+                        <div class="form-group"><input type="email" id="emailFrom" class="form-control" value="{{ notifications.email.from }}" placeholder="From"></div>
+                        <div class="form-group"><input type="password" id="emailPassword" class="form-control" value="{{ notifications.email.password }}" placeholder="App Password"></div>
+                        <div class="form-group"><input type="email" id="emailTo" class="form-control" value="{{ notifications.email.to }}" placeholder="To"></div>
+                        <div class="form-row">
+                            <div class="form-group"><input type="text" id="smtpServer" class="form-control" value="{{ notifications.email.smtp_server }}"></div>
+                            <div class="form-group"><input type="number" id="smtpPort" class="form-control" value="{{ notifications.email.smtp_port }}"></div>
+                        </div>
+                        <div class="form-group"><input type="text" id="emailSubjectPrefix" class="form-control" value="{{ notifications.email.subject_prefix }}"></div>
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn btn-primary btn-sm" onclick="saveChannel('email')" style="flex:1;">Save</button>
+                            <button class="btn btn-success btn-sm" onclick="testChannel('email')">Test</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notif-item">
+                    <div class="notif-header">
+                        <div class="notif-icon" style="background:#e8f8e8;color:#34c759;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </div>
+                        <span class="notif-name">WhatsApp</span>
+                        <label class="switch">
+                            <input type="checkbox" id="whatsappToggle" {% if notifications.whatsapp.enabled %}checked{% endif %} onchange="toggleChannel('whatsapp')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="notif-fields{{ ' open' if notifications.whatsapp.enabled }}" id="whatsappFields">
+                        <div class="form-group"><input type="tel" id="whatsappPhone" class="form-control" value="{{ notifications.whatsapp.phone }}" placeholder="+6591234567"></div>
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn btn-primary btn-sm" onclick="saveChannel('whatsapp')" style="flex:1;">Save</button>
+                            <button class="btn btn-success btn-sm" onclick="testChannel('whatsapp')">Test</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><span id="highlightsDate">Today</span></span>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <select id="industryFilter" onchange="applyFilterAndPage()" class="date-select" style="max-width:160px;">
+                        <option value="">All Industries</option>
+                    </select>
+                    <a id="fullReportLink" href="/view-report/{{ reports[0].name if reports else '#' }}" class="btn btn-secondary btn-sm">Full Report →</a>
+                </div>
+            </div>
+            <div id="highlightsContainer"></div>
+            <div id="pagination" class="pagination"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Archive</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <select id="archiveJump" onchange="loadReport(this.value)" class="date-select">
+                        <option value="">Jump to date...</option>
+                        {% for r in reports %}
+                        <option value="{{ r.name }}">{{ r.name | extract_date }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="count-badge" id="archiveCount">{{ reports | length }} reports</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <select id="archiveYearFilter" onchange="updateMonthFilter(); renderArchive()" class="date-select" style="width: 100px;">
+                    <option value="">All Years</option>
+                </select>
+                <select id="archiveMonthFilter" onchange="renderArchive()" class="date-select" style="width: 120px;">
+                    <option value="">All Months</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div id="archiveMonths"></div>
+            
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="chatBtn" onclick="toggleChat()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+
+    <div id="chatPanel">
+        <div id="chatHeader">
+            <span>AI Assistant</span>
+            <span onclick="toggleChat()" style="cursor:pointer;opacity:0.6;">✕</span>
+        </div>
+        <div id="chatTabs">
+            <span class="chat-tab active" data-mode="report" onclick="switchChatMode('report')">📋 Report</span>
+            <span class="chat-tab" data-mode="general" onclick="switchChatMode('general')">💬 General</span>
+        </div>
+        <div id="chatMessages"></div>
+        <div id="chatInputRow">
+            <textarea id="chatInput" placeholder="Ask about the news..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+            <button onclick="sendChat()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        #chatBtn { position:fixed; bottom:24px; right:24px; width:52px; height:52px; background:#76b900; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer; box-shadow:0 4px 20px rgba(118,185,0,0.35); transition:all 0.3s cubic-bezier(0.16,1,0.3,1); z-index:1000; }
+        #chatBtn:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(118,185,0,0.5); }
+        #chatBtn.open { transform:scale(0.8); opacity:0; pointer-events:none; }
+        #chatPanel { position:fixed; bottom:88px; right:24px; width:380px; max-height:560px; background:#fff; border-radius:18px; box-shadow:0 8px 48px rgba(0,0,0,0.15); border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; z-index:1000; opacity:0; transform:translateY(20px) scale(0.95); pointer-events:none; transition:all 0.35s cubic-bezier(0.16,1,0.3,1); overflow:hidden; }
+        #chatPanel.open { opacity:1; transform:translateY(0) scale(1); pointer-events:all; }
+        #chatHeader { display:flex; align-items:center; justify-content:space-between; padding:14px 18px 10px; font-size:0.85rem; font-weight:600; color:#1d1d1f; }
+        #chatTabs { display:flex; gap:0; padding:0 18px 10px; border-bottom:1px solid rgba(0,0,0,0.06); }
+        .chat-tab { padding:6px 14px; font-size:0.75rem; font-weight:500; color:#86868b; cursor:pointer; border-radius:8px; transition:all 0.2s; user-select:none; }
+        .chat-tab:hover { background:#f5f5f7; color:#1d1d1f; }
+        .chat-tab.active { background:#76b900; color:#fff; }
+        #chatMessages { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:10px; min-height:180px; max-height:300px; }
+        .chat-msg { display:flex; }
+        .chat-msg.user { justify-content:flex-end; }
+        .chat-bubble { max-width:88%; padding:10px 14px; border-radius:14px; font-size:0.8rem; line-height:1.5; color:#1d1d1f; white-space:pre-wrap; word-wrap:break-word; }
+        .chat-msg.ai .chat-bubble { background:#f5f5f7; border:1px solid rgba(0,0,0,0.04); border-bottom-left-radius:4px; }
+        .chat-msg.user .chat-bubble { background:#76b900; color:#fff; border-bottom-right-radius:4px; }
+        .chat-msg.ai .chat-bubble a { color:#76b900; }
+        #chatInputRow { display:flex; align-items:flex-end; gap:8px; padding:10px 14px 14px; border-top:1px solid rgba(0,0,0,0.06); }
+        #chatInput { flex:1; padding:10px 14px; border:1px solid rgba(0,0,0,0.08); border-radius:12px; font-size:0.8rem; outline:none; font-family:inherit; resize:none; line-height:1.4; max-height:120px; transition:border 0.2s; background:#f5f5f7; color:#1d1d1f; }
+        #chatInput:focus { border-color:#76b900; box-shadow:0 0 0 3px rgba(118,185,0,0.12); }
+        #chatInput::placeholder { color:#86868b; }
+        #chatInputRow button { width:36px; height:36px; border-radius:50%; background:#76b900; color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.2s; }
+        #chatInputRow button:hover { background:#68a500; }
+        #chatInputRow button:disabled { opacity:0.5; cursor:not-allowed; }
+        .chat-loading { display:flex; align-items:center; gap:4px; padding:10px 14px; }
+        .chat-loading span { width:6px; height:6px; background:#c7c7cc; border-radius:50%; animation:chatBounce 1.2s infinite; }
+        .chat-loading span:nth-child(2) { animation-delay:0.2s; }
+        .chat-loading span:nth-child(3) { animation-delay:0.4s; }
+        @keyframes chatBounce { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-6px); } }
+        @media (max-width:480px) { #chatPanel { right:12px; left:12px; width:auto; bottom:80px; } #chatBtn { right:16px; bottom:16px; width:48px; height:48px; } }
+    </style>
+
+    <script>
+        let pollTimer = null;
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast toast-' + (type || 'success') + ' show';
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function loadDomains() {
+            fetch('/api/domains').then(r => r.json()).then(domains => {
+                const container = document.getElementById('pillContainer');
+                const allPill = document.createElement('span');
+                allPill.className = 'pill pill-all active';
+                allPill.textContent = 'All';
+                allPill.onclick = selectAllPills;
+                container.appendChild(allPill);
+
+                let allEnabled = true;
+                domains.forEach(d => {
+                    if (!d.enabled) allEnabled = false;
+                    const pill = document.createElement('span');
+                    pill.className = 'pill' + (d.enabled ? ' active' : '');
+                    pill.dataset.domain = d.name;
+                    pill.innerHTML = d.name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' <span class="count">' + d.source_count + '</span>';
+                    pill.onclick = function() { togglePill(this); };
+                    container.appendChild(pill);
+                });
+                if (!allEnabled) allPill.classList.remove('active');
+                updateUI();
+            });
+        }
+
+        function updateUI() {
+            const active = document.querySelectorAll('.pill[data-domain].active');
+            const all = document.querySelectorAll('.pill[data-domain]');
+            const count = active.length;
+            const total = all.length;
+            const btn = document.getElementById('triggerBtn');
+            const label = btn.querySelector('span');
+
+            if (count === 0) {
+                document.getElementById('selectedCount').textContent = 'None';
+                label.textContent = 'Select Industries';
+                btn.disabled = true;
+            } else if (count === total) {
+                document.getElementById('selectedCount').textContent = 'All (' + total + ')';
+                label.textContent = 'Fetch All';
+                btn.disabled = false;
+            } else {
+                document.getElementById('selectedCount').textContent = count + ' selected';
+                label.textContent = 'Fetch ' + count;
+                btn.disabled = false;
+            }
+            btn.classList.remove('fetching');
+
+            const names = new Set(Array.from(active).map(p => p.dataset.domain));
+            document.querySelectorAll('.domain-group').forEach(g => {
+                g.style.display = names.has(g.dataset.domain) ? 'block' : 'none';
+            });
+        }
+
+        function selectAllPills() {
+            const all = document.querySelector('.pill-all');
+            const pills = document.querySelectorAll('.pill[data-domain]');
+            if (all.classList.contains('active')) {
+                pills.forEach(p => p.classList.remove('active'));
+                all.classList.remove('active');
+            } else {
+                pills.forEach(p => p.classList.add('active'));
+                all.classList.add('active');
+            }
+            updateUI();
+            syncDomains();
+        }
+
+        function togglePill(el) {
+            el.classList.toggle('active');
+            document.querySelector('.pill-all').classList.remove('active');
+            const all = document.querySelectorAll('.pill[data-domain]');
+            const active = document.querySelectorAll('.pill[data-domain].active');
+            if (active.length === all.length) document.querySelector('.pill-all').classList.add('active');
+            updateUI();
+            syncDomain(el.dataset.domain, el.classList.contains('active'));
+        }
+
+        let syncQueue = {};
+        function syncDomain(name, enabled) {
+            syncQueue[name] = enabled;
+            clearTimeout(syncQueue._timer);
+            syncQueue._timer = setTimeout(() => {
+                const names = Object.keys(syncQueue).filter(k => k !== '_timer' && syncQueue[k]);
+                fetch('/api/domains/batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domains: names })
+                }).catch(() => {});
+                syncQueue = {};
+            }, 300);
+        }
+
+        function syncDomains() {
+            document.querySelectorAll('.pill[data-domain]').forEach(p => {
+                syncDomain(p.dataset.domain, p.classList.contains('active'));
+            });
+        }
+
+        function getSelectedDomains() {
+            return Array.from(document.querySelectorAll('.pill[data-domain].active')).map(p => p.dataset.domain);
+        }
+
+        function triggerFetch() {
+            const selected = getSelectedDomains();
+            if (selected.length === 0) { showToast('Select at least one industry', 'error'); return; }
+            const btn = document.getElementById('triggerBtn');
+            const label = btn.querySelector('span');
+            btn.disabled = true;
+            label.textContent = 'Starting...';
+            btn.classList.add('fetching');
+            fetch('/api/trigger', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domains: selected })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'started') {
+                    showToast(data.message, 'info');
+                    label.textContent = 'Fetching...';
+                    document.getElementById('stopBtn').style.display = '';
+                    pollUntilDone();
+                } else {
+                    showToast(data.message, 'error');
+                    updateUI();
+                }
+            })
+            .catch(() => { showToast('Failed', 'error'); updateUI(); });
+        }
+
+        function cancelFetch() {
+            document.getElementById('stopBtn').style.display = 'none';
+            fetch('/api/cancel', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => showToast(data.message, 'info'))
+            .catch(() => showToast('Failed to cancel', 'error'));
+        }
+
+        function pollUntilDone() {
+            if (pollTimer) clearInterval(pollTimer);
+            pollTimer = setInterval(() => {
+                fetch('/api/status').then(r => r.json()).then(data => {
+                    const badge = document.getElementById('statusBadge');
+                    let cls = 'status-idle', txt = data.message || 'Idle';
+                    if (data.is_running) { cls = 'status-running'; txt = 'Running...'; }
+                    else if (data.status === 'success') cls = 'status-success';
+                    else if (data.status === 'error') cls = 'status-error';
+                    else if (data.status === 'cancelled') cls = 'status-error';
+                    badge.className = 'status-pill ' + cls;
+                    badge.innerHTML = '<span class="status-dot"></span><span>' + txt + '</span>';
+
+                    {% raw %}
+                    if (data.previous_run) {
+                        document.getElementById('prevRun').textContent = 'Previous: ' + data.previous_run;
+                    }
+                    {% endraw %}
+
+                    if (!data.is_running) {
+                        clearInterval(pollTimer);
+                        pollTimer = null;
+                        document.getElementById('stopBtn').style.display = 'none';
+                        location.reload();
+                    }
+                }).catch(() => {});
+            }, 2000);
+        }
+
+        function toggleMonth(el) {
+            el.classList.toggle('open');
+        }
+
+        function loadReport(filename) {
+            if (!filename) return;
+            fetch('/api/report-articles/' + encodeURIComponent(filename))
+            .then(r => r.json())
+            .then(data => {
+                const dateLabel = document.getElementById('highlightsDate');
+                const link = document.getElementById('fullReportLink');
+                const date = (filename.replace('techpulse-daily-','').replace('.md','') || 'Today');
+                dateLabel.textContent = date;
+                link.href = '/view-report/' + encodeURIComponent(filename);
+
+                document.getElementById('archiveJump').value = filename;
+
+                if (!data || data.error || !data.domains) {
+                    document.getElementById('highlightsContainer').innerHTML = '<div class="empty-state">Could not load report.</div>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                allArticles = data;
+                currentPage = 1;
+                currentIndustry = '';
+
+                const sel = document.getElementById('industryFilter');
+                sel.innerHTML = '<option value="">All Industries</option>';
+                data.domains.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d.name; opt.textContent = d.name + ' (' + d.count + ')';
+                    sel.appendChild(opt);
+                });
+
+                renderTodayPage();
+            })
+            .catch(() => {
+                document.getElementById('highlightsContainer').innerHTML = '<div class="empty-state">Error loading report.</div>';
+                document.getElementById('pagination').innerHTML = '';
+            });
+        }
+
+        function updateMonthFilter() {
+            const year = document.getElementById('archiveYearFilter').value;
+            const monthSel = document.getElementById('archiveMonthFilter');
+            // If year is cleared, keep month as is; if year is selected, we could potentially limit months if needed
+        }
+
+        function renderArchive() {
+            const container = document.getElementById('archiveMonths');
+            if (!container || !window.__reports) return;
+            const yearFilter = document.getElementById('archiveYearFilter').value;
+            const monthFilter = document.getElementById('archiveMonthFilter').value;
+            
+            let filtered = window.__reports;
+            if (yearFilter) {
+                filtered = filtered.filter(r => (r.name || '').replace(/^techpulse-daily-/, '').slice(0, 4) === yearFilter);
+            }
+            if (monthFilter) {
+                filtered = filtered.filter(r => (r.name || '').replace(/^techpulse-daily-/, '').slice(5, 7) === monthFilter);
+            }
+            
+            const months = {};
+            filtered.forEach(r => {
+                const d = (r.name || '').replace(/^techpulse-daily-/, '').slice(0, 7);
+                if (!months[d]) months[d] = [];
+                months[d].push(r);
+            });
+            const sorted = Object.keys(months).sort().reverse();
+            container.innerHTML = '';
+            sorted.forEach((ym, mi) => {
+                const group = document.createElement('div');
+                group.className = 'month-group';
+                const header = document.createElement('div');
+                header.className = 'month-header' + (mi === 0 ? ' open' : '');
+                header.onclick = function() { this.classList.toggle('open'); };
+                header.innerHTML = '<span class="month-arrow">▶</span><span class="month-label">' + ym + '<span class="month-count">(' + months[ym].length + ')</span></span>';
+                group.appendChild(header);
+                const body = document.createElement('div');
+                body.className = 'month-body';
+                let html = '<div class="arc-grid">';
+                months[ym].forEach(r => {
+                    const date = (r.name || '').replace(/^techpulse-daily-/, '').replace(/\.md$/, '').slice(0, 10);
+                    const size = (r.size / 1024).toFixed(1);
+                    const viewUrl = '/view-report/' + encodeURIComponent(r.name);
+                    const dlUrl = '/api/reports/' + encodeURIComponent(r.name) + '/download';
+                    html += '<div class="arc-card">'
+                        + '<div class="arc-top"><span class="arc-day">' + date.slice(8) + '</span><span class="arc-size">' + size + ' KB</span></div>'
+                        + '<span class="arc-date">' + date + '</span>'
+                        + '<div class="arc-actions">'
+                        + '<a href="' + viewUrl + '" class="arc-btn arc-btn-view">View</a>'
+                        + '<a href="' + dlUrl + '" class="arc-btn arc-btn-dl">Download</a>'
+                        + '</div>'
+                        + '</div>';
+                });
+                html += '</div>';
+                body.innerHTML = html;
+                group.appendChild(body);
+                container.appendChild(group);
+            });
+        }
+
+        function populateArchiveYears() {
+            const sel = document.getElementById('archiveYearFilter');
+            if (!sel) return;
+            const years = new Set();
+            window.__reports.forEach(r => {
+                const y = (r.name || '').replace(/^techpulse-daily-/, '').slice(0, 4);
+                if (y) years.add(y);
+            });
+            [...years].sort().reverse().forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y; opt.textContent = y;
+                sel.appendChild(opt);
+            });
+        }
+
+        const PER_PAGE = 10;
+        let allArticles = null;
+        let currentPage = 1;
+        let currentIndustry = '';
+
+        function renderTodayPage() {
+            const container = document.getElementById('highlightsContainer');
+            const pagEl = document.getElementById('pagination');
+            if (!allArticles || !allArticles.domains || allArticles.domains.length === 0) {
+                container.innerHTML = '<div class="empty-state">No news articles for today yet.</div>';
+                pagEl.innerHTML = '';
+                return;
+            }
+
+            let domains = allArticles.domains;
+            if (currentIndustry) {
+                domains = domains.filter(d => d.name === currentIndustry);
+            }
+
+            let allItems = [];
+            domains.forEach(d => {
+                d.highlights.forEach(item => {
+                    allItems.push({ ...item, domain: d.name });
+                });
+            });
+
+            if (allItems.length === 0) {
+                container.innerHTML = '<div class="empty-state">No articles match the selected industry.</div>';
+                pagEl.innerHTML = '';
+                return;
+            }
+
+            const totalPages = Math.ceil(allItems.length / PER_PAGE);
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const start = (currentPage - 1) * PER_PAGE;
+            const pageItems = allItems.slice(start, start + PER_PAGE);
+
+            let html = '';
+            pageItems.forEach(item => {
+                html += '<div class="news-item"><div class="news-title">';
+                if (item.url) html += '<a href="' + item.url + '" target="_blank" rel="noopener">' + item.title.replace(/</g,'&lt;') + '</a>';
+                else html += item.title.replace(/</g,'&lt;');
+                html += '</div><div class="news-source">' + (item.source || '') + ' &middot; ' + (item.domain || '') + '</div></div>';
+            });
+            container.innerHTML = html;
+
+            let pagHtml = '<button class="page-btn" onclick="goPage(' + (currentPage - 1) + ')" ' + (currentPage <= 1 ? 'disabled' : '') + '>‹ Prev</button><span class="page-info">Page ' + currentPage + ' of ' + totalPages + ' (' + allItems.length + ' articles)</span><button class="page-btn" onclick="goPage(' + (currentPage + 1) + ')" ' + (currentPage >= totalPages ? 'disabled' : '') + '>Next ›</button>';
+            pagEl.innerHTML = pagHtml;
+        }
+
+        function goPage(p) {
+            currentPage = p;
+            renderTodayPage();
+        }
+
+        function applyFilterAndPage() {
+            currentIndustry = document.getElementById('industryFilter').value;
+            currentPage = 1;
+            renderTodayPage();
+        }
+
+        function toggleSchedule() { saveSchedule(); }
+        function saveSchedule() {
+            const enabled = document.getElementById('scheduleToggle').checked;
+            const hour = document.getElementById('scheduleHour').value;
+            const minute = document.getElementById('scheduleMinute').value;
+            fetch('/api/schedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ enabled, hour, minute })
+            })
+            .then(r => r.json()).then(data => {
+                showToast(data.message);
+                document.getElementById('scheduleLabel').textContent = data.active ? 'On' : 'Off';
+                document.getElementById('scheduleLabel').style.color = data.active ? '#34c759' : '#86868b';
+                document.getElementById('scheduleDisplay').textContent = String(hour).padStart(2,'0') + ':' + String(minute).padStart(2,'0');
+            }).catch(() => showToast('Failed', 'error'));
+        }
+
+        function toggleNotifications() {
+            const body = document.getElementById('notifBody');
+            const btn = document.getElementById('notifToggle');
+            const open = body.classList.toggle('open');
+            btn.classList.toggle('open');
+            localStorage.setItem('notifCollapsed', open ? '0' : '1');
+        }
+        function refreshNotifSummary() {
+            const e = document.getElementById('emailToggle').checked;
+            const w = document.getElementById('whatsappToggle').checked;
+            document.getElementById('sumEmail').textContent = e ? '✅ ' + document.getElementById('emailTo').value : '⛔ Not set';
+            document.getElementById('sumWhatsApp').textContent = w ? '✅ ' + document.getElementById('whatsappPhone').value : '⛔ Not set';
+        }
+        function toggleChannel(ch) {
+            const enabled = document.getElementById(ch + 'Toggle').checked;
+            document.getElementById(ch + 'Fields').className = 'notif-fields' + (enabled ? ' open' : '');
+            refreshNotifSummary();
+            if (!enabled) {
+                fetch('/api/notifications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ channel: ch, enabled: false })
+                }).then(r => r.json()).then(d => d.message && showToast(d.message)).catch(() => {});
+            }
+        }
+
+        function saveChannel(ch) {
+            const body = { channel: ch, enabled: document.getElementById(ch + 'Toggle').checked };
+            if (ch === 'email') {
+                body.from = document.getElementById('emailFrom').value;
+                body.password = document.getElementById('emailPassword').value;
+                body.to = document.getElementById('emailTo').value;
+                body.smtp_server = document.getElementById('smtpServer').value;
+                body.smtp_port = document.getElementById('smtpPort').value;
+                body.subject_prefix = document.getElementById('emailSubjectPrefix').value;
+            } else {
+                body.phone = document.getElementById('whatsappPhone').value;
+            }
+            fetch('/api/notifications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            }).then(r => r.json()).then(d => { showToast(d.message); refreshNotifSummary(); }).catch(() => showToast('Failed', 'error'));
+        }
+
+        function testChannel(ch) {
+            const btn = event.target;
+            btn.disabled = true; btn.textContent = '...';
+            fetch('/api/notifications/test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ channel: ch })
+            })
+            .then(r => r.json())
+            .then(d => showToast(d.message, d.status === 'ok' ? 'success' : 'error'))
+            .catch(() => showToast('Failed', 'error'))
+            .finally(() => { btn.disabled = false; btn.textContent = 'Test'; });
+        }
+
+        let chatMode = 'report';
+        let chatHistory = [];
+
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+        }
+
+        function switchChatMode(mode) {
+            chatMode = mode;
+            document.querySelectorAll('.chat-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+            const msgs = document.getElementById('chatMessages');
+            msgs.innerHTML = '';
+            chatHistory = [];
+            const welcome = document.createElement('div');
+            welcome.className = 'chat-msg ai';
+            welcome.innerHTML = mode === 'report'
+                ? '<div class="chat-bubble">Hi! Ask me about topics in today\'s news — AI agents, cybersecurity, fintech, or anything in the report.</div>'
+                : '<div class="chat-bubble">Hi! I\'m a general AI assistant. Ask me anything — coding, tech concepts, explanations, or just chat!</div>';
+            msgs.appendChild(welcome);
+            document.getElementById('chatInput').placeholder = mode === 'report' ? 'Ask about the news...' : 'Ask me anything...';
+        }
+
+        function toggleChat() {
+            document.getElementById('chatBtn').classList.toggle('open');
+            document.getElementById('chatPanel').classList.toggle('open');
+            if (document.getElementById('chatPanel').classList.contains('open')) {
+                if (!document.getElementById('chatMessages').children.length) switchChatMode(chatMode);
+                setTimeout(() => document.getElementById('chatInput').focus(), 400);
+            }
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const q = input.value.trim();
+            if (!q) return;
+
+            const msgs = document.getElementById('chatMessages');
+            msgs.appendChild(document.createElement('div')).outerHTML = '<div class="chat-msg user"><div class="chat-bubble">' + q.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div></div>';
+            msgs.scrollTop = msgs.scrollHeight;
+            input.value = '';
+            input.style.height = 'auto';
+
+            chatHistory.push({role: 'user', content: q});
+
+            const loading = document.createElement('div');
+            loading.className = 'chat-msg ai';
+            loading.innerHTML = '<div class="chat-loading"><span></span><span></span><span></span></div>';
+            loading.id = 'chatLoading';
+            msgs.appendChild(loading);
+            msgs.scrollTop = msgs.scrollHeight;
+
+            const btn = document.querySelector('#chatInputRow button');
+            btn.disabled = true;
+
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: q, mode: chatMode, history: chatHistory.slice(-20) })
+            })
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('chatLoading')?.remove();
+                const answer = data.answer || 'Sorry, I could not process that.';
+                chatHistory.push({role: 'assistant', content: answer});
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'chat-msg ai';
+                let html = answer.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/&lt;br&gt;/g,'<br>');
+                if (data.sources && data.sources.length > 0) {
+                    html += '<br><br><small style="color:#86868b;">Sources:</small><br>';
+                    data.sources.slice(0,3).forEach(s => {
+                        if (s.url) html += '<small><a href="' + s.url + '" target="_blank" rel="noopener" style="color:#0071e3;">' + (s.title || 'Link') + '</a></small><br>';
+                    });
+                }
+                aiDiv.innerHTML = '<div class="chat-bubble">' + html + '</div>';
+                msgs.appendChild(aiDiv);
+                msgs.scrollTop = msgs.scrollHeight;
+            })
+            .catch(() => {
+                document.getElementById('chatLoading')?.remove();
+                const errDiv = document.createElement('div');
+                errDiv.className = 'chat-msg ai';
+                errDiv.innerHTML = '<div class="chat-bubble">Sorry, something went wrong. Please try again.</div>';
+                msgs.appendChild(errDiv);
+            })
+            .finally(() => { btn.disabled = false; });
+        }
+
+        window.__reports = {{ reports | tojson }};
+
+        {% if latest_full_summary %}
+        allArticles = {{ latest_full_summary | tojson }};
+        {% endif %}
+
+        (function() {
+            const sel = document.getElementById('industryFilter');
+            if (allArticles && allArticles.domains) {
+                allArticles.domains.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d.name; opt.textContent = d.name + ' (' + d.count + ')';
+                    sel.appendChild(opt);
+                });
+            }
+        })();
+        renderTodayPage();
+
+        renderArchive();
+        populateArchiveYears();
+        loadDomains();
+        fetch('/api/status').then(r => r.json()).then(data => { if (data.is_running) pollUntilDone(); });
+        fetch('/api/schedule').then(r => r.json()).then(data => {
+            if (data.next_run_display) {
+                document.getElementById('nextRunInfo').textContent = data.next_run_display;
+            } else {
+                document.getElementById('nextRunInfo').textContent = 'Not scheduled';
+            }
+            {% raw %}
+            if (data.last_run) {
+                document.getElementById('prevRun').textContent = 'Previous Run: ' + data.last_run;
+            }
+            {% endraw %}
+        });
+
+        (function() {
+            if (localStorage.getItem('notifCollapsed') === '1') {
+                document.getElementById('notifBody').classList.remove('open');
+                document.getElementById('notifToggle').classList.remove('open');
+            }
+            refreshNotifSummary();
+        })();
+    </script>
+</body>
+</html>
