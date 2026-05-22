@@ -135,34 +135,45 @@ def save_alert(session, alert: dict):
     return True
 
 
-def get_top_articles(session, limit=50, min_score=0):
-    return session.query(Article).filter(
-        Article.final_score >= min_score
-    ).order_by(Article.final_score.desc()).limit(limit).all()
+def get_latest_articles(session, limit=50):
+    return session.query(Article).order_by(
+        Article.published.desc().nullslast()
+    ).limit(limit).all()
 
 
-def get_articles_by_industry(session, industry: str, limit=20):
-    all_articles = session.query(Article).filter(
-        Article.final_score > 0
-    ).order_by(Article.final_score.desc()).limit(200).all()
+def get_articles_by_industry(session, industry: str, limit=30):
+    all_articles = session.query(Article).order_by(
+        Article.published.desc().nullslast()
+    ).limit(200).all()
     return [
         a for a in all_articles
         if a.industry_tags and industry.lower() in [t.lower() for t in a.industry_tags]
     ][:limit]
 
 
-def get_articles_by_region(session, region: str, limit=20):
-    all_articles = session.query(Article).filter(
-        Article.final_score > 0
-    ).order_by(Article.final_score.desc()).limit(200).all()
+def get_articles_by_region(session, region: str, limit=30):
+    all_articles = session.query(Article).order_by(
+        Article.published.desc().nullslast()
+    ).limit(200).all()
     return [
         a for a in all_articles
         if a.region_tags and any(region.lower() in r.lower() for r in a.region_tags)
     ][:limit]
 
 
+def get_articles_by_industry_and_region(session, industry: str, region: str, limit=30):
+    all_articles = session.query(Article).order_by(
+        Article.published.desc().nullslast()
+    ).limit(300).all()
+    return [
+        a for a in all_articles
+        if (not industry or (a.industry_tags and industry.lower() in [t.lower() for t in a.industry_tags]))
+        and (not region or region == "Global" or (a.region_tags and any(region.lower() in r.lower() for r in a.region_tags)))
+    ][:limit]
+
+
 def get_source_breakdown(session):
-    rows = session.query(Article.source).filter(Article.final_score > 0).all()
+    rows = session.query(Article.source).all()
     counts = {}
     for (source,) in rows:
         key = source.split(":")[0] if ":" in source else source
@@ -172,8 +183,8 @@ def get_source_breakdown(session):
 
 def get_entity_mentions(session, limit=15):
     rows = session.query(Article.key_entities).filter(
-        Article.final_score > 0, Article.key_entities != None
-    ).limit(100).all()
+        Article.key_entities != None
+    ).limit(200).all()
     counts = {}
     for (entities,) in rows:
         if entities:

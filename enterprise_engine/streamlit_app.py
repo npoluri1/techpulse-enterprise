@@ -24,8 +24,9 @@ st.set_page_config(
 from enterprise_engine.config import config
 from enterprise_engine.pipeline import EnterprisePipeline
 from enterprise_engine.models import (
-    init_db, get_session, get_top_articles, get_articles_by_industry,
-    get_articles_by_region, get_alerts, get_pipeline_stats,
+    init_db, get_session, get_latest_articles, get_articles_by_industry,
+    get_articles_by_region, get_articles_by_industry_and_region,
+    get_alerts, get_pipeline_stats,
     get_source_breakdown, get_entity_mentions,
 )
 from enterprise_engine.industry_categories import get_all_industries, INDUSTRY_CATEGORIES
@@ -217,6 +218,8 @@ if "results" not in st.session_state:
     st.session_state.results = None
 if "selected_country" not in st.session_state:
     st.session_state.selected_country = "Global"
+if "selected_industry" not in st.session_state:
+    st.session_state.selected_industry = "All"
 
 total_industries = sum(len(v["sub_industries"]) for v in INDUSTRY_CATEGORIES.values())
 
@@ -234,11 +237,19 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.markdown("### Country Focus")
+    st.markdown("### Filters")
     country_keys = list(config.COUNTRIES.keys())
     selected_idx = country_keys.index(st.session_state.selected_country) if st.session_state.selected_country in country_keys else 0
-    selected_country = st.selectbox("Filter by country", country_keys, index=selected_idx, label_visibility="collapsed")
+    selected_country = st.selectbox("Country", country_keys, index=selected_idx, label_visibility="collapsed")
     st.session_state.selected_country = selected_country
+
+    all_industries_list = sorted(set(i["industry"] for i in get_all_industries()))
+    ind_idx = 0
+    if st.session_state.selected_industry in all_industries_list:
+        ind_idx = all_industries_list.index(st.session_state.selected_industry) + 1
+    industry_opts = ["All"] + all_industries_list
+    selected_industry = st.selectbox("Industry", industry_opts, index=ind_idx, label_visibility="collapsed")
+    st.session_state.selected_industry = selected_industry
 
     col1, col2 = st.columns(2)
     with col1:
@@ -279,6 +290,7 @@ with st.sidebar:
         ("Database", "SQLite"),
         ("Sources", "NewsAPI + RSS"),
         ("Country", st.session_state.selected_country),
+        ("Industry", st.session_state.selected_industry),
     ]:
         st.markdown(f"**{label}** `{value}`")
 
@@ -326,10 +338,16 @@ with tabs[0]:
     try:
         session = get_session()
         region = st.session_state.selected_country
-        if region and region != "Global":
-            articles = get_articles_by_region(session, region, limit=15)
+        industry = st.session_state.selected_industry
+        if industry and industry != "All":
+            if region and region != "Global":
+                articles = get_articles_by_industry_and_region(session, industry, region, limit=30)
+            else:
+                articles = get_articles_by_industry(session, industry, limit=30)
+        elif region and region != "Global":
+            articles = get_articles_by_region(session, region, limit=30)
         else:
-            articles = get_top_articles(session, limit=15)
+            articles = get_latest_articles(session, limit=30)
         sources = get_source_breakdown(session)
         entities = get_entity_mentions(session)
         session.close()
@@ -339,7 +357,7 @@ with tabs[0]:
             if sources:
                 st.markdown("### Top Sources")
                 src_df = pd.DataFrame(sources[:6], columns=["Source", "Count"])
-                fig = px.pie(src_df, values="Count", names="Source", title="Articles by Source",
+                fig = px.pie(src_df, values="Count", names="Source",
                             color_discrete_sequence=px.colors.sequential.Tealgrn)
                 fig.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)",
                                 font_color="#c0c0d0", height=280, margin=dict(l=0, r=0, t=40, b=0),
@@ -358,37 +376,25 @@ with tabs[0]:
                                 height=280, margin=dict(l=0, r=0, t=40, b=0), showlegend=False)
                 st.plotly_chart(fig, width='stretch')
 
-        st.markdown("### Top Articles by Relevance")
+        st.markdown(f"### Latest News {f'· {region}' if region != 'Global' else ''}{f' · {industry}' if industry != 'All' else ''}")
         if articles:
-            for a in articles[:10]:
-                score = a.final_score or 0
-                color = "#00d4aa" if score >= 75 else "#f0a030" if score >= 50 else "#666"
-                bar_pct = min(score, 100)
+            for a in articles[:25]:
                 tags = ", ".join(a.industry_tags[:3]) if a.industry_tags else "General"
                 regions = ", ".join(a.region_tags[:2]) if a.region_tags else ""
-                summary = (a.summary[:150] + "...") if a.summary else ""
+                summary = (a.summary[:200] + "...") if a.summary else ""
+                published = a.published.strftime("%b %d, %Y") if a.published else ""
                 st.markdown(f"""
                 <div class="card" style="padding: 14px 18px;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px;">
-                        <div style="flex: 1; min-width: 0;">
-                            <a href="{a.url}" target="_blank" style="font-weight: 600; font-size: 1.05rem;">{a.title}</a>
-                            <div style="color: #888; font-size: 0.8rem; margin-top: 6px;">
-                                {a.source}  ·  {tags}{'  ·  ' + regions if regions else ''}
-                            </div>
-                            <div style="color: #666; font-size: 0.8rem; margin-top: 4px;">{summary}</div>
-                            <div style="margin-top: 8px; height: 4px; background: #2a2a5a; border-radius: 2px; max-width: 300px;">
-                                <div style="height: 100%; width: {bar_pct}%; background: {color}; border-radius: 2px;"></div>
-                            </div>
-                        </div>
-                        <div style="text-align: center; min-width: 50px;">
-                            <div style="font-size: 1.4rem; font-weight: 800; color: {color};">{score:.0f}</div>
-                            <div style="color: #555; font-size: 0.65rem; letter-spacing: 1px;">SCORE</div>
-                        </div>
+                    <a href="{a.url}" target="_blank" style="font-weight: 600; font-size: 1.05rem;">{a.title}</a>
+                    <div style="color: #888; font-size: 0.8rem; margin-top: 4px;">
+                        {a.source}{' · ' + published if published else ''}{' · ' + regions if regions else ''}
                     </div>
+                    <div style="color: #888; font-size: 0.8rem; margin-top: 2px;">{tags}</div>
+                    <div style="color: #666; font-size: 0.85rem; margin-top: 6px;">{summary}</div>
                 </div>
                 """, unsafe_allow_html=True)
         else:
-            st.info("No articles indexed yet. Run the pipeline first.")
+            st.info("No articles found. Select a different country/industry or run the pipeline first.")
     except Exception as e:
         st.error(f"Error loading articles: {e}")
 

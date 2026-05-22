@@ -34,7 +34,7 @@ class FreeConfig:
     # === PIPELINE ===
     PIPELINE_INTERVAL_HOURS: int = 6
     MAX_ARTICLES_PER_CYCLE: int = 300
-    CURATION_THRESHOLD: float = 40.0
+    CURATION_THRESHOLD: float = 0.0
     ALERT_THRESHOLD: float = 75.0
 
     # === FREE SOURCES ===
