@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import time
 from typing import List, Dict, Optional
 
 from enterprise_engine.config import config
@@ -10,10 +11,12 @@ logger = logging.getLogger("EnterpriseRAG")
 
 try:
     from google import genai as new_genai
+    from google.genai import errors as genai_errors
     HAS_GEMINI = True
 except ImportError:
     HAS_GEMINI = False
     new_genai = None
+    genai_errors = None
     logger.warning("google-genai not installed. Try: pip install google-genai")
 
 
@@ -21,14 +24,15 @@ class FreeRAGEngine:
     def __init__(self, vector_store: FreeVectorStore):
         self.vector_store = vector_store
         self.llm = None
+        self.fallback_models = ["gemini-2.0-flash", "gemini-2.5-flash"]
         self._init_llm()
 
     def _init_llm(self):
         if HAS_GEMINI and config.GEMINI_API_KEY:
             try:
                 self.client = new_genai.Client(api_key=config.GEMINI_API_KEY)
-                self.llm = config.LLM_MODEL
-                logger.info(f"[LLM] Gemini initialized: {config.LLM_MODEL}")
+                self.llm = self.fallback_models[0]
+                logger.info(f"[LLM] Gemini initialized: {self.llm}")
             except Exception as e:
                 logger.error(f"[LLM] Gemini init failed: {e}")
                 self.llm = None
@@ -37,22 +41,41 @@ class FreeRAGEngine:
             logger.warning("[LLM] No Gemini API key. Using template-based responses.")
             self.client = None
 
-    def _call_llm(self, prompt: str) -> str:
+    def _call_llm(self, prompt: str, retries: int = 3) -> str:
         if self.client is None or self.llm is None:
             return "LLM not available. Please set GEMINI_API_KEY in .env"
-        try:
-            resp = self.client.models.generate_content(
-                model=self.llm,
-                contents=prompt,
-                config={
-                    "temperature": config.LLM_TEMPERATURE,
-                    "max_output_tokens": config.LLM_MAX_TOKENS,
-                }
-            )
-            return resp.text if resp and hasattr(resp, 'text') else str(resp)
-        except Exception as e:
-            logger.error(f"[LLM] Generation failed: {e}")
-            return f"[LLM Error: {e}]"
+        last_error = None
+        models_to_try = [self.llm] + [m for m in self.fallback_models if m != self.llm]
+        for model in models_to_try:
+            for attempt in range(retries):
+                try:
+                    resp = self.client.models.generate_content(
+                        model=model,
+                        contents=prompt,
+                        config={
+                            "temperature": config.LLM_TEMPERATURE,
+                            "max_output_tokens": config.LLM_MAX_TOKENS,
+                        }
+                    )
+                    self.llm = model
+                    return resp.text if resp and hasattr(resp, 'text') else str(resp)
+                except Exception as e:
+                    last_error = e
+                    err_str = str(e)
+                    if "503" in err_str or "UNAVAILABLE" in err_str:
+                        wait = 2 ** attempt
+                        logger.warning(f"[LLM] {model} congested, retrying in {wait}s (attempt {attempt+1}/{retries})")
+                        time.sleep(wait)
+                    elif "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                        wait = 5 * (attempt + 1)
+                        logger.warning(f"[LLM] {model} rate limited, retrying in {wait}s")
+                        time.sleep(wait)
+                    else:
+                        logger.warning(f"[LLM] {model} failed: {err_str[:100]}, trying next model")
+                        break
+            logger.info(f"[LLM] Falling back to next model after {model} exhausted")
+        logger.error(f"[LLM] All models failed: {last_error}")
+        return f"[LLM Error: {last_error}]"
 
     def ask(self, question: str, industry: Optional[str] = None,
             context: Optional[str] = None) -> dict:

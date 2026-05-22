@@ -34,6 +34,16 @@ from enterprise_engine.industry_categories import get_all_industries, INDUSTRY_C
 init_db()
 pipeline = EnterprisePipeline()
 
+# Auto-run pipeline if database is empty
+from enterprise_engine.models import Article
+session = get_session()
+count = session.query(Article).count()
+session.close()
+if count == 0:
+    with st.spinner("First run — auto-fetching intelligence..."):
+        result = pipeline.run_full()
+        st.session_state.results = result
+
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
@@ -253,7 +263,7 @@ with st.sidebar:
 
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("▶ Run Pipeline", width='stretch'):
+        if st.button("▶ Run Pipeline", use_container_width=True):
             st.session_state.pipeline_running = True
             with st.spinner(f"Running intelligence pipeline ({selected_country})..."):
                 result = pipeline.run_full(country=selected_country)
@@ -261,7 +271,7 @@ with st.sidebar:
                 st.session_state.pipeline_running = False
             st.rerun()
     with col2:
-        if st.button("🔄 Refresh", width='stretch'):
+        if st.button("🔄 Refresh", use_container_width=True):
             st.rerun()
 
     try:
@@ -413,7 +423,7 @@ with tabs[1]:
         filtered = [i for i in industries if selected_sector == "All" or i["sector"] == selected_sector]
         selected_industry = st.selectbox("Industry", sorted(set(i["industry"] for i in filtered)))
 
-    if st.button("Search Industry", width='stretch'):
+    if st.button("Search Industry", use_container_width=True):
         with st.spinner(f"Searching {selected_industry}..."):
             from enterprise_engine.vector_store import FreeVectorStore
             vs = FreeVectorStore()
@@ -542,7 +552,7 @@ with tabs[3]:
                                      ["All"] + sorted(set(i["industry"] for i in get_all_industries())),
                                      label_visibility="collapsed")
 
-    if question and st.button("Send", width='stretch'):
+    if question and st.button("Send", use_container_width=True):
         st.session_state.chat_history.append({"role": "user", "content": question})
         with st.spinner("Analyzing..."):
             result = pipeline.rag.ask(
@@ -557,7 +567,7 @@ with tabs[3]:
         st.rerun()
 
     if st.session_state.chat_history:
-        if st.button("Clear Chat", width='stretch'):
+        if st.button("Clear Chat", use_container_width=True):
             st.session_state.chat_history = []
             st.rerun()
 
