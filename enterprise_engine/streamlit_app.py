@@ -23,7 +23,7 @@ st.set_page_config(
 
 from enterprise_engine.config import config
 from enterprise_engine.pipeline import EnterprisePipeline
-from enterprise_engine.models import init_db, get_session, get_top_articles, get_alerts, get_pipeline_stats
+from enterprise_engine.models import init_db, get_session, get_top_articles, get_articles_by_industry, get_alerts, get_pipeline_stats
 from enterprise_engine.industry_categories import get_all_industries, INDUSTRY_CATEGORIES
 
 init_db()
@@ -365,6 +365,14 @@ with tabs[1]:
             from enterprise_engine.vector_store import FreeVectorStore
             vs = FreeVectorStore()
             results = vs.search_by_industry(selected_industry, k=10)
+            if not results:
+                session = get_session()
+                db_results = get_articles_by_industry(session, selected_industry)
+                session.close()
+                results = [
+                    {"title": a.title, "url": a.url, "source": a.source, "final_score": a.final_score or 0}
+                    for a in db_results
+                ]
             if results:
                 st.markdown(f"**{len(results)}** articles found for '{selected_industry}'")
                 for r in results:

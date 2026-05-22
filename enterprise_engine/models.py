@@ -141,6 +141,16 @@ def get_top_articles(session, limit=50, min_score=0):
     ).order_by(Article.final_score.desc()).limit(limit).all()
 
 
+def get_articles_by_industry(session, industry: str, limit=20):
+    all_articles = session.query(Article).filter(
+        Article.final_score > 0
+    ).order_by(Article.final_score.desc()).limit(200).all()
+    return [
+        a for a in all_articles
+        if a.industry_tags and industry.lower() in [t.lower() for t in a.industry_tags]
+    ][:limit]
+
+
 def get_alerts(session, limit=20, unsent_only=False):
     q = session.query(Alert).order_by(Alert.severity.desc(), Alert.created_at.desc())
     if unsent_only:
