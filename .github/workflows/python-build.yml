@@ -37,7 +37,14 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.venv,enterprise_engine,__pycache__
 
     - name: Check package structure
-      run: python -c "import sys; sys.path.insert(0, '.'); from src.utils import setup_logging, load_env_file; print('utils OK'); from src.agent import NewsTechAgent; print('agent OK')"
+      run: python -c "
+import sys; sys.path.insert(0, '.')
+from src.utils import setup_logging, load_env_file; print('utils OK')
+from src.curator import Curator; print('curator OK')
+from src.formatter import Formatter; print('formatter OK')
+import src.notifiers; print('notifiers OK')
+print('All core modules OK')
+"
 
     - name: Validate config
       run: python -c "import yaml; cfg = yaml.safe_load(open('config.yaml')); print(f'{len(cfg.get(\"domains\", {}))} domains')"
