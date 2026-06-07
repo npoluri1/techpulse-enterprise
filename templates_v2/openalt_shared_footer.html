@@ -1,0 +1,40 @@
+<footer style="border-top:1px solid var(--border-color);padding:40px 20px 20px;margin-top:32px;font-size:0.75rem;color:var(--text-secondary);">
+<div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;">
+<div>
+<h4 style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);margin-bottom:10px;font-weight:600;">Browse</h4>
+<a href="/browse" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Tools</a>
+<a href="/categories" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Categories</a>
+<a href="/self-hosted" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Self-hosted</a>
+<a href="/tech-stacks" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Tech Stacks</a>
+<a href="/tags" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Tags</a>
+<a href="/licenses" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Licenses</a>
+<a href="/discount-codes" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Discount Codes</a>
+</div>
+<div>
+<h4 style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);margin-bottom:10px;font-weight:600;">Quick Links</h4>
+<a href="/contact" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Contact us</a>
+<a href="/submit" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Submit</a>
+<a href="/blog" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Blog</a>
+<a href="/about" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">About Us</a>
+<a href="/advertise" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Advertise</a>
+</div>
+<div>
+<h4 style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);margin-bottom:10px;font-weight:600;">Other Products</h4>
+<a href="https://shadcnblocks.com" target="_blank" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Shadcnblocks.com</a>
+<a href="https://dirstarter.com" target="_blank" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">Dirstarter</a>
+<a href="https://terminaldock.com" target="_blank" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">TerminalDock</a>
+<a href="https://neroalternative.com" target="_blank" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">EuroAlternative</a>
+<a href="https://devsuite.ai" target="_blank" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">DevSuite</a>
+<a href="https://openads.com" target="_blank" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">OpenAds</a>
+</div>
+<div>
+<h4 style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);margin-bottom:10px;font-weight:600;">Popular Software</h4>
+{% for s in popular_software_list %}
+<a href="/browse" style="display:block;padding:3px 0;color:var(--text-secondary);text-decoration:none;font-size:0.78rem;">{{ s.name }}</a>
+{% endfor %}
+</div>
+</div>
+<div style="text-align:center;padding:20px;border-top:1px solid var(--border-color);margin-top:32px;font-size:0.7rem;color:var(--text-tertiary);">
+NovaPulse AI · Discover the best open source tools.
+</div>
+</footer>

@@ -63,6 +63,25 @@ class FreeConfig:
         "https://www.reddit.com/r/LocalLLaMA/.rss",
         "https://www.reddit.com/r/cybersecurity/.rss",
         "https://www.reddit.com/r/singularity/.rss",
+        "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-april-2026",
+        "https://deepmind.google/blog",
+        "https://blogs.nvidia.com/blog/feed/",
+        "https://openai.com/index/",
+        "https://www.therobotreport.com/feed/",
+        "https://indianexpress.com/section/technology/artificial-intelligence/feed/",
+        "https://techxplore.com/rss-feed/news/artificial-intelligence/",
+        "https://www.sciencedaily.com/rss/computers_math/robotics.xml",
+        "https://phys.org/rss-feed/space-news/",
+        "https://www.technologyreview.com/feed/",
+        "https://thenextweb.com/feed/",
+        "https://www.vox.com/rss/index.xml",
+        "https://aiwire.ai/feed/",
+        "https://quantumnews.ai/feed/",
+        "https://newatlas.com/robotics/feed/",
+        "https://www.producthunt.com/feed",
+        "https://www.superhuman.ai/feed/",
+        "https://aibriefs.news/feed/",
+        "https://feeds.feedburner.com/omniscientmedia",
     ]
 
     NEWSAPI_QUERIES: list = [
@@ -73,6 +92,16 @@ class FreeConfig:
         "autonomous vehicles", "space technology", "biotech",
         "renewable energy", "fintech", "blockchain",
         "electric vehicles", "5G", "IoT", "digital transformation",
+        "agentic AI", "AI agents", "multi-agent systems",
+        "humanoid robot", "AGI", "artificial general intelligence",
+        "AI model release", "large language model",
+        "EU AI Act", "AI governance",
+        "AI coding agent", "AI software engineering",
+        "physical AI", "embodied AI",
+        "quantum AI", "post-quantum cryptography",
+        "generative AI video", "multimodal AI",
+        "product launch tech", "startup product hunt",
+        "AI newsletter", "curated AI news",
     ]
 
     # === COUNTRY / REGION SETTINGS ===

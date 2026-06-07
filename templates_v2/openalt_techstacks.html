@@ -1,0 +1,711 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Tech Stacks - NovaPulse AI</title>
+<style>
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px;justify-content:center}
+.tag-item{padding:5px 14px;border-radius:20px;border:1px solid var(--border-color);background:var(--card-bg);font-size:0.75rem;color:var(--text-secondary);text-decoration:none;transition:all 0.15s}
+.tag-item:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,113,227,0.05)}
+.stack-section{margin-bottom:40px;scroll-margin-top:80px}
+.stack-section h2{font-size:1.15rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.stack-section .sub{font-size:0.82rem;color:var(--text-secondary);margin-bottom:14px}
+.stack-detail-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:20px;margin-bottom:12px;transition:all 0.15s}
+.stack-detail-card:hover{box-shadow:var(--shadow-sm)}
+.stack-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.stack-header .title{font-weight:600;font-size:0.9rem}
+.stack-header .badge-stack{padding:3px 10px;border-radius:12px;font-size:0.62rem;font-weight:600;background:var(--accent);color:#fff}
+.stack-desc{font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin-bottom:10px}
+.stack-tools{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.stack-tools .tool-chip{padding:3px 10px;border-radius:6px;background:var(--bg-tertiary);font-size:0.68rem;color:var(--text-secondary)}
+.flow-diagram{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:10px;padding:16px;margin:10px 0;font-family:monospace;font-size:0.72rem;line-height:1.6;overflow-x:auto;white-space:pre;color:var(--text-primary)}
+.code-block{background:#1e1e1e;border-radius:10px;padding:14px;margin:8px 0;font-family:'SF Mono','Fira Code',monospace;font-size:0.72rem;line-height:1.5;overflow-x:auto;white-space:pre;color:#d4d4d4;position:relative}
+.code-block .lang-tag{position:absolute;top:6px;right:10px;font-size:0.6rem;color:#888;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px}
+.kv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin:8px 0}
+.kv-item{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;padding:10px}
+.kv-key{font-size:0.62rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+.kv-val{font-size:0.8rem;font-weight:600;color:var(--text-primary)}
+.sticky-nav{position:sticky;top:72px;z-index:10;background:var(--nav-bg);backdrop-filter:blur(20px);padding:10px 0;margin-bottom:20px;display:flex;gap:6px;overflow-x:auto;flex-wrap:nowrap;border-bottom:1px solid var(--border-color)}
+.sticky-nav a{padding:5px 14px;border-radius:8px;font-size:0.72rem;font-weight:500;color:var(--text-secondary);text-decoration:none;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
+.sticky-nav a:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.sticky-nav a.active{background:var(--accent);color:#fff}
+.impl-guide{background:var(--bg-primary);border:1px dashed var(--border-color-strong);border-radius:var(--radius-md);padding:18px;margin:12px 0 8px}
+.impl-guide h4{font-size:0.78rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.impl-guide h5{font-size:0.7rem;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin:10px 0 4px}
+.impl-guide p,.impl-guide li{font-size:0.72rem;color:var(--text-secondary);line-height:1.5}
+.impl-guide ul{padding-left:14px;margin:4px 0}
+.impl-guide li{margin-bottom:2px}
+.impl-step{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border-color)}
+.impl-step:last-child{border:none}
+.impl-step .num{font-weight:700;color:var(--accent);font-size:0.72rem;min-width:18px}
+.impl-step .text{font-size:0.72rem;color:var(--text-secondary);line-height:1.4}
+.ref-section{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.ref-link{padding:4px 10px;border-radius:6px;background:rgba(0,113,227,0.06);border:1px solid rgba(0,113,227,0.12);font-size:0.65rem;color:var(--accent);text-decoration:none;transition:all 0.15s;display:inline-flex;align-items:center;gap:4px}
+.ref-link:hover{background:rgba(0,113,227,0.12);border-color:var(--accent)}
+.ref-link .type-tag{font-size:0.55rem;padding:1px 5px;border-radius:3px;background:rgba(0,113,227,0.15);color:var(--accent);text-transform:uppercase}
+.theory-box{background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;padding:12px;margin:6px 0;font-size:0.72rem;color:var(--text-secondary);line-height:1.6}
+.tip-box{padding:8px 12px;border-radius:8px;margin:6px 0;font-size:0.72rem;line-height:1.4;display:flex;gap:8px;align-items:flex-start}
+.tip-box.tip{background:rgba(52,199,89,0.06);border:1px solid rgba(52,199,89,0.15);color:var(--accent-green)}
+.tip-box.warn{background:rgba(255,149,0,0.06);border:1px solid rgba(255,149,0,0.15);color:var(--accent-orange)}
+.tip-box.caution{background:rgba(255,59,48,0.06);border:1px solid rgba(255,59,48,0.15);color:var(--accent-red)}
+.tip-box .icon{font-size:0.85rem;flex-shrink:0}
+</style>
+</head>
+<body>
+{% set nav_active = 'techstacks' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link{{ ' active' if nav_active == 'techstacks' else '' }}">Tech Stacks</a>
+<a href="/tags" class="nav-link{{ ' active' if nav_active == 'tags' else '' }}">Tags</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>Tech Stacks & Architectures</h1><p>Comprehensive technology stacks, AI architectures, and tool combinations with diagrams, code, and configurations.</p></div>
+
+<div class="app-container">
+
+<!-- TAG CLOUD + QUICK CATEGORIES -->
+<div class="tag-cloud">
+{% for t in tags[:20] %}<a href="/tags" class="tag-item" style="font-size:{{ 0.65 + t.count/200 }}rem">#{{ t.name }}</a>{% endfor %}
+</div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+<a href="#ai-ml" class="active">🤖 AI/ML</a>
+<a href="#agentic">🧠 Agentic AI</a>
+<a href="#rag">📚 RAG</a>
+<a href="#vector">🔍 Vector</a>
+<a href="#mcp">🔌 MCP</a>
+<a href="#langgraph">🕸️ LangGraph</a>
+<a href="#langchain">⛓️ LangChain</a>
+<a href="#quantum">⚛️ Quantum</a>
+<a href="#robotics">🤖 Robotics AI</a>
+<a href="#web">🌐 Web</a>
+<a href="#devops">⚙️ DevOps</a>
+<a href="#data">📊 Data</a>
+<a href="#saas">☁️ SaaS</a>
+<a href="#observability">📈 Observability</a>
+</nav>
+
+{% set stacks = [
+  {
+    "id":"ai-ml","name":"🤖 AI/ML Stack","desc":"Full-stack AI/ML development pipeline from training to deployment",
+    "badge":"Production Ready",
+    "detail":"Build, train, and deploy machine learning models at scale. Covers data preprocessing, model training, serving, and monitoring.",
+    "tools":["Ollama","LangChain","HuggingFace","MLflow","TensorFlow","PyTorch","Weights & Biases","Ray"],
+    "flow":["Data Pipeline → Feature Store → Model Training → Evaluation → Registry → Serving → Monitoring"],
+    "code":"# MLflow training pipeline\nimport mlflow\nimport mlflow.sklearn\nfrom sklearn.ensemble import RandomForestClassifier\n\nwith mlflow.start_run():\n    model = RandomForestClassifier(n_estimators=100)\n    model.fit(X_train, y_train)\n    accuracy = model.score(X_test, y_test)\n    mlflow.log_metric(\"accuracy\", accuracy)\n    mlflow.sklearn.log_model(model, \"model\")",
+    "code_lang":"Python",
+    "config":"# Ollama model config\nmodel: llama3.2\nparameters:\n  temperature: 0.7\n  top_p: 0.9\n  max_tokens: 2048\nsystem: You are an AI assistant specialized in technical topics.",
+    "config_lang":"YAML",
+    "kv":{"Frameworks":"PyTorch, TensorFlow, JAX","Orchestration":"Ray, Kubeflow, MLflow","Hardware":"NVIDIA A100, H100, TPU v5","Monitoring":"Prometheus, Grafana, Evidently"},
+    "theory":"Machine learning is a subset of AI where systems learn patterns from data without explicit programming. The ML stack consists of data ingestion pipelines, feature engineering, model training (supervised/unsupervised/reinforcement), hyperparameter tuning, model evaluation, deployment via REST/gRPC endpoints, and continuous monitoring for drift. Deep learning extends this with multi-layer neural networks (CNNs for vision, RNNs/Transformers for sequences, GNNs for graphs).",
+    "diagram":["┌────────────────────────────────────────────────────────────────────┐","│                    AI/ML Production Pipeline                         │","├──────────┬──────────┬──────────┬──────────┬──────────┬──────────────┤","│   Data   │ Feature  │  Model   │  Eval &  │ Serving  │  Monitoring  │","│  Ingest  │   Store  │ Training │ Registry │  API     │  & Drift     │","├──────────┼──────────┼──────────┼──────────┼──────────┼──────────────┤","│ Kafka   │ Feast    │ PyTorch  │ MLflow   │ Torch    │ Prometheus   │","│ Airflow │ Tecton   │ TF + K8s │ W&B      │ Serve    │ Grafana      │","│ Spark   │ SageMaker│ Ray Train│ DVC      │ BentoML  │ Evidently    │","└──────────┴──────────┴──────────┴──────────┴──────────┴──────────────┘"],
+    "steps":["Set up data pipeline: Apache Kafka + Airflow for streaming and batch ingestion from sources (S3, GCS, databases)","Build feature store: Use Feast or Tecton to define, serve, and manage features with point-in-time correctness for training/serving parity","Implement training pipeline: PyTorch Lightning or TF with Ray Train for distributed training across multiple GPUs/nodes","Model tracking: MLflow or W&B for experiment tracking, hyperparameter logging, artifact storage, and model registry","Deploy model: TorchServe, BentoML, or TF Serving via Kubernetes with autoscaling and canary deployments","Set up monitoring: Prometheus metrics (latency, throughput) + Evidently for data/model drift detection + alerts"],
+    "best_practices":["Separate training and serving pipelines to avoid coupling","Use feature store to eliminate training/serving skew","Implement A/B testing framework for model comparisons","Set up automated retraining triggers based on drift thresholds","Use Docker + K8s for reproducible deployments"],
+    "pitfalls":["Training/serving skew from inconsistent feature computation","Data leakage from improper train/test splitting","Concept drift causing model degradation over time","Overfitting due to insufficient regularization or validation strategy"],
+    "refs":["https://mlflow.org/docs/latest/index.html|MLflow Docs|official","https://pytorch.org/tutorials/|PyTorch Tutorials|tutorial","https://www.kubeflow.org/docs/|Kubeflow Docs|official","https://docs.ray.io/en/latest/ray-air/getting-started.html|Ray AI Runtime|tutorial","https://evidentlyai.com/blog/ml-monitoring-guide|ML Monitoring Guide|blog","https://towardsdatascience.com/mlops-pipeline-best-practices-2025|MLOps Pipeline Best Practices|blog","https://www.databricks.com/blog/mlops-tools-2025|Databricks MLOps Tools Guide|blog","https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/|Hands-On ML (Geron)|book","https://www.manning.com/books/machine-learning-engineering|ML Engineering (Burkov)|book"]
+  },
+  {
+    "id":"agentic","name":"🧠 Agentic AI Stack","desc":"Build autonomous AI agents with reasoning, tool use, and multi-agent coordination",
+    "badge":"Cutting Edge",
+    "detail":"Agentic AI enables LLMs to reason, plan, use tools, and execute tasks autonomously. Supports multi-agent collaboration, memory, and human-in-the-loop.",
+    "tools":["LangGraph","AutoGen","CrewAI","OpenAI Agents SDK","Anthropic Claude","Semantic Kernel","Agent Protocol"],
+    "flow":["User Input → Agent Orchestrator → Tool Selection → Execution → Memory Update → Response → Human Feedback Loop"],
+    "code":"# LangGraph multi-agent workflow\nfrom langgraph.graph import StateGraph, END\nfrom typing import TypedDict, List\n\nclass AgentState(TypedDict):\n    messages: List[dict]\n    next_agent: str\n\nworkflow = StateGraph(AgentState)\nworkflow.add_node(\"researcher\", research_agent)\nworkflow.add_node(\"coder\", code_agent)\nworkflow.add_node(\"critic\", critic_agent)\nworkflow.set_entry_point(\"researcher\")\nworkflow.add_conditional_edges(\"researcher\", router)\nworkflow.add_edge(\"coder\", \"critic\")\nworkflow.add_edge(\"critic\", END)\napp = workflow.compile()",
+    "code_lang":"Python",
+    "config":"# CrewAI agent config\nresearch_agent:\n  role: Senior Research Analyst\n  goal: Find latest AI developments\n  backstory: Expert AI researcher\n  tools:\n    - web_search\n    - browse_website\n  llm: anthropic/claude-sonnet-4\n\ncoding_agent:\n  role: Senior Software Engineer\n  goal: Implement solutions\n  tools:\n    - write_code\n    - execute_python\n  allow_delegation: true",
+    "config_lang":"YAML",
+    "kv":{"Orchestration":"LangGraph, AutoGen, CrewAI","Models":"GPT-4o, Claude 4 Sonnet, Gemini 2.5","Patterns":"ReAct, Plan-Execute, Reflection","Memory":"Short-term, Long-term, Entity, Semantic"},
+    "theory":"Agentic AI refers to autonomous LLM-powered agents that perceive their environment, reason about goals, use tools, and take actions. The ReAct pattern (Reasoning + Acting) interleaves chain-of-thought reasoning with tool calls. Multi-agent systems (AutoGen, CrewAI) enable specialized agents to collaborate, delegate, and critique each other. Memory systems (short-term, long-term, entity, semantic) persist context across interactions. Human-in-the-loop patterns allow agents to request approval before executing critical actions.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────┐","│                        Agentic AI Architecture                              │","├─────────────────────────────────────────────────────────────────────────────┤","│  User Input →  Orchestrator →  Task Planner →  Tool Selector →  Executor   │","│                     ↓               ↓               ↓               ↓        │","│                Memory Store    LLM Call      API/Database   Code Runtime    │","│                     ↓               ↓               ↓               ↓        │","│                ←─────────────── Feedback / Reflection Loop ─────────────→  │","│                                                                             │","│  Multi-Agent: Researcher ↔ Coder ↔ Critic (with supervisor agent)          │","└─────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Define agent persona and system prompt with role, goal, backstory, and constraints","Implement ReAct loop: observe → think → act → observe, using LLM + tool registry","Set up tool catalog with descriptions for LLM function calling (search, code, APIs)","Add memory: BufferWindow for short-term, VectorStore for long-term, EntityStore for facts","Implement human-in-the-loop checkpoints for sensitive actions (approval gates)","Orchestrate multi-agent: define agent roles, handoff protocols, and supervisor routing"],
+    "best_practices":["Use structured outputs (JSON mode) for reliable tool call parsing","Limit tool access based on agent role (principle of least privilege)","Implement max iterations and timeout guards to prevent runaway agents","Log all agent actions and tool calls for audit/debugging"],
+    "pitfalls":["Hallucinated tool arguments (validate inputs before execution)","Infinite loops from unclear termination conditions","Context window overflow from accumulating long histories"],
+    "refs":["https://react-lm.github.io/|ReAct: Synergizing Reasoning and Acting|paper","https://microsoft.github.io/autogen/stable/|AutoGen Docs|official","https://docs.crewai.com/|CrewAI Docs|official","https://langchain-ai.github.io/langgraph/tutorials/multi_agent/multi-agent-collaboration/|Multi-Agent LangGraph|tutorial","https://www.anthropic.com/engineering/claude-think-tool|Claude Thinking Tool|blog","https://blog.langchain.dev/agentic-ai-patterns/|Agentic AI Patterns Guide|blog","https://www.deeplearning.ai/the-batch/how-agentic-ai-systems-work/|How Agentic AI Systems Work|blog","https://www.manning.com/books/ai-agents-in-action|AI Agents in Action (Kapoor)|book","https://www.oreilly.com/library/view/building-llm-applications/9781098161231/|Building LLM Applications (Auffarth)|book"]
+  },
+  {
+    "id":"rag","name":"📚 RAG Stack","desc":"Retrieval-Augmented Generation for grounding LLMs in your data",
+    "badge":"Enterprise",
+    "detail":"RAG enhances LLM outputs by retrieving relevant documents from a knowledge base before generating responses. Essential for enterprise AI applications requiring accuracy and citation.",
+    "tools":["ChromaDB","Pinecone","Weaviate","LlamaIndex","LangChain","Haystack","Qdrant","Cohere Rerank"],
+    "flow":["Document → Chunking → Embedding → Vector Store → Query → Retrieval → Reranking → LLM → Response with Citations"],
+    "code":"# RAG pipeline with ChromaDB + LangChain\nfrom langchain_community.vectorstores import Chroma\nfrom langchain_community.embeddings import HuggingFaceEmbeddings\nfrom langchain.chains import RetrievalQA\n\nembeddings = HuggingFaceEmbeddings(\n    model_name=\"all-MiniLM-L6-v2\"\n)\nvectorstore = Chroma(\n    collection_name=\"docs\",\n    embedding_function=embeddings,\n    persist_directory=\"./chroma_db\"\n)\nqa_chain = RetrievalQA.from_chain_type(\n    llm=llm,\n    retriever=vectorstore.as_retriever(\n        search_kwargs={\"k\": 5}\n    ),\n    return_source_documents=True\n)\nresult = qa_chain(\"What is RAG?\")",
+    "code_lang":"Python",
+    "config":"# ChromaDB collection config\ncollection:\n  name: technical_docs\n  embedding_function: all-MiniLM-L6-v2\n  distance: cosine\n  chunk_size: 512\n  chunk_overlap: 64\n\nretrieval:\n  top_k: 5\n  reranker: cohere/rerank-v3.5\n  hybrid_search: true",
+    "config_lang":"YAML",
+    "kv":{"Chunking":"Recursive, Semantic, Token-based","Embeddings":"text-embedding-3-small, BGE, E5","Stores":"ChromaDB, Pinecone, Weaviate","Rerankers":"Cohere, BGE-Reranker, Cross-Encoder"},
+    "theory":"Retrieval-Augmented Generation (RAG) grounds LLM outputs in external knowledge by retrieving relevant document chunks before generation. The pipeline: documents → chunking (recursive/semantic/token) → embedding (text-embedding-3-small, BGE) → vector DB → query → retrieval → reranking → LLM with context. Advanced patterns include: Self-RAG (retrieve on demand), HyDE (query expansion), Agentic RAG (agent decides when/where to retrieve), and CRAG (corrective RAG with self-reflection).",
+    "diagram":["┌──────────────────────────────────────────────────────────────────────┐","│                        RAG Pipeline Architecture                         │","├──────────────────────────────────────────────────────────────────────────┤","│  INDEXING: Doc → Chunker → Embedder → Vector DB                         │","│             ↓          ↓          ↓          ↓                           │","│         PDF/HTML  Recursive  all-MiniLM  ChromaDB                        │","│         Markdown  Semantic  text-emb-3  Pinecone                         │","│                         │                                               │","│  QUERY:    User Query → Query Embedding → Vector Search → Reranker       │","│                              ↓                               ↓           │","│                         + Original Query          + Top 3-5 docs          │","│                              ↓                               ↓           │","│                         └────────── LLM with Context ─────────────→     │","│                              ↓                                            │","│                      Response + Citations                                 │","└──────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Ingest documents: Parse PDFs/HTML/Markdown using Unstructured, LangChain loaders, or LlamaParse","Chunk strategy: RecursiveCharacterTextSplitter (chunk_size=512, overlap=64) for general text; Semantic chunker for code","Generate embeddings: sentence-transformers/all-MiniLM-L6-v2 (free) or text-embedding-3-small (OpenAI)","Store in vector DB: ChromaDB (local), Pinecone (managed), or Qdrant (self-hosted) with cosine distance","Query: embed user question, search top-k similar chunks (k=5), optionally apply reranker (Cohere/BGE)","Augment prompt: insert retrieved chunks into system prompt with citation markers, send to LLM"],
+    "best_practices":["Chunk overlap (10-15%) prevents context fragmentation at boundaries","Store metadata (source, page, date) with each chunk for citation tracking","Use MMR (Maximum Marginal Relevance) search for diverse results, not just similarity","Implement caching for frequent queries (Redis) to reduce latency/cost"],
+    "pitfalls":["Retrieved chunks exceed LLM context window (implement sliding window)","Low-quality embeddings from domain mismatch (fine-tune or use domain-specific models)","Hallucinated citations (verify sources, use citation markers in prompt)"],
+    "refs":["https://docs.llamaindex.ai/en/stable/|LlamaIndex Docs|official","https://python.langchain.com/docs/tutorials/rag/|LangChain RAG Tutorial|tutorial","https://www.pinecone.io/learn/rag/|Pinecone RAG Guide|blog","https://arxiv.org/abs/2005.11401|RAG Paper (Lewis et al.)|paper","https://docs.trychroma.com/|ChromaDB Docs|official","https://blog.langchain.dev/advanced-rag-techniques/|Advanced RAG Techniques|blog","https://towardsdatascience.com/rag-evaluation-metrics-2025|RAG Evaluation Metrics|blog","https://www.manning.com/books/retrieval-augmented-generation-in-practice|RAG in Practice (Briggs)|book","https://www.oreilly.com/library/view/llm-engineering/9781098161583/|LLM Engineering (Huyen)|book"]
+  },
+  {
+    "id":"vector","name":"🔍 Vector Database Stack","desc":"High-performance vector search for semantic similarity and ANN queries",
+    "badge":"Core Infrastructure",
+    "detail":"Vector databases store and index embeddings for fast approximate nearest neighbor (ANN) search. Critical for semantic search, recommendation systems, and RAG pipelines.",
+    "tools":["ChromaDB","Pinecone","Weaviate","Qdrant","Milvus","FAISS","pgvector","Voyager"],
+    "flow":["Raw Data → Embedding Model → Vector Index → ANN Search → Filter → Rerank → Results"],
+    "code":"# Vector search with Qdrant\nfrom qdrant_client import QdrantClient\nfrom qdrant_client.models import VectorParams, Distance\n\nclient = QdrantClient(\":memory:\")\nclient.create_collection(\n    collection_name=\"embeddings\",\n    vectors_config=VectorParams(\n        size=768, distance=Distance.COSINE\n    )\n)\n# Search\nresults = client.search(\n    collection_name=\"embeddings\",\n    query_vector=embedding,\n    limit=10,\n    score_threshold=0.75\n)",
+    "code_lang":"Python",
+    "config":"# Qdrant cluster config\nstorage:\n  type: local  # or s3\n  path: ./data\n\noptimizer:\n  default_segment_number: 2\n  memmap_threshold_kb: 20000\n\nhnsw:\n  m: 16\n  ef_construct: 100\n  full_scan_threshold: 10000",
+    "config_lang":"YAML",
+    "kv":{"Index Types":"HNSW, IVF, PQ, ScaNN","Distance":"Cosine, Euclidean, Dot Product","Quantization":"Binary, Scalar, Product","Filters":"Pre-filter, Post-filter, Hybrid"},
+    "theory":"Vector databases index high-dimensional embeddings for Approximate Nearest Neighbor (ANN) search. HNSW (Hierarchical Navigable Small World) is the most popular index — a multi-layer graph that balances speed vs accuracy. IVF (Inverted File Index) partitions vectors into clusters for faster search. Product Quantization (PQ) compresses vectors by splitting and quantizing sub-vectors. Hybrid search combines vector similarity with keyword/BM25 for better relevance. Each database offers different tradeoffs: ChromaDB (simplicity), Pinecone (managed), Qdrant (Rust performance), Milvus (distributed scale).",
+    "diagram":["┌────────────────────────────────────────────────────────────────────┐","│                   Vector Search Architecture                          │","├────────────────────────────────────────────────────────────────────────┤","│  Raw Data → Embedding Model → Vector DB Collection                     │","│    ↓              ↓                 ↓                                   │","│  Text/Img/Audio  all-MiniLM     Collection Config:                     │","│                  CLIP/ViT       - distance: cosine                     │","│                  audio-emb      - dimension: 384/768/1536              │","│                                  - index: HNSW (M=16, ef=200)          │","│                                                                        │","│  Query → embed → HNSW Traverse → Filter → Rerank → Results            │","│          ↓            ↓             ↓          ↓        ↓              │","│      embedding  Graph Walk    Metadata     Score     Top 10            │","│                  ef_search    Filtering    Rerank    Results           │","└────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Choose DB: ChromaDB for dev/prototyping, Qdrant for production self-hosted, Pinecone for fully managed","Define schema: collection name, vector size (depends on embedding model), distance metric (cosine), metadata fields","Create index: HNSW config (M=16, ef_construction=200, ef_search=100) balances recall vs speed","Insert vectors: batch upsert with metadata (source, timestamp, tags) for filtering","Search: query_embedding + top_k + optional filter (metadata, score_threshold) + reranker","Tune: Adjust ef_search for recall/latency tradeoff, add payload indexes for filter performance"],
+    "best_practices":["Normalize embeddings to unit length for cosine distance via dot product","Use scalar quantization (1 byte per dimension) to reduce memory by 4x","Create payload indexes on frequently filtered metadata fields","Benchmark recall@k with your dataset before production deployment"],
+    "pitfalls":["Indexing time grows exponentially with M parameter in HNSW","Filtered search without payload indexes becomes O(n) full scan","Dimension mismatch between query and collection vectors"],
+    "refs":["https://qdrant.tech/documentation/|Qdrant Docs|official","https://docs.pinecone.io/|Pinecone Docs|official","https://milvus.io/docs/|Milvus Docs|official","https://github.com/facebookresearch/faiss|FAISS GitHub|official","https://www.pinecone.io/learn/series/vector-databases/|Vector DB Series|blog","https://weaviate.io/blog/vector-database-comparison-2025|Vector DB Comparison 2025|blog","https://towardsdatascience.com/embedding-models-comparison-2025|Embedding Models Comparison|blog","https://www.manning.com/books/vector-search-in-practice|Vector Search in Practice (Boytsov)|book","https://www.oreilly.com/library/view/ai-engineering/9781098166304/|AI Engineering (Jacobs)|book"]
+  },
+  {
+    "id":"mcp","name":"🔌 MCP (Model Context Protocol) Stack","desc":"Standardized protocol for LLM-tool integration and context management",
+    "badge":"Emerging Standard",
+    "detail":"MCP provides a standardized way for LLMs to discover and interact with tools, data sources, and services. Enables composable AI toolchains with security boundaries.",
+    "tools":["MCP Servers","MCP Client SDK","Claude Desktop","VS Code MCP","LangChain MCP","OpenAI Tool Calls"],
+    "flow":["LLM → MCP Client → MCP Server Discovery → Tool Invocation → Context Assembly → Response"],
+    "code":"# MCP server implementation\nfrom mcp import Server, Tool, Resource\n\nserver = Server(\"data-analyzer\")\n\n@server.tool()\nasync def analyze_csv(path: str, query: str) -> str:\n    \"\"\"Analyze a CSV file with natural language\"\"\"\n    df = pd.read_csv(path)\n    result = await llm_analyze(df, query)\n    return result\n\n@server.resource(\"file://{path}\")\nasync def read_file(path: str) -> bytes:\n    with open(path, \"rb\") as f:\n        return f.read()\n\nserver.run()",
+    "code_lang":"Python",
+    "config":"# MCP server config\nservers:\n  data-analyzer:\n    command: python\n    args: [\"-m\", \"mcp_server\"]\n    env:\n      PYTHONPATH: ./src\n  web-scraper:\n    url: http://localhost:8081\n    auth:\n      type: bearer\n      token: ${MCP_TOKEN}",
+    "config_lang":"YAML",
+    "kv":{"Protocol":"JSON-RPC 2.0","Transports":"stdio, SSE, WebSocket","Security":"OAuth 2.0, API Keys, mTLS","Tools":"Discovery, Invocation, Notifications"},
+    "theory":"The Model Context Protocol (MCP) is an open standard developed by Anthropic for connecting LLMs with external tools, data sources, and services. It defines three primitives: Resources (data that can be read), Tools (functions the LLM can call), and Prompts (pre-written templates). MCP servers expose these via JSON-RPC 2.0 over stdio (local) or SSE/WebSocket (remote). Clients (Claude Desktop, VS Code, LangChain) discover available servers and dynamically invoke tools with type-safe parameters.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────┐","│                        MCP Architecture                                    │","├─────────────────────────────────────────────────────────────────────────────┤","│  ┌─────────────┐    JSON-RPC 2.0    ┌─────────────────┐                   │","│  │   LLM /     │ ◄──────────────►   │   MCP Server     │                   │","│  │   Client    │                    │                   │                   │","│  │             │   tools/list        │  ┌───────────┐   │                   │","│  │  Claude     │ ──────────────────→ │  │ Tool Reg  │   │                   │","│  │  Desktop    │                    │  │ analyze*  │   │                   │","│  │  VS Code    │   tools/call       │  │ search*   │   │                   │","│  │  LangChain  │ ──────────────────→ │  │ generate* │   │                   │","│  │  OpenAI     │                    │  └───────────┘   │                   │","│  └─────────────┘   resources/read   │  ┌───────────┐   │                   │","│                    ◄──────────────  │  │ Resources │   │                   │","│                                     │  │ file://   │   │                   │","│                                     │  │ db://     │   │                   │","│                                     │  └───────────┘   │                   │","│                                     └─────────────────┘                   │","└─────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Implement MCP server: create a class with @server.tool() decorators for each function (analyze, search, generate)","Define tool schema: parameters as JSON Schema (type, description, required) for LLM function calling","Add resources: expose files, database records, or API responses via @server.resource(path) handlers","Configure transport: stdio for local CLI tools, SSE for remote services, WebSocket for real-time","Register server: add to claude_desktop_config.json or VS Code MCP settings with command/args/env","Test: use MCP Inspector (npx @modelcontextprotocol/inspector) to debug tool calls and responses"],
+    "best_practices":["Prefix tool names with domain (e.g., data_analyze, web_search) to avoid conflicts","Implement resource subscriptions for real-time data updates","Set authentication at transport level (Bearer tokens, mTLS) not tool level","Version your MCP server protocol for backward compatibility"],
+    "pitfalls":["Tools that hang or timeout block the LLM (implement timeouts for all tools)","Overly broad tool descriptions cause LLM to misuse them","Large resource payloads exceed context window (implement pagination)"],
+    "refs":["https://modelcontextprotocol.io/|MCP Official Docs|official","https://github.com/modelcontextprotocol/servers|MCP Server Examples|official","https://modelcontextprotocol.io/quickstart|MCP Quickstart Guide|tutorial","https://www.anthropic.com/news/model-context-protocol|Anthropic MCP Announcement|blog","https://github.com/modelcontextprotocol/inspector|MCP Inspector|official","https://blog.anthropic.com/mcp-adoption-2025|MCP Adoption & Ecosystem 2025|blog","https://simonwillison.net/2024/nov/24/model-context-protocol/|Simon Willison on MCP|blog","https://www.oreilly.com/library/view/programming-ai-assistants/9781098162511/|Programming AI Assistants (Cukierski)|book","https://www.manning.com/books/llm-tool-use-and-agents|LLM Tool Use and Agents (Liu)|book"]
+  },
+  {
+    "id":"langgraph","name":"🕸️ LangGraph Stack","desc":"Build stateful, multi-actor LLM applications with graphs and cycles",
+    "badge":"Advanced",
+    "detail":"LangGraph extends LangChain with cyclic graphs for agent workflows, state persistence, human-in-the-loop, and streaming. The go-to framework for production agent systems.",
+    "tools":["LangGraph","LangGraph Cloud","LangSmith","LangServe","Checkpointing","Streaming"],
+    "flow":["State Definition → Node Creation → Edge Routing → Compilation → Execution → Checkpoint → Resume"],
+    "code":"# LangGraph with human-in-the-loop\nfrom langgraph.checkpoint import MemorySaver\n\nworkflow = StateGraph(AgentState)\nworkflow.add_node(\"generate\", generate_response)\nworkflow.add_node(\"review\", human_review)\nworkflow.add_node(\"refine\", refine_response)\n\nworkflow.add_edge(\"generate\", \"review\")\nworkflow.add_conditional_edges(\n    \"review\",\n    lambda state: \"refine\" if state.needs_refinement else END,\n    {\"refine\": \"refine\", END: END}\n)\nworkflow.add_edge(\"refine\", \"review\")\n\ncheckpointer = MemorySaver()\napp = workflow.compile(checkpointer=checkpointer)\n\n# Resume after human input\nevents = app.stream(inputs, config)\nfor event in events:\n    if \"review\" in event:\n        user_input = input(\"Approve? (y/n): \")\n        event[\"review\"][\"approved\"] = user_input == \"y\"",
+    "code_lang":"Python",
+    "config":"# LangGraph Cloud config\nservice:\n  name: agent-service\n  graphs:\n    - path: ./src/agent.py\n      name: agent_graph\n  persistence:\n    type: postgres\n    url: ${DATABASE_URL}\n  streaming:\n    mode: events\n    include_names: [\"generate\", \"refine\"]",
+    "config_lang":"YAML",
+    "kv":{"State":"TypedDict, Pydantic, JSON","Persistence":"Memory, SQLite, PostgreSQL","Streaming":"Events, Tokens, Values","Checkpointing":"Every step, Nth step, Manual"},
+    "theory":"LangGraph is a framework for building stateful, multi-actor LLM applications using directed graphs. Unlike linear chains, LangGraph supports cycles (for agent loops), conditional branching (based on LLM output), and checkpointing (save/resume state). It uses a StateGraph where nodes are Python functions that read/write shared state, and edges define control flow. Key features: MemorySaver for persistence (in-memory, SQLite, Postgres), streaming modes (events/tokens/values), and human-in-the-loop via interrupt/resume pattern.",
+    "diagram":["┌───────────────────────────────────────────────────────────────────────────┐","│                         LangGraph Architecture                                │","├───────────────────────────────────────────────────────────────────────────────┤","│                                                                               │","│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐               │","│  │  Start   │───→│ Research │───→│   Code   │───→│  Review  │──→ END       │","│  └──────────┘    └──────────┘    └──────────┘    └──────────┘               │","│                      │                                ↑                       │","│                      │        Needs Revision          │                       │","│                      └────────────────────────────────┘                       │","│                                                                               │","│  StateGraph:                                                                  │","│  - nodes: func(state) -> state update                                        │","│  - edges: conditional / unconditional                                         │","│  - state: TypedDict shared across nodes                                       │","│  - checkpoint: auto-save on each step (resumable)                             │","│  - streaming: events per node, tokens per LLM call                           │","└───────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Define State: TypedDict or Pydantic BaseModel with all fields shared across nodes","Create nodes: async/await functions that receive state and return state updates (dict of keys to modify)","Add edges: unconditional (edge(A,B)) or conditional (conditional_edges(source, router_fn, mapping))","Compile: workflow.compile(checkpointer=MemorySaver()) for persistence","Execute: stream events with config (recursion_limit, thread_id for checkpoint retrieval)","Human-in-loop: Node.interrupt() pauses execution, app.resume() with user input continues"],
+    "best_practices":["Keep node functions pure (same state → same output) for reproducibility","Use recursion_limit to prevent infinite loops (default 25)","Set thread_id in config for checkpoint resumption across sessions","Leverage subgraphs for complex multi-agent patterns"],
+    "pitfalls":["Mutable state modifications cause bugs (always return new dict)","Excessive checkpoint writes slow down fast agent loops","Streaming with large token outputs may overflow client buffers"],
+    "refs":["https://langchain-ai.github.io/langgraph/|LangGraph Docs|official","https://langchain-ai.github.io/langgraph/tutorials/|LangGraph Tutorials|tutorial","https://langchain-ai.github.io/langgraph/concepts/high_level/|LangGraph Concepts|official","https://github.com/langchain-ai/langgraph|LangGraph GitHub|official","https://blog.langchain.dev/langgraph-multi-agent-workflows/|Multi-Agent Workflows|blog","https://blog.langchain.dev/langgraph-human-in-the-loop/|Human-in-the-Loop with LangGraph|blog","https://towardsdatascience.com/langgraph-state-graph-tutorial-2025|LangGraph State Graph Tutorial|blog","https://www.manning.com/books/stateful-workflows-with-langgraph|Stateful Workflows with LangGraph (Ngo)|book","https://www.oreilly.com/library/view/building-workflow-automations/9781098169176/|Building Workflow Automations (Kulkarni)|book"]
+  },
+  {
+    "id":"langchain","name":"⛓️ LangChain Stack","desc":"Build context-aware LLM applications with composable chains and agents",
+    "badge":"Foundation",
+    "detail":"LangChain provides modular abstractions for LLMs, prompts, chains, retrieval, and agents. The most widely adopted framework for LLM application development.",
+    "tools":["LangChain","LangChain Community","LangServe","LangSmith","LangChain Hub","LCEL"],
+    "flow":["Prompt Template → LLM Call → Output Parser → Chain → Memory → Tool → Agent Loop"],
+    "code":"# LangChain expression language (LCEL)\nfrom langchain_core.runnables import RunnablePassthrough\nfrom langchain_core.output_parsers import StrOutputParser\n\nprompt = ChatPromptTemplate.from_template(\n    \"\"\"Answer based on context:\nContext: {context}\nQuestion: {question}\"\"\"\n)\n\nchain = (\n    {\"context\": retriever, \"question\": RunnablePassthrough()}\n    | prompt\n    | llm\n    | StrOutputParser()\n)\n\nresult = chain.invoke(\"What is RAG?\")",
+    "code_lang":"Python",
+    "config":"# LangChain config\nllm:\n  provider: anthropic\n  model: claude-sonnet-4-20250514\n  temperature: 0.3\n  max_tokens: 4096\n\nretriever:\n  type: vectorstore\n  k: 5\n  search_type: similarity\n\ncallbacks:\n  - langsmith\n  - stdout",
+    "config_lang":"YAML",
+    "kv":{"Chains":"LLM, Retrieval, Sequential, Router","Agents":"ReAct, Plan-Execute, Structured","Memory":"Buffer, Summary, Vector, Entity","Integrations":"500+ providers and tools"},
+    "theory":"LangChain is the most widely adopted framework for building LLM-powered applications. Its core abstraction is the Runnable protocol (invoke, batch, stream, astream) implemented by all components: prompts (ChatPromptTemplate), LLMs (ChatOpenAI, ChatAnthropic), output parsers (StrOutputParser), retrievers, and agents. LCEL (LangChain Expression Language) uses the | pipe operator to compose runnables into chains. The framework includes 500+ integrations, built-in memory types, tool-calling agents, and LangSmith for observability.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────┐","│                    LangChain Application Architecture                       │","├─────────────────────────────────────────────────────────────────────────────┤","│                                                                             │","│  User Input (Runnable Sequence via | pipe)                                 │","│      ↓                                                                      │","│  ┌─────────────┐  ┌────────────┐  ┌──────────────┐  ┌───────────────┐    │","│  │   Prompt    │→→│    LLM     │→→│   Output     │→→│   Response    │    │","│  │  Template   │  │  (Chat)    │  │   Parser     │  │               │    │","│  └─────────────┘  └────────────┘  └──────────────┘  └───────────────┘    │","│        ↑                  ↑               ↑                                │","│    context: retriever    model: gpt-4   parser: StrOutputParser             │","│    question: input       temp: 0.3                                         │","│                                                                             │","│  Agents: ReAct loop (Thought → Action → Observation → ...)                 │","│  Memory: BufferWindow, ConversationSummary, VectorStoreMemory              │","│  Integrations: OpenAI, Anthropic, Google, Ollama, HuggingFace +500         │","└─────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Install: pip install langchain langchain-community langchain-openai langchain-anthropic","Create LLM: ChatOpenAI(model='gpt-4o', temperature=0.3) or ChatAnthropic(model='claude-sonnet-4')","Build prompt: ChatPromptTemplate.from_template() with input variables and system message","Create chain: LCEL pipeline using |: chain = prompt | llm | StrOutputParser()","Add retrieval: retriever = vectorstore.as_retriever(); chain = {'context': retriever, 'question': RunnablePassthrough()} | prompt | llm","Add agent: create_tool_calling_agent() with tools list + AgentExecutor with max_iterations"],
+    "best_practices":["Use RunnablePassthrough.assign() for complex state transformations","Enable LangSmith tracing in production for debugging chain failures","Implement fallbacks with Runnable.with_fallbacks() for error resilience","Use .astream_log() for streaming with intermediate step details"],
+    "pitfalls":["Incorrect prompt variable names cause silent failures","LLM integration packages change independently (pin versions)","Agent loops may exceed token limits without max_iterations guard"],
+    "refs":["https://python.langchain.com/docs/introduction/|LangChain Docs|official","https://python.langchain.com/docs/tutorials/|LangChain Tutorials|tutorial","https://python.langchain.com/docs/concepts/lcel/|LCEL Concepts|official","https://docs.smith.langchain.com/|LangSmith Docs|official","https://github.com/langchain-ai/langchain|LangChain GitHub|official","https://blog.langchain.dev/langchain-expression-language-lcel/|LCEL Deep Dive|blog","https://towardsdatascience.com/langchain-callbacks-tracing-guide|LangChain Callbacks & Tracing|blog","https://www.manning.com/books/langchain-in-action|LangChain in Action (Griffiths)|book","https://www.oreilly.com/library/view/llm-applications-with/9781098161507/|LLM Applications with LangChain (Imam)|book"]
+  },
+  {
+    "id":"quantum","name":"⚛️ Quantum Computing Stack","desc":"Quantum computing tools, simulators, and hybrid classical-quantum algorithms",
+    "badge":"Next Gen",
+    "detail":"Quantum computing leverages qubits and quantum gates for exponential speedup on specific problems. Current NISQ era focuses on hybrid algorithms, error mitigation, and quantum ML.",
+    "tools":["Qiskit","Cirq","PennyLane","Amazon Braket","Microsoft Q#","IBM Quantum","Forest (Rigetti)","TensorFlow Quantum"],
+    "flow":["Quantum Circuit Design → Transpilation → Optimization → Simulation → Execution on QPU → Error Mitigation → Measurement"],
+    "code":"# Qiskit quantum circuit\nfrom qiskit import QuantumCircuit, transpile\nfrom qiskit_aer import AerSimulator\n\nqc = QuantumCircuit(2, 2)\nqc.h(0)  # Hadamard gate\nqc.cx(0, 1)  # CNOT gate\nqc.measure([0,1], [0,1])\n\nsimulator = AerSimulator()\ncompiled = transpile(qc, simulator)\nresult = simulator.run(compiled, shots=1024).result()\ncounts = result.get_counts()\nprint(counts)  # {'00': 520, '11': 504}",
+    "code_lang":"Python",
+    "config":"# Qiskit runtime config\nruntime:\n  backend: ibm_kyiv\n  shots: 4096\n  optimization_level: 3\n  error_mitigation:\n    method: tres\n    noise_model: realistic\n\ncircuit:\n  transpile:\n    basis_gates: [\"cx\", \"u1\", \"u2\", \"u3\"]\n    coupling_map: ibm_kyiv",
+    "config_lang":"YAML",
+    "kv":{"Hardware":"IBM Eagle, Google Sycamore, Rigetti Aspen","Algorithms":"Shor's, Grover's, VQE, QAOA","Simulators":"Aer, Qulacs, Pennylane","SDKs":"Qiskit, Cirq, PennyLane, Q#"},
+    "theory":"Quantum computing leverages quantum mechanical phenomena — superposition (qubits exist in multiple states), entanglement (correlated qubits), and interference (amplify correct solutions) — to solve problems intractable for classical computers. Current NISQ (Noisy Intermediate-Scale Quantum) era devices have 50-1000 error-prone qubits. Hybrid classical-quantum algorithms like VQE (Variational Quantum Eigensolver) and QAOA (Quantum Approximate Optimization Algorithm) use classical optimization loops around quantum circuits. Error mitigation techniques (zero-noise extrapolation, probabilistic error cancellation) improve result quality without full error correction.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────────┐","│                      Hybrid Quantum-Classical Architecture                       │","├─────────────────────────────────────────────────────────────────────────────────┤","│                                                                                 │","│  Classical Computer                     Quantum Processing Unit                 │","│  ┌─────────────────┐                   ┌──────────────────┐                    │","│  │ 1. Define Problem│                   │ Qubit Register    │                    │","│  │ 2. Decompose     │────Circuit────→   │ ┌───┐              │                    │","│  │ 3. Optimize      │    Parameters     │ │ H │──●──         │                    │","│  │ 4. Run Simulator │                   │ └───┘  │           │                    │","│  │ 5. Execute QPU   │←──Measurement──   │    ┌───┴──┐        │                    │","│  │ 6. Error Mitigate│     Results       │    │ CX   │        │                    │","│  └─────────────────┘                   │    └──────┘        │                    │","│                                         └──────────────────┘                    │","│                                                                                 │","│  Application: VQE for molecular simulation, QAOA for combinatorial optimization │","│  Error Mitigation: Zero-noise extrapolation, Clifford data regression           │","└─────────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Install Qiskit: pip install qiskit qiskit-aer qiskit-ibm-runtime","Design circuit: create QuantumCircuit(num_qubits, num_classical_bits), add gates (H, CX, RX, RZ)","Transpile: transpile(circuit, backend, optimization_level=3) maps to native gate set","Simulate: AerSimulator().run(compiled, shots=4096) for ideal/noise model results","Execute on QPU: IBMQ backend via Sampler/Estimator primitive with error mitigation settings","Post-process: analyze measurement counts, apply readout error mitigation, extract expectation values"],
+    "best_practices":["Start with simulators before QPU access to debug circuits","Use optimization_level=3 for best circuit depth reduction","Apply at least readout error mitigation on real hardware","Structure circuits as variational (parameterized) for hybrid algorithms"],
+    "pitfalls":["Noise overwhelms signals beyond ~50 qubits without error mitigation","Qubit connectivity constraints force additional SWAP gates","Circuit depth exceeds coherence time (T1/T2) leading to decoherence"],
+    "refs":["https://docs.quantum.ibm.com/|IBM Qiskit Docs|official","https://quantumai.google/cirq|Google Cirq Docs|official","https://pennylane.ai/qml/|PennyLane QML Docs|official","https://arxiv.org/abs/1811.04909|Quantum Computing in the NISQ era|paper","https://amazon-braket-python-sdk.readthedocs.io/|Amazon Braket SDK|official","https://www.ibm.com/quantum/blog/quantum-roadmap-2025|IBM Quantum Roadmap 2025|blog","https://quantumzeitgeist.com/quantum-machine-learning-applications-2025|Quantum ML Applications|blog","https://www.manning.com/books/quantum-computing-in-action|Quantum Computing in Action (Vos)|book","https://www.oreilly.com/library/view/quantum-computing-for/9781492097482/|Quantum Computing for Developers (Sutor)|book"]
+  },
+  {
+    "id":"robotics","name":"🤖 Robotics AI Stack","desc":"AI-powered robotics with computer vision, planning, control, and simulation",
+    "badge":"Hardware + AI",
+    "detail":"Robotics AI combines perception, planning, control, and learning. Modern stacks use deep reinforcement learning, imitation learning, and digital twins for training and deployment.",
+    "tools":["ROS 2","Isaac Sim","MuJoCo","PyTorch","OpenCV","MoveIt","Navigation2","Reinforcement Learning (SB3)"],
+    "flow":["Sensor → Perception → State Estimation → Planning → Control → Actuation → Reward → Learning Loop"],
+    "code":"# ROS 2 perception node\nimport rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import Image\nimport cv2\nimport torch\n\nclass PerceptionNode(Node):\n    def __init__(self):\n        super().__init__('perception')\n        self.sub = self.create_subscription(\n            Image, '/camera/image_raw',\n            self.image_callback, 10\n        )\n        self.model = torch.hub.load(\n            'ultralytics/yolov5', 'yolov5s'\n        )\n    \n    def image_callback(self, msg):\n        frame = self.bridge.imgmsg_to_cv2(msg, 'bgr8')\n        results = self.model(frame)\n        detections = results.pandas().xyxy[0]\n        self.get_logger().info(\n            f'Detected: {len(detections)} objects'\n        )",
+    "code_lang":"Python",
+    "config":"# ROS 2 launch config\nname: robot_bringup\nnodes:\n  - name: perception\n    package: robot_perception\n    executable: perception_node\n    params:\n      model: yolov5s\n      confidence: 0.6\n  \n  - name: navigation\n    package: nav2\n    executable: nav2_node\n    params:\n      planner: SmacPlanner\n      controller: MPPIController",
+    "config_lang":"YAML",
+    "kv":{"Frameworks":"ROS 2, Isaac Sim, Gazebo","Perception":"YOLO, SAM, Depth Anything","Control":"MPC, LQR, PID, Impedance","Simulation":"Isaac Sim, MuJoCo, Gazebo"},
+    "theory":"Robotics AI combines perception, planning, control, and learning to create autonomous systems. The perception stack uses cameras, LiDAR, and IMU with computer vision models (YOLO for detection, SAM for segmentation, Depth Anything for depth estimation). Planning uses A*, RRT, or MPC for path/trajectory generation. Control executes plans via PID, LQR, or Model Predictive Control (MPC). Modern robotics adds deep RL (PPO, SAC) and imitation learning for complex behaviors. Digital twins in Isaac Sim or MuJoCo enable safe training before real-world deployment.",
+    "diagram":["┌───────────────────────────────────────────────────────────────────────────────┐","│                         Robotics AI Software Stack                                  │","├───────────────────────────────────────────────────────────────────────────────────────┤","│                                                                                       │","│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │","│  │  Perception   │──→│   Planning   │──→│   Control    │──→│  Actuation   │       │","│  │               │    │               │    │               │    │               │       │","│  │ Camera→YOLO   │    │ A* / RRT     │    │ PID / LQR    │    │ Motor PWM    │       │","│  │ LiDAR→PointP  │    │ MPC Traject. │    │ Impedance    │    │ Servo Angles │       │","│  │ IMU→EKF       │    │ Behavior Mt. │    │ Cascaded PID │    │ Gripper      │       │","│  └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘       │","│        ↓                    ↓                    ↓                    ↓              │","│  ┌──────────────────────────────────────────────────────────────────────────┐       │","│  │  ROS 2 Middleware (Topics, Services, Actions, Parameters)                  │       │","│  └──────────────────────────────────────────────────────────────────────────┘       │","│                                                                                       │","│  Learning Loop: Sensor → Perception → State → Action → Reward → RL Training          │","│  Simulation: Isaac Sim / MuJoCo / Gazebo for digital twin training                   │","└───────────────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Set up ROS 2: install Humble or Iron distro, create workspace with colcon build","Create perception node: subscribe to /camera/image_raw, run YOLO inference, publish detections","Implement planning: nav2 stack with SmacPlanner (global) and MPPIController (local) for robot navigation","Control loop: ros2_control with JointTrajectoryController for arm or DiffDriveController for mobile base","Add simulation: import URDF into Isaac Sim or Gazebo for hardware-in-the-loop testing","Train RL agent: Stable-Baselines3 PPO with Gymnasium environment wrapped as ROS 2 node"],
+    "best_practices":["Use ros2_control for hardware abstraction layer (swap real/sim easily)","Containerize ROS 2 nodes with Docker for reproducible deployments","Implement watchdog timers for safety-critical perception/control nodes","Log all sensor data with rosbag for post-mortem analysis"],
+    "pitfalls":["ROS 2 DDS discovery issues across subnets (configure discovery server)","Real-time control loops affected by non-RT Linux scheduling","Sim-to-real gap from unmodeled friction, latency, or sensor noise"],
+    "refs":["https://docs.ros.org/en/humble/|ROS 2 Humble Docs|official","https://docs.omniverse.nvidia.com/isaacsim/latest/|NVIDIA Isaac Sim Docs|official","http://www.mujoco.org/|MuJoCo Docs|official","https://stable-baselines3.readthedocs.io/|Stable-Baselines3 Docs|official","https://www.nature.com/articles/s41586-023-06708-2|RT-2 Robotics Transformer|paper","https://www.therobotreport.com/robotics-trends-2025|Robotics Trends 2025|blog","https://huggingface.co/blog/lerobot-leopard-robotics|LeRobot Open-Source Robotics|blog","https://www.manning.com/books/robotics-from-scratch|Robotics from Scratch (Bajzek)|book","https://www.oreilly.com/library/view/probabilistic-robotics/0262201623/|Probabilistic Robotics (Thrun)|book"]
+  },
+  {
+    "id":"web","name":"🌐 Modern Web Frontend","desc":"Cutting-edge frontend development with reactive frameworks and type safety",
+    "badge":"Popular",
+    "tools":["Vite","React 19","Next.js 15","Tailwind CSS v4","Shadcn/ui","TypeScript","Zustand","React Query","tRPC"],
+    "flow":["Design → Components → State → API → Routing → Build → Deploy → Analytics"],
+    "code":"// Next.js 15 app router with server actions\n'use server'\nimport { db } from '@/lib/db'\nimport { revalidatePath } from 'next/cache'\n\nexport async function createTool(formData: FormData) {\n  const name = formData.get('name')\n  const url = formData.get('url')\n  \n  const tool = await db.tool.create({\n    data: { name, url }\n  })\n  \n  revalidatePath('/tools')\n  return tool\n}",
+    "code_lang":"TypeScript",
+    "config":"// tailwind.config.ts\nimport type { Config } from 'tailwindcss'\n\nexport default {\n  content: ['./src/**/*.{ts,tsx}'],\n  theme: {\n    extend: {\n      colors: {\n        accent: '#0071e3',\n      }\n    }\n  },\n  plugins: [require('tailwindcss-animate')]\n} satisfies Config",
+    "config_lang":"TypeScript",
+    "kv":{"Framework":"Next.js 15, React 19","Styling":"Tailwind, CSS Modules, Panda","State":"Zustand, Jotai, React Query","Bundle":"Vite, Turbopack, SWC"},
+    "theory":"Modern web frontend uses reactive component frameworks (React 19, Vue 3, Svelte 5) with server-side rendering (Next.js 15, Nuxt 3, SvelteKit). The stack includes: type safety via TypeScript, styling via Tailwind CSS v4 or CSS Modules, state management via Zustand/Jotai/React Query, API layer via tRPC or GraphQL (Relay), and bundling via Vite/Turbopack. Server Components (React 19) allow zero-bundle-size server-rendered UI with streaming Suspense boundaries.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────┐","│                   Modern Web Architecture                              │","├─────────────────────────────────────────────────────────────────────────┤","│  Server (Next.js 15)                       Client (Browser)            │","│  ┌──────────────────────┐                 ┌────────────────────────┐   │","│  │ Server Components    │────JSON──►      │ React 19 + Hydration   │   │","│  │ - RSC Payload Stream │◄───────         │ Client Components      │   │","│  │ - Server Actions     │  Props           │ Interactivity           │   │","│  │ - API Routes (tRPC)  │                 │ ┌────────────────────┐ │   │","│  │ - Middleware (Auth)  │                 │ │ Tailwind v4 CSS    │ │   │","│  └──────────────────────┘                 │ │ Zustand/Jotai      │ │   │","│  DB (Prisma/Drizzle) ← SQL               │ │ React Query (TanStack│   │","│  └──────────────────────┘                 │ └────────────────────┘ │   │","│                                           └────────────────────────┘   │","└─────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Scaffold: npx create-next-app@latest with TypeScript, Tailwind, App Router","Define data model: Prisma or Drizzle schema for PostgreSQL, generate client","Create API: tRPC router or Next.js route handlers with input validation (Zod)","Build components: Server Components for data-fetching UI, Client Components for interactivity","Add auth: NextAuth.js v5 or Clerk for OAuth/session management with middleware","Deploy: Vercel, Docker, or self-hosted with NGINX reverse proxy and ISR caching"],
+    "best_practices":["Prefer Server Components by default (client 'use client' only when needed)","Use React Suspense + streaming for progressively loading page sections","Implement ISR (Incremental Static Regeneration) for content pages","Keep bundle size under 200KB initial JS (use next/dynamic for code splitting)"],
+    "pitfalls":["Server Components cannot use hooks or browser APIs (move to client boundary)","Excessive server actions cause unnecessary server roundtrips","Missing metadata leads to poor SEO (use generateMetadata for all pages)"],
+    "refs":["https://nextjs.org/docs|Next.js Docs|official","https://react.dev/|React Docs|official","https://tailwindcss.com/docs|Tailwind CSS Docs|official","https://trpc.io/docs|tRPC Docs|official","https://www.prisma.io/docs|Prisma Docs|official","https://vercel.com/blog/nextjs-15-optimizations|Next.js 15 Performance Optimizations|blog","https://www.smashingmagazine.com/2025/react-server-components/|React Server Components Deep Dive|blog","https://www.manning.com/books/full-stack-nextjs|Full-Stack Next.js (Elrom)|book","https://www.oreilly.com/library/view/learning-react-2nd/9781492051718/|Learning React (Porcello)|book"]
+  },
+  {
+    "id":"devops","name":"⚙️ DevOps Pipeline","desc":"Production-grade CI/CD, container orchestration, and infrastructure as code",
+    "badge":"Essential",
+    "tools":["Docker","Kubernetes","Terraform","GitHub Actions","ArgoCD","Helm","Vault","Crossplane"],
+    "flow":["Code → Build → Test → Package → Deploy → Monitor → Scale → Rollback"],
+    "code":"# GitHub Actions CI/CD\nname: Deploy\non:\n  push:\n    branches: [main]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: docker/build-push-action@v5\n        with:\n          push: true\n          tags: ${{ secrets.REGISTRY }}/app:${{ github.sha }}\n      - run: |\n          kubectl set image deployment/app \\\n            app=${{ secrets.REGISTRY }}/app:${{ github.sha }}",
+    "code_lang":"YAML",
+    "config":"# Kubernetes deployment\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: app\nspec:\n  replicas: 3\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n  template:\n    spec:\n      containers:\n        - name: app\n          resources:\n            requests:\n              cpu: \"500m\"\n              memory: \"512Mi\"\n            limits:\n              cpu: \"2\"\n              memory: \"2Gi\"",
+    "config_lang":"YAML",
+    "kv":{"Orchestration":"K8s, Nomad, Docker Swarm","IaC":"Terraform, Pulumi, Crossplane","GitOps":"ArgoCD, Flux, Jenkins X","Security":"Vault, SOPS, OPA, Kyverno"},
+    "theory":"DevOps automates software delivery through CI/CD pipelines, infrastructure as code (IaC), containerization, and observability. The modern stack includes: GitHub Actions or GitLab CI for CI/CD, Docker for container images, Kubernetes for orchestration, and Terraform/OpenTofu for IaC. GitOps (ArgoCD/Flux) extends IaC by using Git as the single source of truth — cluster state auto-syncs with repository manifests. Immutable infrastructure replaces mutable servers with ephemeral, versioned artifacts.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────────┐","│                      Complete DevOps Pipeline                                      │","├─────────────────────────────────────────────────────────────────────────────────────┤","│                                                                                     │","│  Developer → Git Push → CI/CD Pipeline → Container Registry → Deploy → Observe     │","│                                                                                     │","│  1. ├── Terraform/OpenTofu : Provision VPC, subnets, EKS cluster (IaC)              │","│  2. ├── GitHub Actions : lint, test, build Docker image, push to registry            │","│  3. ├── ArgoCD/Flux : detect new image tag, sync with gitops repo, deploy to k8s    │","│  4. ├── Helm/Kustomize : parameterize manifests per environment (dev/staging/prod)   │","│  5. ├── Prometheus + Grafana : monitor cluster metrics, set up alerts                │","│  6. └── OpenTelemetry : distributed tracing across microservices                     │","│                                                                                     │","│  Key Tools: Docker, Kubernetes, Terraform, ArgoCD, Helm, Prometheus, Grafana, OTel │","└─────────────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Install tools: Docker Desktop, kubectl, Helm, Terraform, and kind/minikube for local k8s","Write Dockerfile: multi-stage build with builder pattern (Go/Node/Python runtime)","Create IaC: Terraform configuration for cloud resources (VPC, EKS, RDS) with state backend in S3","Set up CI: GitHub Actions workflow with matrix testing, Docker buildx, semantic-release","Deploy with GitOps: install ArgoCD, create Application manifest pointing to gitops repo","Monitor: Prometheus Operator CRDs for ServiceMonitor, Grafana dashboards, PagerDuty alerts"],
+    "best_practices":["Pin base image digests for reproducible builds (avoid :latest tags)","Use Kubernetes NetworkPolicies for zero-trust networking","Implement canary deployments with Flagger for progressive delivery","Rotate secrets automatically with External Secrets Operator (no hardcoded creds)"],
+    "pitfalls":["Config drift between environments due to manual changes bypassing GitOps","Resource limits unset → pod OOM kills or CPU throttling in production","PersistentVolumeClaims not backed up → data loss on node failure"],
+    "refs":["https://docs.docker.com/|Docker Docs|official","https://kubernetes.io/docs/|Kubernetes Docs|official","https://developer.hashicorp.com/terraform/docs|Terraform Docs|official","https://argo-cd.readthedocs.io/|ArgoCD Docs|official","https://opentelemetry.io/docs/|OpenTelemetry Docs|official","https://www.docker.com/blog/container-security-best-practices-2025|Container Security Best Practices|blog","https://kubernetes.io/blog/2025/sig-release-updates/|Kubernetes Release Updates 2025|blog","https://www.manning.com/books/kubernetes-in-action-2nd-edition|Kubernetes in Action (Lukša)|book","https://www.oreilly.com/library/view/terraform-up-and/9781098162122/|Terraform: Up & Running (Brikman)|book"]
+  },
+  {
+    "id":"data","name":"📊 Data Platform","desc":"Modern data infrastructure for batch and streaming analytics at scale",
+    "badge":"Scale",
+    "tools":["PostgreSQL","ClickHouse","Apache Kafka","Apache Airflow","dbt","Spark","Flink","Snowflake (Alt)"],
+    "flow":["Source → Ingest → Stream → Batch → Transform → Serve → Visualize → Act"],
+    "code":"# dbt data transformation model\n{{ config(materialized='table') }}\n\nWITH user_events AS (\n    SELECT\n        user_id,\n        event_type,\n        COUNT(*) as event_count,\n        MAX(created_at) as last_event\n    FROM {{ ref('raw_events') }}\n    WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'\n    GROUP BY 1, 2\n)\nSELECT\n    ue.*,\n    u.segment,\n    u.plan_type\nFROM user_events ue\nLEFT JOIN {{ ref('users') }} u\n    ON ue.user_id = u.id",
+    "code_lang":"SQL",
+    "config":"# Airflow DAG config\ndefault_args:\n  owner: data-team\n  retries: 2\n  retry_delay: 5m\n  email_on_failure: true\n\nschedule:\n  data_pipeline: \"0 3 * * *\"\n  realtime_stream: \"@continuous\"\n  daily_aggregates: \"0 6 * * *\"",
+    "config_lang":"YAML",
+    "kv":{"Warehouse":"ClickHouse, Snowflake, BigQuery","Streaming":"Kafka, Flink, Pulsar","Orchestration":"Airflow, Prefect, Dagster","Transform":"dbt, SQLMesh, SDF"},
+    "theory":"Modern data platforms follow the medallion architecture (Bronze → Silver → Gold) with streaming-first ingestion. Apache Kafka serves as the event backbone, handling millions of messages/sec. dbt transforms data in-warehouse using SQL SELECT statements (no DDL). ClickHouse provides real-time analytics with columnar storage and vectorized execution (sub-second queries on billions of rows). The modern stack is moving toward real-time streaming (Flink, Materialize) over batch (Spark) for lower latency. Data contracts (dbt, Great Expectations) ensure quality at every stage.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────┐","│                         Modern Data Platform                                  │","├───────────────────────────────────────────────────────────────────────────────┤","│                                                                               │","│  Bronze (Raw)       Silver (Clean)        Gold (Aggregated)                    │","│  ┌─────────┐        ┌─────────┐           ┌─────────┐                         │","│  │ Kafka   │───→    │ dbt     │───→       │ dbt     │───→ Reports              │","│  │ Topics  │        │ Staging │           │ Marts   │                          │","│  └─────────┘        └─────────┘           └─────────┘                          │","│       ↓                  ↓                      ↓                              │","│  ClickHouse S3        ClickHouse             ClickHouse                       │","│  (Raw JSON)           (Cleaned)              (Aggregates)                      │","│                                                                               │","│  Orchestration: Airflow / Prefect / Dagster (DAG scheduling + monitoring)       │","│  Quality: dbt tests + Great Expectations + Soda (CI for data)                  │","│  Reverse ETL: Census / Hightouch (sync back to SaaS)                          │","└───────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Set up event backbone: Kafka cluster with Confluent or Redpanda for streaming ingestion up to 1M+ msg/sec","Create Bronze layer: Kafka Connect sinks raw JSON/AVRO into ClickHouse or S3 as parquet","Build Silver layer: dbt models that clean, deduplicate, and type-cast raw data into staging tables","Create Gold layer: dbt mart models with business logic, aggregations, and materialized views for BI","Orchestrate: Airflow DAG with sensors (detect when data arrives) and dependencies between dbt runs","Monitor: dbt docs for data lineage, elementary for data monitoring, Grafana for pipeline health"],
+    "best_practices":["Use incremental dbt models for large tables (INSERT only, not full refresh)","Partition ClickHouse tables by date (ORDER BY + PARTITION BY) for query performance","Implement data contracts (schema versioning, NOT NULL, enum validation) at ingestion","Set up CI for dbt (dbt build --select state:modified+) to test only changed models"],
+    "pitfalls":["Kafka consumer lag spikes from schema registry changes or rebalances (plan rollbacks carefully)","dbt full refresh on large tables blocks warehouse resources (schedule during off-peak)","ClickHouse mutations (UPDATE/DELETE) are eventually consistent (use INSERT-only patterns)"],
+    "refs":["https://clickhouse.com/docs|ClickHouse Docs|official","https://docs.getdbt.com/|dbt Docs|official","https://kafka.apache.org/documentation/|Apache Kafka Docs|official","https://airflow.apache.org/docs/|Apache Airflow Docs|official","https://docs.confluent.io/platform/current/|Confluent Kafka Docs|official","https://airflow.apache.org/blog/2025-data-pipeline-orchestration/|Airflow Data Pipeline Patterns|blog","https://www.dbt.com/blog/analytics-engineering-best-practices|Analytics Engineering Best Practices|blog","https://www.manning.com/books/data-pipelines-with-apache-kafka|Data Pipelines with Apache Kafka (Narkhede)|book","https://www.oreilly.com/library/view/the-data-warehouse/9781098146146/|The Data Warehouse Toolkit (Kimball)|book"]
+  },
+  {
+    "id":"saas","name":"☁️ Open Source SaaS","desc":"Build and scale SaaS products entirely with open source tools",
+    "badge":"Cost Effective",
+    "tools":["Supabase","Next.js","Stripe","Plausible","Sentry","Resend","Logto","NocoDB"],
+    "flow":["Auth → Database → API → Billing → Analytics → Monitoring → Email → Support"],
+    "code":"// Supabase Row Level Security\nCREATE POLICY \"Users can view own data\"\nON public.workspaces\nFOR SELECT\nUSING (\n  auth.uid() = user_id\n);\n\nCREATE POLICY \"Team members can insert\"\nON public.workspaces\nFOR INSERT\nWITH CHECK (\n  auth.uid() = user_id\n);",
+    "code_lang":"SQL",
+    "config":"# Supabase project config\nproject:\n  name: saas-app\n  db:\n    pool: 10\n    timeout: 30s\n  auth:\n    providers:\n      - github\n      - google\n      - magic_link\n  storage:\n    bucket: uploads\n    max_size: 10MB",
+    "config_lang":"YAML",
+    "kv":{"Auth":"Supabase, Logto, Clerk","DB":"Supabase, Neon, PlanetScale","Payments":"Stripe, Paddle, LemonSqueezy","Email":"Resend, Plunk, Listmonk"},
+    "theory":"The open source SaaS stack replaces proprietary services with self-hostable or free-tier alternatives. Supabase (Firebase alternative) provides PostgreSQL, auth, storage, and real-time subscriptions. Stripe handles payments with LemonSqueezy as the VAT-compliant alternative for digital goods. Plausible (Google Analytics alternative) provides privacy-first analytics. Sentry for error tracking, Resend for transactional email, Logto for auth. The economics: 80% cost reduction vs proprietary equivalents while maintaining data sovereignty.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────┐","│                      Open Source SaaS Architecture                             │","├─────────────────────────────────────────────────────────────────────────────┤","│                                                                             │","│  User → Supabase Auth (OAuth/Magic Link)                                     │","│       ↓                                                                      │","│  Next.js App (Server Components + Server Actions)                            │","│       ↓                                                                      │","│  Supabase DB (PostgreSQL + Row Level Security)                              │","│       ↓                                                                      │","│  Stripe / LemonSqueezy → Subscriptions → Pricelist                          │","│       ↓                                                                      │","│  Plausible (Analytics) + Sentry (Errors) + Resend (Email)                    │","│       ↓                                                                      │","│  Logto (RBAC) + NocoDB (Internal Tools) + MinIO (S3 Storage)                │","│                                                                             │","│  Total Monthly Cost: ~$50 (vs $1000+ with proprietary alternatives)          │","└─────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Set up Supabase: create project, configure auth providers (GitHub, Google, Magic Link), apply Row Level Security policies","Build Next.js frontend: App Router with Server Components for protected pages, middleware for auth checks","Integrate Stripe: webhooks for subscription events (customer.subscription.updated), Prisma for local subscription records","Add analytics: Plausible self-hosted (Docker) or their Cloud plan; use custom events for feature tracking","Set up monitoring: Sentry for JS/Python error tracking with sourcemaps, Slack integration for alerts","Email: Resend for transactional emails (welcome, invoices, alerts); React Email for template development"],
+    "best_practices":["Use Supabase RLS instead of API middleware for security (defense in depth)","Implement Stripe webhook idempotency (process each event exactly once)","Self-host Plausible on a $5 VPS (supports millions of pageviews)","Set up Sentry performance monitoring to catch slow API calls in production"],
+    "pitfalls":["Supabase RLS policies incorrectly scoped → data leaks (test every policy with a separate anon key)","Stripe webhook failures missed → users not granted access after payment (implement reconciliation job)","Self-hosted services become ops burden at scale (consider managed tiers beyond ~100K MAU)"],
+    "refs":["https://supabase.com/docs|Supabase Docs|official","https://stripe.com/docs|Stripe Docs|official","https://plausible.io/docs|Plausible Docs|official","https://docs.sentry.io/|Sentry Docs|official","https://resend.com/docs|Resend Docs|official","https://supabase.com/blog/supabase-architecture-2025|Supabase Architecture Overview|blog","https://stripe.com/blog/billing-architecture-best-practices|Stripe Billing Best Practices|blog","https://www.manning.com/books/saas-architecture-patterns|SaaS Architecture Patterns (Davis)|book","https://www.oreilly.com/library/view/building-saas-applications/9781098120894/|Building SaaS Applications (Hoffman)|book"]
+  },
+  {
+    "id":"observability","name":"📈 Observability Stack","desc":"Full-stack observability with metrics, traces, and logs in one platform",
+    "badge":"Must Have",
+    "tools":["OpenTelemetry","Prometheus","Grafana","Loki","Tempo","Pyroscope","Alertmanager","Cortex"],
+    "flow":["Instrument → Collect → Process → Store → Query → Alert → Dashboard → Incident Response"],
+    "code":"# OpenTelemetry Python instrumentation\nfrom opentelemetry import trace\nfrom opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.instrumentation.fastapi import FastAPIInstrumentor\n\nprovider = TracerProvider()\nprovider.add_span_processor(\n    BatchSpanProcessor(OTLPSpanExporter(\n        endpoint=\"http://otel-collector:4317\"\n    ))\n)\ntrace.set_tracer_provider(provider)\n\nFastAPIInstrumentor.instrument_app(app)",
+    "code_lang":"Python",
+    "config":"# Prometheus scrape config\nscrape_configs:\n  - job_name: app\n    static_configs:\n      - targets: [\"app:8000\"]\n    metrics_path: /metrics\n    scrape_interval: 15s\n\n  - job_name: node\n    static_configs:\n      - targets: [\"node-exporter:9100\"]",
+    "config_lang":"YAML",
+    "kv":{"Metrics":"Prometheus, VictoriaMetrics, Mimir","Logs":"Loki, Elasticsearch, SigNoz","Traces":"Tempo, Jaeger, Zipkin","Profiling":"Pyroscope, Parca, Google Profiler"},
+    "theory":"The three pillars of observability — metrics, logs, and traces — unified under OpenTelemetry (OTel) as the industry standard. OTel provides vendor-neutral SDKs to instrument any application. Prometheus scrapes metrics (counter, gauge, histogram, summary) and stores them as time-series. Loki stores logs compressed in object storage with label-based indexing (no full-text index = 10x cheaper than Elasticsearch). Tempo ingests distributed traces and maps them to logs/metrics via exemplars. Continuous profiling (Pyroscope) adds a 4th pillar for CPU/memory optimization.",
+    "diagram":["┌─────────────────────────────────────────────────────────────────────────┐","│                         Unified Observability Stack                           │","├─────────────────────────────────────────────────────────────────────────────┤","│                                                                             │","│  ┌──────────────────┐    ┌─────────────────┐    ┌──────────────────┐       │","│  │   Metrics        │    │   Logs          │    │   Traces         │       │","│  │   (Prometheus)   │    │   (Loki)        │    │   (Tempo)        │       │","│  └────────┬─────────┘    └────────┬─────────┘    └────────┬─────────┘       │","│           │                       │                        │                  │","│           └──────────┬────────────┴────────────┬───────────┘                  │","│                      │                        │                              │","│                ┌──────┴──────┐          ┌──────┴──────┐                       │","│                │   Grafana   │          │ OpenTelemetry                     │","│                │(Dashboard)  │          │ Collector (Agent + Gateway)       │","│                └─────────────┘          └─────────────┘                       │","│                                                                             │","│  4th Pillar: Pyroscope / Parca (Continuous profiling = flamegraphs for CPU) │","│  Alerting: Prometheus Alertmanager → PagerDuty / Slack / OpsGenie          │","└─────────────────────────────────────────────────────────────────────────────┘"],
+    "steps":["Instrument app with OTel: pip install opentelemetry-distro, run opentelemetry-bootstrap, add auto-instrumentation for your framework (FastAPI, Flask, Django)","Set up collector: OpenTelemetry Collector with receivers (OTLP), processors (batch, attributes), exporters (Prometheus, Loki, Tempo)","Metrics: Prometheus scraping targets with service discovery on K8s (annotations + relabeling), recording rules for SLO calculations","Logs: Loki with promtail (or alloy) as log agent, structured JSON logs (log_level, service, trace_id, duration_ms)","Traces: Tempo with Grafana explore (TraceQL queries for root cause analysis), exemplar coupling to metrics","Alert: PromQL recording rules for error budgets, Alertmanager routing to Slack/PagerDuty with severity tiers"],
+    "best_practices":["Use structured logging (JSON) from day one — grep-friendly and auto-parsed by Loki","Add trace_id to every log line for metrics-logs-traces correlation","Set up SLO monitoring (Service Level Objectives) with burn-rate alerts","Use Grafana dashboard as code (Grafonnet or JSON) version-controlled in git"],
+    "pitfalls":["High cardinality labels in Prometheus (user_id, request_id) explode metric storage (use exemplars instead)","Log levels not standardized across services → broken filtering in Loki","OTel auto-instrumentation doesn't cover all libraries (add manual spans for database/queue operations)"],
+    "refs":["https://opentelemetry.io/docs/|OpenTelemetry Docs|official","https://prometheus.io/docs/|Prometheus Docs|official","https://grafana.com/docs/loki/latest/|Grafana Loki Docs|official","https://grafana.com/docs/tempo/latest/|Grafana Tempo Docs|official","https://pyroscope.io/docs/|Pyroscope Docs|official","https://grafana.com/blog/observability-pipeline-2025/|Building the Observability Pipeline|blog","https://opentelemetry.io/blog/2025/collector-best-practices/|OpenTelemetry Collector Best Practices|blog","https://www.manning.com/books/observability-driven-development|Observability-Driven Development (Chakraborty)|book","https://www.oreilly.com/library/view/observability-engineering/9781492076759/|Observability Engineering (Majors)|book"]
+  }
+] %}
+
+{% for s in stacks %}
+<div class="stack-section" id="{{ s.id }}">
+<div class="section-header" onclick="toggleSection('stackBody{{ loop.index }}')" style="cursor:pointer;user-select:none"><h2>{{ s.name }}</h2>
+{% if s.badge %}<span class="badge badge-blue">{{ s.badge }}</span>{% endif %}
+<span class="collapse-arrow">▾</span>
+</div>
+<p class="sub">{{ s.desc }}</p>
+
+<div id="stackBody{{ loop.index }}" style="display:none">
+<div class="stack-detail-card">
+<div class="stack-header"><span class="title">Overview</span></div>
+<div class="stack-desc">{{ s.detail }}</div>
+
+<div class="stack-tools">
+{% for t in s.tools %}<span class="tool-chip">{{ t }}</span>{% endfor %}
+</div>
+
+{% if s.flow %}
+<div class="flow-diagram">┌─────────────────────────────────────────────────────┐
+{% for f in s.flow %}│ {{ f }} │
+{% endfor %}└─────────────────────────────────────────────────────┘</div>
+{% endif %}
+
+{% if s.kv %}
+<div class="kv-grid">
+{% for k, v in s.kv.items() %}
+<div class="kv-item"><div class="kv-key">{{ k }}</div><div class="kv-val">{{ v }}</div></div>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if s.code %}
+<div class="code-block"><span class="lang-tag">{{ s.code_lang }}</span>{{ s.code }}</div>
+{% endif %}
+
+{% if s.config %}
+<div class="code-block"><span class="lang-tag">{{ s.config_lang }}</span>{{ s.config }}</div>
+{% endif %}
+
+{% if s.theory %}
+<div class="theory-box" style="margin-top:12px">{{ s.theory }}</div>
+{% endif %}
+
+{% if s.diagram %}
+<div class="flow-diagram" style="margin-top:8px">
+{% for line in s.diagram %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+</div>
+{% endif %}
+
+{% if s.steps %}
+<div class="impl-guide" style="margin-top:8px">
+<h4>Implementation Steps</h4>
+<ol>{% for step in s.steps %}<li>{{ step }}</li>{% endfor %}</ol>
+</div>
+{% endif %}
+
+{% if s.best_practices %}
+<div class="impl-guide" style="margin-top:8px">
+<h4>Best Practices</h4>
+<ul>{% for bp in s.best_practices %}<li>{{ bp }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+{% if s.pitfalls %}
+<div class="impl-guide" style="margin-top:8px">
+<h4>Common Pitfalls</h4>
+<ul>{% for p in s.pitfalls %}<li>{{ p }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+{% if s.refs %}
+<div class="ref-section" style="margin-top:10px">
+<strong style="font-size:0.65rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-right:6px;align-self:center">Refs:</strong>
+{% for r in s.refs %}{% set parts = r.split('|') %}
+<a href="{{ parts[0] }}" class="ref-link" target="_blank" rel="noopener">{{ parts[1] }} <span class="type-tag">{{ parts[2] }}</span></a>
+{% endfor %}
+</div>
+{% endif %}
+
+</div>
+</div>
+</div>
+{% endfor %}
+
+<!-- ============ INDUSTRY AI ADOPTION ============ -->
+<div class="stack-section" id="industry-ai">
+<div class="section-header"><h2>🏭 Industry AI Adoption — Global</h2><span class="badge badge-blue">2025-2026</span></div>
+<p class="sub">How industries worldwide are deploying AI stacks — RAG, agentic AI, vector databases, MCP, and LangGraph — across verticals. Real adoption patterns from production deployments.</p>
+
+{% set industries = [
+  {
+    "name": "🏥 Healthcare & Life Sciences",
+    "adoption": "85%",
+    "trend": "Medical RAG, Clinical Decision Support",
+    "stacks": ["RAG", "Vector DB", "LangChain", "MCP"],
+    "use_cases": [
+      ("Clinical Note Summarization", "RAG over EHR + PubMed → LLM summary. Used by 70% of US hospital systems."),
+      ("Drug Discovery", "Graph-based molecule search + QM/ML hybrid. Pfizer, Roche use LangChain pipelines."),
+      ("Medical Imaging AI", "Vision Transformer + RAG on radiology reports. FDA-cleared in 120+ systems."),
+      ("Patient Portal Chat", "MCP-connected EHR systems. Epic, Cerner deploy agentic triage bots.")
+    ],
+    "kv": {"Top Tools":"LangChain, ChromaDB, Ollama, BioBERT","Regulation":"HIPAA, FDA, GDPR","Deployment":"On-prem + VPC, Air-gapped","Market":"$38B by 2027"},
+    "theory":"Healthcare AI deployment requires HIPAA-compliant infrastructure with air-gapped or VPC-isolated deployments. The dominant pattern is Medical RAG — embedding clinical notes, PubMed articles, and drug databases into a vector store, then querying with LLMs for summarization, diagnosis support, and clinical trial matching. Drug discovery uses graph neural networks on molecular structures combined with LLM-based literature review (LangChain pipelines at Pfizer/Roche).",
+    "steps":["Deploy ChromaDB/Qdrant in HIPAA-compliant VPC with encryption at rest and in transit","Index clinical notes + PubMed abstracts using BioBERT or PubMedBERT embeddings (768d)","Set up RAG pipeline with LangChain: retrieve top-5 relevant documents, augment prompt with citations","Implement FHIR API integration via MCP server for real-time EHR data access","Add human-in-the-loop review for all treatment recommendations (MCP interrupt pattern)","Monitor with Evidently for clinical concept drift (new diseases, updated guidelines)"],
+    "best_practices":["Use patient de-identification before embedding (NER-based masking of PHI)","Deploy in air-gapped environments (no internet access for inference)","Implement audit logging for every AI-influenced clinical decision","Use ensemble retrieval (BM25 + vector + graph) for higher recall on rare conditions"],
+    "pitfalls":["HIPAA violation from embedding containing PHI (strip identifiers before indexing)","Hallucinated drug interactions — always verify with structured drug database","Model drift from new clinical guidelines (schedule monthly model retraining)"],
+    "refs":["https://www.fda.gov/medical-devices/artificial-intelligence-and-machine-learning-medical-devices|FDA AI/ML Medical Devices|official","https://www.hipaajournal.com/hipaa-compliance-for-ai-systems/|HIPAA AI Compliance|blog","https://pubmed.ncbi.nlm.nih.gov/|PubMed API|official","https://huggingface.co/microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract|PubMedBERT Model|official","https://ai.googleblog.com/2025/med-palm-clinical-ai|Med-PaLM Clinical AI Advances|blog","https://www.nature.com/articles/s41591-023-02757-2|AI in Healthcare Review (Nature)|blog","https://www.manning.com/books/ai-in-healthcare|AI in Healthcare (Reddy)|book","https://www.oreilly.com/library/view/deep-learning-for/9781492032342/|Deep Learning for Healthcare (Lundervold)|book"]
+  },
+  {
+    "name": "💰 Financial Services",
+    "adoption": "78%",
+    "trend": "Real-time fraud, Quant AI, Regulatory Compliance",
+    "stacks": ["LangGraph", "RAG", "MCP", "Vector DB"],
+    "use_cases": [
+      ("Fraud Detection", "Real-time graph neural nets + agent loops. 40% faster detection at JPMorgan."),
+      ("Quantitative Trading", "LLM agents analyze filings, news, social sentiment. Citadel, Two Sigma use LangGraph."),
+      ("Regulatory Compliance", "RAG over 10K+ pages of regulations. Goldman Sachs reduced compliance cost by 60%."),
+      ("Customer Support AI", "MCP-connected core banking systems. 85% first-contact resolution.")
+    ],
+    "kv": {"Top Tools":"LangGraph, Pinecone, Weaviate, Qdrant","Regulation":"SOX, Basel III, MAS, GDPR","Deployment":"Private cloud, HSM-backed","Market":"$28B by 2027"},
+    "theory":"Financial AI requires sub-millisecond latency for trading and strict regulatory compliance (SOX, Basel III, MAS). Fraud detection uses graph neural networks (GNNs) on transaction graphs with real-time agent loops in LangGraph for alert triage. Quantitative trading employs multi-agent systems where agents analyze SEC filings, news sentiment, social media, and market data simultaneously. Regulatory compliance uses RAG over thousands of pages of regulations with citation-verified responses.",
+    "steps":["Set up LangGraph workflow: data_ingestion → fraud_detection → alert_triage → case_management with MemorySaver for audit trail","Implement GNN-based fraud model on transaction graph (PyTorch Geometric + CUDA) with real-time inference via Triton","Build regulatory RAG: chunk 10K+ pages of regulations, embed with FinBERT or Sentence-BERT, retrieve top-10 for compliance queries","Deploy HSM-backed model serving (AWS CloudHSM or Azure Dedicated HSM) for cryptographic key protection","Set up real-time market data pipeline (Kafka → feature store → ML inference → trade execution in <100ms)"],
+    "best_practices":["Use differential privacy for training on sensitive financial data","Implement circuit breakers in agent loops to prevent runaway trading","Store all agent decisions in immutable audit log (WORM storage for SOX compliance)","Benchmark LLM latency: keep total RAG response under 500ms for customer-facing apps"],
+    "pitfalls":["Market data latency spikes cause model prediction degradation (implement fallback strategies)","Regulatory hallucinations — fine-tune LLM on specific regulations rather than relying solely on RAG","Model overfitting to historical market patterns that don't repeat"],
+    "refs":["https://www.mas.gov.sg/regulation/cybersecurity/guidance-on-the-use-of-ai-and-data-analytics|MAS AI Guidance|official","https://www.sec.gov/files/ai-report-2024.pdf|SEC AI Report 2024|paper","https://pytorch-geometric.readthedocs.io/|PyTorch Geometric Docs|official","https://huggingface.co/ProsusAI/finbert|FinBERT Model|official","https://jpmorgan.com/technology/ai-research-2025|JPMorgan AI Research Report|blog","https://www.bloomberg.com/company/bloomberg-gpt-ai-finance/|BloombergGPT for Finance|blog","https://www.manning.com/books/ai-in-finance|AI in Finance (Hilpisch)|book","https://www.oreilly.com/library/view/hands-on-quantitative-finance/9781098123482/|Hands-On Quantitative Finance (Jansen)|book"]
+  },
+  {
+    "name": "🏭 Manufacturing & Industry 4.0",
+    "adoption": "72%",
+    "trend": "Predictive maintenance, Digital Twins, Quality Vision AI",
+    "stacks": ["Agentic AI", "LangGraph", "Computer Vision", "MCP"],
+    "use_cases": [
+      ("Predictive Maintenance", "IoT sensor data + anomaly detection agents. Siemens reduced downtime 45%."),
+      ("Visual Quality Inspection", "YOLO + ViT + agent review loops. Toyota: 99.7% defect detection."),
+      ("Digital Twin Simulation", "NVIDIA Isaac Sim + RL agents. BMW: factory simulation cuts retooling 60%."),
+      ("Supply Chain AI", "Multi-agent planning across suppliers. Foxconn: 22% inventory reduction.")
+    ],
+    "kv": {"Top Tools":"ROS 2, Isaac Sim, YOLO, PyTorch","Protocols":"OPC-UA, MQTT, Modbus","Deployment":"Edge + On-prem, 5G","Market":"$14B by 2027"},
+    "theory":"Industry 4.0 deploys AI at the edge for real-time defect detection, predictive maintenance, and digital twin simulation. YOLO-based vision models run on NVIDIA Jetson edge devices for sub-10ms defect detection. Predictive maintenance uses IoT sensor time-series with anomaly detection transformers (e.g., TimesNet). Digital twins in NVIDIA Isaac Sim simulate factory operations, allowing RL agents to optimize production flows before real-world deployment. Multi-agent supply chain coordination uses LangGraph to manage supplier negotiation and inventory optimization.",
+    "steps":["Deploy edge inference: YOLOv8 on NVIDIA Jetson Orin with TensorRT optimization for <5ms inference per frame","Set up IoT pipeline: MQTT sensors → Kafka → TimescaleDB for time-series storage, anomalies detected by transformer model","Build digital twin: import factory CAD/URDF into Isaac Sim, add sensor simulation, train RL agents with Isaac Gym","Implement LangGraph supply chain: agents for procurement, inventory, logistics, and quality with shared state","Connect OPC-UA server to MCP bridge for LLM-controlled PLC parameter tuning with safety limits"],
+    "best_practices":["Use ONNX Runtime for cross-platform edge deployment (swap Jetson/AMD/Intel easily)","Implement human-in-the-loop for any PLC/machine control changes (MCP interrupt pattern)","Train defect detection on synthetic data (render defects in Isaac Sim) to cover rare failure modes","Set up OPC-UA tunnel with TLS for secure machine communication"],
+    "pitfalls":["Edge model drift from lighting changes, camera wear, or product variations (schedule weekly retraining)","Digital twin not matching real physics → sim-to-real gap (calibrate with real sensor data)","5G latency spikes causing missed real-time control deadlines (implement local fallback control)"],
+    "refs":["https://docs.omniverse.nvidia.com/isaacsim/latest/|NVIDIA Isaac Sim Docs|official","https://docs.opcua.opcfoundation.org/|OPC-UA Specification|official","https://docs.nvidia.com/deeplearning/tensorrt/|TensorRT Docs|official","https://github.com/thuml/Time-Series-Library|TimesNet Time-Series Models|github","https://www.siemens.com/digitaltwin-industrial-ai|Siemens Digital Twin AI|blog","https://www.bmw.com/en/innovation/digital-twin-factory.html|BMW Factory Digital Twin|blog","https://www.manning.com/books/industrial-ai|Industrial AI (Szeliski)|book","https://www.oreilly.com/library/view/practical-industrial-ai/9781098144463/|Practical Industrial AI (O'Donovan)|book"]
+  },
+  {
+    "name": "🛒 Retail & E-Commerce",
+    "adoption": "82%",
+    "trend": "Personalization, Agentic Shopping, Dynamic Pricing",
+    "stacks": ["RAG", "Vector DB", "LangChain", "Agentic AI"],
+    "use_cases": [
+      ("AI Shopping Assistant", "MCP-connected catalog + RAG. Amazon: 35% conversion lift."),
+      ("Visual Search", "CLIP embeddings + vector search. ASOS: 2.3x add-to-cart rate."),
+      ("Dynamic Pricing", "RL agents adjust prices in real-time. Walmart: 8% margin improvement."),
+      ("Inventory Forecasting", "Transformer-based demand prediction. Target: 15% stockout reduction.")
+    ],
+    "kv": {"Top Tools":"ChromaDB, LangChain, HuggingFace, MLflow","Infra":"Cloud-native, GCP/AWS","Scale":"100M+ products indexed","Market":"$45B by 2027"},
+    "theory":"Retail AI focuses on personalization at scale using vector search, CLIP-based visual search, and RL-driven dynamic pricing. Vector databases index 100M+ product embeddings for sub-50ms semantic search. AI shopping assistants use MCP-connected product catalogs with RAG for personalized recommendations. Dynamic pricing uses deep RL agents (PPO) that continuously adjust prices based on demand, competitor pricing, and inventory levels. Inventory forecasting uses temporal fusion transformers (TFT) on historical sales + external factors (weather, holidays, trends).",
+    "steps":["Index products: generate CLIP embeddings for product images + Sentence-BERT for descriptions → ChromaDB collection with product_id metadata","Build visual search: query image → CLIP embedding → vector search → rerank with product metadata filters","Implement AI shopping assistant: LangChain ReAct agent with MCP tools for catalog search, cart management, and recommendations","Set up dynamic pricing: RL agent (Stable-Baselines3 PPO) trained on historical demand curves, deployed as microservice with A/B testing","Deploy inventory forecasting: Temporal Fusion Transformer on 3 years of sales data + weather API + trend features"],
+    "best_practices":["Use MMR (Max Marginal Relevance) for diverse product recommendations (avoid all-similar results)","Implement cache warming for top-10K products to avoid cold-start latency","A/B test every pricing model change with statistical significance (minimum 2 weeks)","Use ClickHouse for real-time sales analytics (sub-second queries on billions of rows)"],
+    "pitfalls":["Seasonal events (Black Friday, CNY) break demand forecasting models (use holiday binary features)","Visual search fails on text-heavy product images (OCR + hybrid text/image embedding)","RL pricing agent causes price wars with competitors (implement competitor price caps)"],
+    "refs":["https://openai.com/index/clip/|CLIP Model|official","https://huggingface.co/sentence-transformers|Sentence-Transformers|official","https://stable-baselines3.readthedocs.io/|Stable-Baselines3 Docs|official","https://pytorch-forecasting.readthedocs.io/|PyTorch Forecasting (TFT)|official","https://aws.amazon.com/blogs/ai/retail-recommendation-engine-bedrock-2025|AWS Retail Recommendation Engine|blog","https://www.walmart.com/dynamic-pricing-ai-case-study|Walmart Dynamic Pricing AI|blog","https://www.manning.com/books/ai-for-e-commerce|AI for E-Commerce (Das)|book","https://www.oreilly.com/library/view/building-recommendation-systems/9781492089148/|Building Recommendation Systems (Jannach)|book"]
+  },
+  {
+    "name": "🚗 Transportation & Logistics",
+    "adoption": "68%",
+    "trend": "Autonomous driving, Route optimization, Fleet AI",
+    "stacks": ["Computer Vision", "LangGraph", "Reinforcement Learning", "Agentic AI"],
+    "use_cases": [
+      ("Autonomous Driving", "End-to-end Vision + Planning. Waymo: 20M+ autonomous miles."),
+      ("Route Optimization", "Graph RL agents for fleet routing. UPS saved 10M gallons fuel/year."),
+      ("Warehouse Robotics", "Multi-agent pick-and-place. Amazon Robotics: 5x throughput."),
+      ("Demand Forecasting", "Temporal fusion transformers. DHL: 92% forecast accuracy.")
+    ],
+    "kv": {"Top Tools":"ROS 2, PyTorch, TensorFlow, MuJoCo","Hardware":"NVIDIA Orin, Qualcomm Ride","Safety":"ISO 26262, SOTIF","Market":"$12B by 2027"},
+    "theory":"Transportation AI spans autonomous driving (end-to-end vision transformers), route optimization (graph RL), and warehouse robotics (multi-agent coordination). Autonomous vehicles use vision transformers (ViT) with bird's-eye-view (BEV) perception, planning with imitation learning, and control with model-predictive control (MPC). Route optimization for fleet logistics uses graph neural networks combined with RL on historical traffic + weather data. Warehouse robotics uses multi-agent RL where robots coordinate via centralized critic (CTDE paradigm).",
+    "steps":["Set up autonomous driving perception: BEVFormer or UniAD vision transformer with multi-camera input → occupancy grid + object detection","Train planner: Transformer-based imitation learning on 1000+ hours of human driving data (NuPlan dataset)","Implement route optimization: graph neural network on traffic topology + PPO agent for real-time rerouting (SUMO simulator for training)","Deploy warehouse multi-agent system: MAPPO (Multi-Agent PPO) with centralized training, decentralized execution on ROS 2 nodes","Safety validation: ISO 26262 ASIL-D compliance for perception, planner, and control modules with hardware-in-the-loop testing"],
+    "best_practices":["Use simulation-first approach (CARLA/SUMO/Isaac Sim) before real-world deployment","Implement ODD (Operational Design Domain) monitors that gracefully degrade when outside training conditions","Log all perception outputs + decisions for post-mortem analysis (rosbag + SQLite)","Use formal verification (Reachability Analysis) for safety-critical planner outputs"],
+    "pitfalls":["Corner cases in perception (unusual vehicle types, adverse weather) cause detection failures (augment with synthetic data)","Sim-to-real gap in RL policies (domain randomization + real-world fine-tuning)","Warehouse multi-agent deadlock from myopic policies (implement traffic rules + centralized coordinator)"],
+    "refs":["https://carla.org/|CARLA Simulator|official","https://sumo.dlr.de/docs/|SUMO Traffic Simulator|official","https://arxiv.org/abs/2206.08256|BEVFormer Paper|paper","https://arxiv.org/abs/2103.01955|MAPPO Paper|paper","https://waymo.com/blog/2025-autonomous-driving-stack|Waymo Autonomous Driving Stack|blog","https://www.uber.com/blog/machine-learning-at-uber/|Uber ML in Logistics|blog","https://www.manning.com/books/autonomous-vehicles|Autonomous Vehicles (Levine)|book","https://www.oreilly.com/library/view/hands-on-autonomous-driving/9781098145972/|Hands-On Autonomous Driving (Cho)|book"]
+  },
+  {
+    "name": "🏛️ Government & Public Sector",
+    "adoption": "55%",
+    "trend": "Citizen services, Document AI, Policy analysis",
+    "stacks": ["RAG", "MCP", "LangChain", "Vector DB"],
+    "use_cases": [
+      ("Citizen Query Portal", "RAG over policy docs + MCP-connected databases. Singapore Gov: 90% auto-resolution."),
+      ("Legislative Analysis", "LLM comparison of bills across jurisdictions. EU Parliament: 70% faster analysis."),
+      ("Fraud & Waste Detection", "Graph neural nets on procurement data. US Federal: $2B recovered."),
+      ("Emergency Response", "Multi-agent coordination for disaster response. FEMA: 40% faster resource allocation.")
+    ],
+    "kv": {"Top Tools":"LangChain, ChromaDB, Ollama, Qdrant","Compliance":"IM8, PDPA, FedRAMP, SOC 2","Deployment":"GovCloud, On-prem","Market":"$8B by 2027"},
+    "theory":"Government AI requires sovereign cloud deployment (GovCloud) with strict compliance frameworks (IM8 for Singapore, FedRAMP for US, PDPA for personal data). Citizen query portals use RAG over policy documents with MCP-connected government databases. Legislative analysis uses multi-document RAG with cross-jurisdiction comparison. Fraud detection uses graph neural networks on procurement and benefits data. Emergency response systems use multi-agent coordination for resource allocation across agencies.",
+    "steps":["Deploy on GovCloud: air-gapped vector store (ChromaDB/Qdrant) with IL5-compliant encryption","Build citizen portal RAG: index all policy documents + FAQ + legislation into vector DB, deploy LangChain QA chain via MCP","Implement legislative analysis: multi-document RAG with cross-reference linking between related statutes across jurisdictions","Set up fraud detection: graph neural network (GraphSAGE) on procurement contracts + entity resolution for shell company detection","Deploy emergency response: LangGraph multi-agent system (police/fire/medical/hazmat agents) with shared situation-map state"],
+    "best_practices":["Use on-prem LLM (Ollama with Llama 3.2 or Mistral) for data sovereignty — never send government data to external APIs","Implement full audit logging for every AI action (who, what, when, why, what data accessed)","Classify data sensitivity levels and enforce RAG access controls per classification","Use PDPA-compliant PII masking (NER → redaction before embedding or storage)"],
+    "pitfalls":["Citizen queries in local languages fail with English-only embedding models (use multilingual BGE or mE5)","Policy document version conflicts confuse RAG (implement date-range filtering in metadata)","Fraud GNN has high false positive rate on legitimate but unusual procurement patterns (human review loop required)"],
+    "refs":["https://www.tech.gov.sg/resources/our-standards/|Singapore IM8 Standards|official","https://www.pdpc.gov.sg/|Singapore PDPA|official","https://www.fedramp.gov/|US FedRAMP|official","https://ollama.com/library/llama3.2|Llama 3.2 via Ollama|official","https://www.govtech.gov.sg/reports/2025/ai-government-services|Singapore Gov AI Services Report|blog","https://federalnewsnetwork.com/ai-government-2025|US Federal AI Adoption 2025|blog","https://www.manning.com/books/ai-in-government|AI in Government (Margetts)|book","https://www.oreilly.com/library/view/digital-government/9781098148782/|Digital Government (Dunleavy)|book"]
+  },
+  {
+    "name": "🎓 Education & EdTech",
+    "adoption": "74%",
+    "trend": "Personalized tutoring, Automated grading, Content generation",
+    "stacks": ["RAG", "Agentic AI", "LangChain", "MCP"],
+    "use_cases": [
+      ("AI Tutor", "RAG over curriculum + adaptive questioning. Khan Academy: 2x learning speed."),
+      ("Automated Essay Scoring", "Fine-tuned LLMs + rubric RAG. ETS: 92% agreement with human graders."),
+      ("Content Generation", "Curriculum creation agents. Duolingo: 10x content output."),
+      ("Research Assistant", "Multi-paper RAG + citation graph. Used by 200+ universities.")
+    ],
+    "kv": {"Top Tools":"LangChain, ChromaDB, OpenAI, Anthropic","Standards":"SCORM, LTI 1.3, QTI","Scale":"50M+ students reached","Market":"$6B by 2027"},
+    "theory":"EdTech AI delivers personalized tutoring at scale using RAG over curriculum materials with adaptive question-answering. AI tutors use a multi-step pipeline: assess student knowledge → retrieve relevant curriculum → generate adaptive question → evaluate response → update knowledge graph. Automated essay scoring uses fine-tuned LLMs with rubric-specific RAG for fair, consistent grading. Content generation agents create curriculum materials aligned to standards (SCORM, LTI). Research assistants use multi-paper RAG with citation graphs for literature review.",
+    "steps":["Build student model: knowledge tracing via Bayesian Knowledge Graphs or DKVMN deep learning on quiz history","Create AI tutor: LangChain RAG pipeline over curriculum, with adaptive retrieval based on student skill level (Bloom's Taxonomy)","Implement essay scoring: fine-tune LLM with LoRA on rubric-scored essays, augment with rubric RAG for context","Deploy content generation: CrewAI agents for curriculum design, lesson planning, and assessment creation with SCORM compliance","Set up research assistant: multi-paper ingestion into vector DB, citation graph for paper discovery, LangGraph for iterative research"],
+    "best_practices":["Use Bloom's Taxonomy levels to adjust question difficulty retrieved from curriculum DB","Implement spaced repetition algorithm (FSRS) in student knowledge graph for optimal review timing","Store student interaction data in anonymized format for research while complying with FERPA/COPPA","Use RLHF on tutor responses to improve pedagogical quality over time"],
+    "pitfalls":["AI tutor giving answers instead of hints (prompt engineering for Socratic method)","Essay scoring biased against non-native writers (fine-tune on diverse demographic samples)","Research assistant hallucinating paper citations (verify with DOI/crossref API)"],
+    "refs":["https://www.imsglobal.org/activity/learning-tools-interoperability|LTI 1.3 Standard|official","https://arxiv.org/abs/1912.09728|DKVMN Knowledge Tracing|paper","https://huggingface.co/docs/peft/en/developer_guides/lora|LoRA Fine-Tuning|official","https://arxiv.org/abs/2210.12701|Spaced Repetition FSRS|paper","https://www.khanacademy.org/research/ai-tutor-impact|Khan Academy AI Tutor Results|blog","https://www.duolingo.com/blog/ai-language-learning-2025|Duolingo AI Language Learning|blog","https://www.manning.com/books/ai-in-education|AI in Education (Luckin)|book","https://www.oreilly.com/library/view/practical-ai-for/9781098146306/|Practical AI for EdTech (Verma)|book"]
+  },
+  {
+    "name": "⚡ Energy & Utilities",
+    "adoption": "62%",
+    "trend": "Smart grid, Renewable forecasting, Nuclear AI safety",
+    "stacks": ["LangGraph", "Computer Vision", "IoT ML", "Agentic AI"],
+    "use_cases": [
+      ("Grid Load Forecasting", "Transformer time-series + weather data. EDF: 5% energy savings."),
+      ("Solar/Wind Prediction", "Physics-informed neural nets. Vestas: 20% more accurate output forecasts."),
+      ("Nuclear Safety AI", "Multi-sensor anomaly detection agents. Framatome: real-time risk monitoring."),
+      ("Pipeline Inspection", "Drone vision + defect detection AI. Shell: 90% faster inspections.")
+    ],
+    "kv": {"Top Tools":"PyTorch, TensorFlow, FastAI, ONNX","Protocols":"IEC 61850, DNP3, Modbus","Hardware":"NVIDIA Jetson, Edge TPU","Market":"$18B by 2027"},
+    "theory":"Energy AI focuses on smart grid optimization, renewable energy forecasting, and infrastructure inspection. Grid load forecasting uses transformer-based time-series models with weather data integration (EDF: 5% energy savings). Renewable energy prediction uses physics-informed neural networks (PINNs) that incorporate atmospheric physics equations into the loss function for more accurate solar/wind forecasts. Nuclear safety AI uses multi-sensor anomaly detection (audio, vibration, temperature, radiation) with agent-based monitoring. Pipeline inspection uses drone-based computer vision with defect detection models on edge devices.",
+    "steps":["Deploy smart grid load forecasting: Temporal Fusion Transformer on 5 years of load + weather data, deployed as ONNX on edge gateway","Build renewable prediction: NeuralProphet base model + physics-informed residuals for solar/wind farm output forecasting","Implement nuclear safety monitoring: ensemble of autoencoders per sensor type, LangGraph agent for cross-sensor correlation and alert escalation","Deploy drone inspection: YOLOv8 on NVIDIA Jetson Orin for real-time pipeline/cable defect detection with 5G uplink for edge-cloud hybrid","Set up IEC 61850 MCP bridge: connect substation automation data to LangChain agents for grid management"],
+    "best_practices":["Use ensemble of numerical weather prediction (NWP) + ML model for renewable forecasting","Store all sensor data with nanosecond timestamps for post-event grid analysis","Implement progressive model loading (edge models fallback to cloud when confidence < threshold)","Use synthetic data augmentation for rare grid fault scenarios"],
+    "pitfalls":["Weather forecast errors cascade into renewable prediction (use probabilistic forecasting with confidence intervals)","IEC 61850 protocol changes between substation vendors require adapter layer","Edge device thermal constraints in desert/arctic deployments (implement model quantization for lower power)"],
+    "refs":["https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=59|IEEE Trans. on Power Systems|paper","https://arxiv.org/abs/2202.13429|Temporal Fusion Transformer|paper","https://pytorch.org/docs/stable/quantization.html|PyTorch Quantization|official","https://github.com/ourownstory/neural_prophet|NeuralProphet|github","https://www.edf.com/smart-grid-ai-case-study|EDF Smart Grid AI|blog","https://www.siemens-energy.com/ai-energy-management|Siemens Energy AI|blog","https://www.manning.com/books/ai-for-energy|AI for Energy (Papadopoulos)|book","https://www.oreilly.com/library/view/machine-learning-for/9781492085225/|ML for Energy Systems (Meyn)|book"]
+  },
+  {
+    "name": "📡 Telecom & 5G/6G",
+    "adoption": "70%",
+    "trend": "Network optimization, RAN automation, Customer AI",
+    "stacks": ["Agentic AI", "LangGraph", "Computer Vision", "RAG"],
+    "use_cases": [
+      ("RAN Optimization", "RL agents tune radio parameters. Ericsson: 25% capacity improvement."),
+      ("Network Fault Prediction", "Graph neural nets on topology graphs. Nokia: 40% fewer outages."),
+      ("Customer Churn AI", "RAG over customer history + intent prediction. T-Mobile: 18% churn reduction."),
+      ("Edge AI for 5G", "Federated learning on base stations. Samsung: privacy-preserving network ML.")
+    ],
+    "kv": {"Top Tools":"LangChain, PyTorch, Kubeflow, MLflow","Standards":"3GPP, O-RAN, ETSI","Deployment":"Edge + MEC, Central Cloud","Market":"$10B by 2027"},
+    "theory":"Telecom AI leverages RL for RAN (Radio Access Network) optimization — agents tune antenna tilt, power, and beamforming parameters in real-time for 25% capacity gains. Network fault prediction uses graph neural networks on telecom topology graphs to predict outages before they occur. Customer churn prediction uses RAG over customer interaction history with intent prediction models. Edge AI for 5G deploys federated learning across base stations for privacy-preserving network optimization (no raw user data leaves the base station).",
+    "steps":["Set up RAN optimization: RL agent (RLlib or Stable-Baselines3) trained in O-RAN simulator (Colosseum), deployed via O-RAN near-RT RIC","Build fault prediction: GraphSAGE on network topology (cell sites, routers, fiber links) with time-series features for each node","Implement customer churn AI: RAG over call logs + billing + support tickets + social sentiment, deployed as LangChain agent","Deploy federated learning: Flower framework with NVIDIA FLARE for distributed training across 5G base stations","Set up MEC inference: NVIDIA Triton Inference Server on MEC nodes for sub-10ms AI inference at the edge"],
+    "best_practices":["Use O-RAN near-RT RIC with E2 interface for real-time RAN control loops (<10ms latency)","Implement explainable AI for fault predictions (GNNExplainer or Integrated Gradients for root cause analysis)","Use differential privacy in federated learning (add calibrated noise to gradient updates)","Store synthetic data from network digital twin for rare fault scenario training"],
+    "pitfalls":["RL agent exploration degrades live network performance (train entirely in simulation first)","GNN topology graphs become stale when network changes (implement incremental graph updates)","Federated learning communication overhead on backhaul (use gradient compression + asynchronous FL)"],
+    "refs":["https://www.o-ran.org/specifications|O-RAN Specifications|official","https://docs.ray.io/en/latest/rllib/|Ray RLlib Docs|official","https://flower.ai/docs/|Flower Federated Learning|official","https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=49|IEEE Comms. Magazine|paper","https://www.ericsson.com/en/reports-and-papers/white-papers/ai-in-ran|Ericsson AI in RAN Whitepaper|blog","https://www.nokia.com/networks/ai-network-automation/|Nokia AI Network Automation|blog","https://www.manning.com/books/ai-for-telecommunications|AI for Telecommunications (Sun)|book","https://www.oreilly.com/library/view/5g-and-beyond/9781098147974/|5G and Beyond AI (Choi)|book"]
+  }
+] %}
+
+{% for ind in industries %}
+<div class="stack-section" style="margin-bottom:32px">
+<div class="section-header" onclick="toggleSection('industryBody{{ loop.index }}')" style="cursor:pointer;user-select:none">
+  <h2>{{ ind.name }}</h2>
+  <span class="collapse-arrow">▾</span>
+</div>
+  <p class="sub">Adoption: <strong>{{ ind.adoption }}</strong> · Trend: {{ ind.trend }}</p>
+  
+  <div class="stack-detail-card">
+    <div class="stack-header">
+      <span class="title">AI Use Cases & Deployment Patterns</span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        {% for s in ind.stacks %}<span class="tool-chip">{{ s }}</span>{% endfor %}
+      </div>
+    </div>
+    
+    {% for uc_name, uc_desc in ind.use_cases %}
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-color)">
+      <div style="min-width:140px;font-weight:600;font-size:0.78rem;color:var(--accent)">{{ uc_name }}</div>
+      <div style="font-size:0.74rem;color:var(--text-secondary);line-height:1.5">{{ uc_desc }}</div>
+    </div>
+    {% endfor %}
+    
+    <div class="kv-grid" style="margin-top:12px">
+      {% for k, v in ind.kv.items() %}
+      <div class="kv-item"><div class="kv-key">{{ k }}</div><div class="kv-val">{{ v }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+
+<div id="industryBody{{ loop.index }}" style="display:none">
+  {% if ind.theory %}
+  <div class="theory-box" style="margin-top:12px">{{ ind.theory }}</div>
+  {% endif %}
+  {% if ind.diagram %}
+  <div class="flow-diagram" style="margin-top:10px">{% for line in ind.diagram %}{{ line }}
+{% endfor %}</div>
+  {% endif %}
+  {% if ind.steps %}
+  <div class="impl-guide" style="margin-top:12px">
+    <h4>📋 Implementation Guide</h4>
+    {% for s in ind.steps %}
+    <div class="impl-step"><span class="num">{{ loop.index }}.</span><span class="text">{{ s }}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if ind.best_practices %}
+  <div class="impl-guide" style="margin-top:8px">
+    <h4>✅ Best Practices</h4>
+    <ul>{% for bp in ind.best_practices %}<li>{{ bp }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  {% if ind.pitfalls %}
+  <div class="impl-guide" style="margin-top:8px">
+    <h4>⚠️ Common Pitfalls</h4>
+    <ul>{% for p in ind.pitfalls %}<li>{{ p }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  {% if ind.refs %}
+  <div class="ref-section" style="margin-top:10px">
+    <strong style="font-size:0.65rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-right:6px;align-self:center">Refs:</strong>
+    {% for r in ind.refs %}{% set parts = r.split('|') %}
+    <a href="{{ parts[0] }}" class="ref-link" target="_blank" rel="noopener">{{ parts[1] }} <span class="type-tag">{{ parts[2] }}</span></a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+</div>
+{% endfor %}
+
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+// Highlight active section in sticky nav
+document.addEventListener('DOMContentLoaded', () => {
+  const sections = document.querySelectorAll('.stack-section');
+  const navLinks = document.querySelectorAll('.sticky-nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sticky-nav a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
+  sections.forEach(s => observer.observe(s));
+});
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  const arrow = el.previousElementSibling.querySelector('.collapse-arrow');
+  if (el) {
+    el.style.display = el.style.display === 'none' ? '' : 'none';
+    if (arrow) arrow.classList.toggle('open');
+  }
+}
+</script>
+</body>
+</html>

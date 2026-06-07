@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Categories - NovaPulse AI</title>
+<style>
+.cat-explorer{max-width:960px;margin:0 auto}
+.cat-hero{text-align:center;margin-bottom:28px}
+.cat-hero h1{font-size:1.6rem;font-weight:700;margin-bottom:6px}
+.cat-hero p{font-size:0.85rem;color:var(--text-secondary)}
+.search-cats{margin-bottom:20px;position:relative}
+.search-cats input{width:100%;padding:12px 16px 12px 40px;border:1px solid var(--border-color);border-radius:12px;font-size:0.85rem;outline:none;background:var(--card-bg);color:var(--text-primary)}
+.search-cats input:focus{border-color:var(--accent)}
+.search-cats .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);font-size:0.9rem}
+.cat-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:28px}
+.cat-stat-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:16px;text-align:center}
+.cat-stat-card .num{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.cat-stat-card .label{font-size:0.65rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-top:3px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.cat-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:20px;cursor:pointer;transition:all 0.2s;position:relative}
+.cat-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);transform:translateY(-2px)}
+.cat-card .cat-icon{font-size:2rem;margin-bottom:8px}
+.cat-card .cat-name{font-weight:700;font-size:1.05rem;margin-bottom:4px}
+.cat-card .cat-desc{font-size:0.75rem;color:var(--text-secondary);line-height:1.5;margin-bottom:10px}
+.cat-card .cat-meta{display:flex;gap:14px;font-size:0.68rem;color:var(--text-tertiary);margin-bottom:8px}
+.cat-card .cat-meta span{display:flex;align-items:center;gap:4px}
+.cat-card .expand-icon{display:inline-block;font-size:0.7rem;color:var(--accent);font-weight:600;text-decoration:none;padding:4px 0}
+.cat-card .expand-icon:hover{text-decoration:underline}
+.cat-detail{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.cat-detail.open{max-height:600px}
+.cat-detail-inner{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:16px;margin-top:12px}
+.cat-detail-inner h4{font-size:0.72rem;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px}
+.sub-tag-grid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.sub-tag{background:var(--bg-tertiary);padding:4px 12px;border-radius:14px;font-size:0.68rem;color:var(--text-secondary)}
+.browse-cta{display:inline-block;padding:6px 16px;border-radius:8px;background:var(--accent);color:#fff;font-size:0.72rem;font-weight:600;text-decoration:none;transition:all 0.2s;margin-top:6px}
+.browse-cta:hover{background:var(--accent-hover)}
+</style>
+</head>
+<body>
+{% set nav_active = 'categories' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link">Browse</a>
+<a href="/categories" class="nav-link active">Categories</a>
+<a href="/self-hosted" class="nav-link">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link">Tech Stacks</a>
+<a href="/tags" class="nav-link">Tags</a>
+<a href="/licenses" class="nav-link">Licenses</a>
+<a href="/advertise" class="nav-link">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="app-container">
+<div class="cat-explorer">
+<div class="cat-hero">
+<h1>📂 Categories</h1>
+<p>Explore {{ categories|length }} curated categories — each with sub-categories and tools. Click to expand details.</p>
+</div>
+
+{% set total_tools = categories|sum(attribute='count') %}
+
+<div class="cat-stats">
+<div class="cat-stat-card"><div class="num">{{ categories|length }}</div><div class="label">Categories</div></div>
+<div class="cat-stat-card"><div class="num">{{ total_tools }}</div><div class="label">Total Tools</div></div>
+<div class="cat-stat-card"><div class="num">{{ (total_tools / categories|length)|round|int if categories else 0 }}</div><div class="label">Avg/Category</div></div>
+<div class="cat-stat-card"><div class="num">{{ (categories|sort(attribute='count', reverse=True))[0].name if categories else '-' }}</div><div class="label">Largest</div></div>
+</div>
+
+<div class="search-cats">
+<span class="search-icon">🔍</span>
+<input type="text" id="catSearch" placeholder="Search categories..." oninput="filterCats(this.value)">
+</div>
+
+<div class="cat-grid" id="catGrid">
+{% for c in categories %}
+<div class="cat-card" data-name="{{ c.name|lower }}" onclick="toggleCat(this)">
+<div class="cat-icon">{{ c.icon }}</div>
+<div class="cat-name">{{ c.name }}</div>
+<div class="cat-desc">{{ c.description }}</div>
+<div class="cat-meta">
+<span>📦 {{ c.count }} tools</span>
+{% if c.subcategories %}<span>🏷️ {{ c.subcategories|length }} sub-categories</span>{% endif %}
+</div>
+<span class="expand-icon">▼ Show details</span>
+<div class="cat-detail">
+<div class="cat-detail-inner">
+{% if c.subcategories %}
+<h4>Sub-categories</h4>
+<div class="sub-tag-grid">
+{% for sub in c.subcategories %}
+<span class="sub-tag">{{ sub }}</span>
+{% endfor %}
+</div>
+{% endif %}
+<a href="/browse?cat={{ c.slug }}" class="browse-cta">Browse {{ c.name }} →</a>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+
+function filterCats(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('#catGrid .cat-card').forEach(function(card) {
+    const name = card.getAttribute('data-name');
+    card.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+function toggleCat(el) {
+  el.classList.toggle('open');
+  const detail = el.querySelector('.cat-detail');
+  const expandIcon = el.querySelector('.expand-icon');
+  if (detail.classList.contains('open')) {
+    detail.classList.remove('open');
+    expandIcon.textContent = '▼ Show details';
+  } else {
+    detail.classList.add('open');
+    expandIcon.textContent = '▲ Hide details';
+  }
+}
+</script>
+</body>
+</html>

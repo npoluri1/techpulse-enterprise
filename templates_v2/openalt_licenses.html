@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Licenses - NovaPulse AI</title>
+</head>
+<body>
+{% set nav_active = 'licenses' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/tags" class="nav-link{{ ' active' if nav_active == 'tags' else '' }}">Tags</a>
+<a href="/licenses" class="nav-link{{ ' active' if nav_active == 'licenses' else '' }}">Licenses</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>📜 Open Source Licenses</h1><p>Browse tools by their open source license type.</p></div>
+
+<div class="app-container">
+<div class="license-grid">
+{% for l in licenses %}
+<a href="/browse?license={{ l.name }}" class="license-card">
+<div>
+<div class="license-name">{{ l.name }}</div>
+<div class="license-desc">{{ l.description }}</div>
+</div>
+<span class="license-count">{{ l.count }} tools</span>
+</a>
+{% endfor %}
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+</script>
+</body>
+</html>

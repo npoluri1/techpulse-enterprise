@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Advertise - NovaPulse AI</title>
+</head>
+<body>
+{% set nav_active = 'advertise' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link{{ ' active' if nav_active == 'techstacks' else '' }}">Tech Stacks</a>
+<a href="/tags" class="nav-link{{ ' active' if nav_active == 'tags' else '' }}">Tags</a>
+<a href="/licenses" class="nav-link{{ ' active' if nav_active == 'licenses' else '' }}">Licenses</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light">
+<h1>Advertise on NovaPulse AI</h1>
+<p>Reach 150,000 monthly visitors – developers, tech leaders, and decision-makers exploring open source tools for their next project.</p>
+</div>
+
+<div class="app-container">
+<div class="stats-row">
+<div class="stat-card"><div class="stat-val" style="color:var(--accent);">{{ data.pageviews }}</div><div class="stat-label">Monthly Pageviews</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-green);">{{ data.listed_projects }}</div><div class="stat-label">Listed Projects</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-purple);">{{ data.newsletter }}</div><div class="stat-label">Newsletter Subscribers</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-orange);">{{ data.github_stars }}</div><div class="stat-label">GitHub Stars</div></div>
+</div>
+
+<div class="period-pills">
+<span class="pill active">Weekly</span>
+<span class="pill">Monthly</span>
+<span class="pill">Yearly</span>
+</div>
+
+<div class="pricing-grid" style="margin-bottom:28px;">
+{% for plan in data.plans %}
+<div class="plan-card{% if plan.popular %} popular{% endif %}">
+{% if plan.popular %}<div class="plan-badge">Most popular</div>{% endif %}
+<div class="plan-name">{{ plan.name }}</div>
+<div class="plan-price">${{ plan.price }} <span>/{{ plan.period }}</span></div>
+<div class="plan-period">Weekly pricing</div>
+<ul class="plan-features">{% for f in plan.features %}<li>{{ f }}</li>{% endfor %}</ul>
+<a href="/subscribe?plan={{ plan.name|lower }}" class="btn btn-primary" style="padding:12px 32px;font-size:0.85rem;">Get started →</a>
+</div>
+{% endfor %}
+</div>
+
+<div class="section" style="text-align:center;background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:28px;margin-bottom:32px;">
+<p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">Need a custom package? Contact us to discuss a tailored solution.</p>
+<a href="/contact" class="btn" style="padding:12px 28px;font-size:0.85rem;font-weight:600;background:var(--text-primary);color:#fff;">Contact us</a>
+</div>
+
+<div class="audience-section" style="margin-bottom:32px;"><h3>Who you're reaching</h3>
+<div class="aud-bar"><span class="label">Developers</span><div class="bar-wrap"><div class="bar-fill" style="width:{{ data.audience.developers }}%"></div></div><span class="pct">{{ data.audience.developers }}%</span></div>
+<div class="aud-bar"><span class="label">Tech Leaders</span><div class="bar-wrap"><div class="bar-fill" style="width:{{ data.audience.tech_leaders }}%"></div></div><span class="pct">{{ data.audience.tech_leaders }}%</span></div>
+<div class="aud-bar"><span class="label">Founders & CTOs</span><div class="bar-wrap"><div class="bar-fill" style="width:{{ data.audience.founders_ctos }}%"></div></div><span class="pct">{{ data.audience.founders_ctos }}%</span></div>
+<div class="aud-bar"><span class="label">Other Technical</span><div class="bar-wrap"><div class="bar-fill" style="width:{{ data.audience.other }}%"></div></div><span class="pct">{{ data.audience.other }}%</span></div>
+</div>
+
+<div style="text-align:center;margin-bottom:24px;">
+<a href="https://dashboard.openpanel.dev/share/overview/Ezr2sN?range=30d" target="_blank" class="btn" style="padding:10px 24px;font-size:0.82rem;font-weight:500;background:var(--bg-tertiary);color:var(--text-primary);">📊 Explore our real-time analytics →</a>
+</div>
+
+<div class="testimonial-card">
+<blockquote>"{{ data.testimonial.quote }}"</blockquote>
+<div class="author">{{ data.testimonial.author }}</div>
+<div class="role">{{ data.testimonial.role }}</div>
+</div>
+
+<div class="partners"><h3>Join these companies in advertising</h3>
+<div class="partner-grid">{% for logo in data.partner_logos %}<span class="partner-tag">{{ logo }}</span>{% endfor %}</div>
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+</script>
+</body>
+</html>

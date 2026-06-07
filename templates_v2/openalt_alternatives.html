@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Alternatives - NovaPulse AI</title>
+<style>
+.alt-rich-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.alt-rich-card{display:grid;grid-template-columns:36px 1fr;gap:14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:16px;text-decoration:none;color:inherit;transition:all 0.2s;align-items:start}
+.alt-rich-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--accent)}
+.alt-rich-fav{width:36px;height:36px;border-radius:8px;overflow:hidden;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.alt-rich-fav img{width:36px;height:36px;object-fit:contain}
+.alt-rich-fav .fallback{font-size:1.1rem;font-weight:600;color:var(--text-secondary)}
+.alt-rich-body{min-width:0}
+.alt-rich-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.alt-rich-name{font-weight:600;font-size:0.9rem}
+.alt-rich-desc{font-size:0.78rem;color:var(--text-secondary);line-height:1.4;margin-bottom:6px}
+.alt-rich-meta{display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-tertiary)}
+.alt-rich-meta .count-badge{padding:2px 10px;border-radius:12px;background:var(--accent);color:#fff;font-size:0.68rem;font-weight:600}
+@media(min-width:768px){.alt-rich-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+{% set nav_active = 'browse' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link{{ ' active' if nav_active == 'techstacks' else '' }}">Tech Stacks</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light">
+<h1>Alternatives</h1>
+<p>Browse Open Source Software Alternatives — discover top open source alternatives to popular proprietary software tools.</p>
+<div class="search-box" style="max-width:500px;margin:0 auto;position:relative;">
+<input type="text" id="searchInput" placeholder="Search alternatives..." oninput="filterCards(this.value)" style="width:100%;padding:12px 16px 12px 40px;border:1px solid var(--border-color);border-radius:30px;font-size:0.9rem;outline:none;background:var(--card-bg);">
+<span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:0.9rem;">🔍</span>
+</div>
+</div>
+
+<div class="app-container">
+<div class="section-header" style="margin-bottom:16px;">
+<h2>All Alternatives</h2>
+<span id="resultCount" style="font-size:0.8rem;color:var(--text-secondary);">{{ alternatives|length }} tools</span>
+</div>
+
+{% set unique_props = {} %}
+{% for a in alternatives %}
+{% set _ = unique_props.update({a.proprietary: unique_props.get(a.proprietary, {'count': 0, 'description': a.get('description', ''), 'category': a.category})}) %}
+{% set _ = unique_props[a.proprietary].__setitem__('count', unique_props[a.proprietary]['count'] + 1) %}
+{% endfor %}
+
+<div class="alt-rich-grid" id="altGrid">
+{% for prop, info in unique_props.items()|sort %}
+<div class="alt-rich-card" data-name="{{ prop.lower() }}" onclick="window.location.href='/browse?q={{ prop | urlencode }}'">
+<div class="alt-rich-fav">
+<img src="https://www.google.com/s2/favicons?domain={{ prop.lower().replace(' ', '') }}.com&sz=32" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=fallback>{{ prop[:1] }}</span>'">
+</div>
+<div class="alt-rich-body">
+<div class="alt-rich-header">
+<span class="alt-rich-name">{{ prop }}</span>
+<span class="count-badge">{{ info.count }} alternative{% if info.count > 1 %}s{% endif %}</span>
+</div>
+<div class="alt-rich-desc">{{ info.description }}</div>
+<div class="alt-rich-meta">
+<span>{{ info.category }}</span>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+function filterCards(q) {
+  q = q.toLowerCase().trim();
+  const cards = document.querySelectorAll('.alt-rich-card');
+  let count = 0;
+  cards.forEach(c => {
+    const name = c.dataset.name || '';
+    if (!q || name.includes(q)) { c.style.display = ''; count++; }
+    else { c.style.display = 'none'; }
+  });
+  document.getElementById('resultCount').textContent = count + ' tool' + (count !== 1 ? 's' : '');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Browse - NovaPulse AI</title>
+<style>
+.sh-grid{display:flex;flex-direction:column;gap:10px}
+.sh-card{display:flex;gap:14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:16px;text-decoration:none;color:inherit;transition:all 0.15s}
+.sh-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);transform:translateY(-1px)}
+.sh-favicon{flex-shrink:0;width:48px;height:48px;border-radius:12px;background:var(--bg-primary);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:var(--accent);overflow:hidden;border:1px solid var(--border-color)}
+.sh-favicon img{width:28px;height:28px}
+.sh-body{flex:1;min-width:0}
+.sh-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.sh-header h3{font-size:0.9rem;font-weight:700;margin:0}
+.sh-header .badge{padding:2px 8px;border-radius:6px;font-size:0.6rem;font-weight:600}
+.badge-green{background:rgba(52,199,89,0.12);color:var(--accent-green)}
+.badge-blue{background:rgba(0,113,227,0.1);color:var(--accent)}
+.sh-desc{font-size:0.75rem;color:var(--text-secondary);line-height:1.5;margin-bottom:6px}
+.sh-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:0.68rem;color:var(--text-tertiary)}
+.sh-alts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:0.68rem}
+.alt-label{color:var(--text-tertiary);font-size:0.62rem}
+.alt-item{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:var(--bg-tertiary);color:var(--text-secondary)}
+.alt-item img{width:12px;height:12px;border-radius:2px}
+.sh-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.tag-chip{font-size:0.6rem;padding:2px 8px;border-radius:999px;background:var(--bg-tertiary);color:var(--text-tertiary)}
+.sh-install{margin-top:6px;font-size:0.68rem;display:flex;align-items:center;gap:4px}
+.sh-install .install-icon{font-size:0.7rem}
+.sh-install code{background:var(--bg-tertiary);padding:2px 8px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,monospace;font-size:0.65rem;color:var(--text-secondary);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh-type-badge{display:inline-block;margin-top:6px;font-size:0.55rem;padding:1px 8px;border-radius:4px;background:rgba(90,200,250,0.12);color:#5ac8fa;text-transform:uppercase;letter-spacing:0.03em;font-weight:600}
+.controls-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.collapse-arrow{font-size:0.7rem;margin-left:6px;transition:transform .2s}
+.collapse-arrow.open{transform:rotate(180deg)}
+.sort-select{padding:8px 14px;border:1px solid var(--border-color);border-radius:10px;font-size:0.78rem;background:var(--card-bg);color:var(--text-primary);outline:none;cursor:pointer}
+.sort-select:focus{border-color:var(--accent)}
+.filter-count{font-size:0.72rem;color:var(--text-tertiary);margin-left:auto}
+@media(max-width:640px){.sh-card{flex-direction:column;align-items:flex-start}.sh-favicon{width:40px;height:40px}.sh-favicon img{width:22px;height:22px}}
+</style>
+</head>
+<body>
+{% set nav_active = 'browse' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link active">Browse</a>
+<a href="/categories" class="nav-link">Categories</a>
+<a href="/self-hosted" class="nav-link">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link">Tech Stacks</a>
+<a href="/tags" class="nav-link">Tags</a>
+<a href="/licenses" class="nav-link">Licenses</a>
+<a href="/advertise" class="nav-link">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light">
+<h1>Open Source Tools Directory</h1>
+<p>Discover the best open source alternatives to proprietary software. Save money with reliable tools hand-picked for you.</p>
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input type="text" id="searchInput" placeholder="Search open source tools..." oninput="filterTools(this.value)">
+</div>
+</div>
+
+<div class="app-container">
+<div class="stats-row">
+<div class="stat-card"><div class="stat-val" style="color:var(--accent);">750+</div><div class="stat-label">Listed Projects</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-green);">450K</div><div class="stat-label">Monthly Views</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-purple);">10K</div><div class="stat-label">Newsletter</div></div>
+</div>
+
+<div class="section">
+<div class="section-header" onclick="toggleSection('popularTools')" style="cursor:pointer;user-select:none">
+<h2 class="section-title">🔥 Popular Tools <span class="collapse-arrow">▾</span></h2>
+</div>
+<div id="popularTools" class="alt-list" style="display:none">
+{% for a in popular %}
+<a href="{{ a.url }}" class="alt-item" target="_blank">
+<div><div class="prop">{{ a.proprietary }}</div><div class="oss">{{ a.open_source }}</div></div>
+<div><span class="badge badge-blue">{{ a.category }}</span></div>
+<div class="arrow">→</div>
+</a>
+{% endfor %}
+</div>
+</div>
+
+<div class="section">
+<div class="section-header" onclick="toggleSection('categoriesSection')" style="cursor:pointer;user-select:none">
+<h2 class="section-title">📂 Categories <span class="collapse-arrow">▾</span></h2>
+</div>
+<div id="categoriesSection" style="display:none">
+<div class="cat-grid">
+{% for c in categories %}
+<a href="/categories" class="cat-card">
+<div class="cat-icon">{{ c.icon }}</div>
+<div class="cat-name">{{ c.name }}</div>
+<div class="cat-count">{{ c.count }} tools</div>
+</a>
+{% endfor %}
+</div>
+</div>
+</div>
+
+<div class="section-header" style="margin-top:24px;"><h2 class="section-title">🛠️ All Tools</h2></div>
+
+<div class="controls-row">
+<select class="sort-select" id="categoryFilter" onchange="filterTools(document.getElementById('searchInput').value)">
+<option value="">All Categories</option>
+{% for c in categories|sort(attribute='name') %}
+<option value="{{ c.name }}">{{ c.name }}</option>
+{% endfor %}
+</select>
+<select class="sort-select" id="sortOrder" onchange="applySort()">
+<option value="stars">Order by: Stars</option>
+<option value="name">Order by: Name</option>
+</select>
+<span class="filter-count">{{ tools|length }} tools</span>
+</div>
+
+<div class="sh-grid" id="toolGrid">
+{% for t in tools %}
+<a href="{{ t.url }}" class="sh-card" target="_blank" data-name="{{ t.name.lower() }}" data-cat="{{ t.category.lower() }}" data-stars="{{ t.stars }}">
+<div class="sh-favicon"><img src="{{ t.github_img }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain={{ t.domain }}&sz=64';this.onerror=function(){this.parentNode.textContent='{{ t.name[0] }}'}"></div>
+<div class="sh-body">
+<div class="sh-header">
+<h3>{{ t.name }}</h3>
+<span class="badge badge-green">Open Source</span>
+{% if t.stars and t.stars|int > 50000 %}<span class="badge badge-blue">Featured</span>{% endif %}
+</div>
+<div class="sh-desc">{{ t.description }}</div>
+<div class="sh-meta">
+<span>⭐ {{ "{:,}".format(t.stars) }}</span>
+{% if t.github %}<span>⑂ {{ t.github }}</span>{% endif %}
+<span>{{ t.license }}</span>
+</div>
+{% if t.tags %}
+<div class="sh-tags">{% for tag in t.tags %}<span class="tag-chip">#{{ tag }}</span>{% endfor %}</div>
+{% endif %}
+{% if t.install_cmd %}
+<div class="sh-install"><span class="install-icon">📦</span><code>{{ t.install_cmd }}</code></div>
+{% endif %}
+{% if t.tool_type %}
+<div class="sh-type-badge">{{ t.tool_type }}</div>
+{% endif %}
+</div>
+</a>
+{% endfor %}
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+let allCards = document.querySelectorAll('.sh-card');
+function filterTools(q) {
+  q = q.toLowerCase();
+  let cat = document.getElementById('categoryFilter').value.toLowerCase();
+  allCards.forEach(c => {
+    let name = c.dataset.name || '';
+    let match = !q || name.includes(q);
+    if (cat && c.dataset.cat !== cat) match = false;
+    c.style.display = match ? '' : 'none';
+  });
+  document.querySelector('.filter-count').textContent = document.querySelectorAll('.sh-card[style=""], .sh-card:not([style])').length + ' tools';
+}
+function applySort() {
+  let sort = document.getElementById('sortOrder').value;
+  let grid = document.getElementById('toolGrid');
+  let items = Array.from(grid.children);
+  items.sort((a, b) => {
+    if (sort === 'name') return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+    let sa = parseInt(a.dataset.stars) || 0;
+    let sb = parseInt(b.dataset.stars) || 0;
+    return sb - sa;
+  });
+  items.forEach(item => grid.appendChild(item));
+}
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  const arrow = el.previousElementSibling.querySelector('.collapse-arrow');
+  if (el) {
+    el.style.display = el.style.display === 'none' ? '' : 'none';
+    if (arrow) arrow.classList.toggle('open');
+  }
+}
+applySort();
+</script>
+</body>
+</html>

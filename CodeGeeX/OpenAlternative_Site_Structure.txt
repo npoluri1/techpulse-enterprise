@@ -1,0 +1,291 @@
+OPENALTERNATIVE.CO - COMPLETE SITE STRUCTURE & MENU MAP
+================================================================================
+URL: https://openalternative.co/
+Last Updated: 2026
+================================================================================
+
+
+================================================================================
+SECTION 1: TOP NAVIGATION BAR (Header Menu)
+================================================================================
+
+Menu Item              URL Slug              Type
+---------------------  --------------------  -----------
+Browse ~               
+  Tools                /tools                Dropdown/Page
+  Alternatives         /alternatives         Page
+  Categories           /categories           Page
+  Self-hosted          /self-hosted          Page
+  Tech Stacks          /tech-stacks          Page
+  Tags                 /tags                 Page
+  Licenses             /licenses             Page
+  Discount Codes       /discount-codes       Page
+Submit                 /submit               Button/Page
+Sign In                /auth/sign-in         Auth Page
+
+
+================================================================================
+SECTION 2: FOOTER NAVIGATION (Quick Links)
+================================================================================
+
+Section               Links
+--------------------  ---------------------------------------------------------
+Browse                Tools, Alternatives, Categories, Self-hosted, Tech Stacks,
+                      Tags, Licenses, Discount Codes
+
+Quick Links           Contact Us (/contact), Submit (/submit), Blog (/blog),
+                      About Us (/about), Advertise (/advertise)
+
+Other Products        Shadcnblocks.com, Dirstarter, TerminalDock,
+                      EuroAlternative, DevSuite, OpenAds
+
+Social                X/Twitter (@ossalternative), Bluesky (@openalternative.co),
+                      Mastodon (@openalternative), LinkedIn (/company/openalternative)
+
+Newsletter            Join 16K other members - email signup form
+
+
+================================================================================
+SECTION 3: HOMEPAGE - ALL COMPONENTS
+================================================================================
+
+Component             Description
+--------------------  ---------------------------------------------------------
+1. HERO               "Open Source Alternatives to Popular Software"
+                      Tagline: "Over 1 million users replaced their proprietary
+                      tools with open source software. Discover the best
+                      alternatives and join the movement."
+                      CTA: "Join our community" | Badge: "Built with Dirstarter"
+
+2. STATS BAR          "Join 16K tech people" (newsletter count)
+
+3. SPONSORS SECTION   "Supported by the best / OpenAlternative is supported by
+                      incredible partners and sponsors"
+                      Sponsor Cards: Each shows Favicon, Stars, Forks, Last Commit
+                      Known sponsors: InfluxData, Databuddy, CodeRabbit, c15t,
+                      Openlane, Sent, Sevalla, Prismical, Logto
+
+4. TRENDING TOOLS     "People are looking for alternatives to..."
+                      (Grid of popular tools with favicons)
+
+5. NEWSLETTER         "Join us / Join 16K other members and get updates on
+                      new open source tools" + email input + social links
+
+6. FOOTER             Full nav (Browse + Quick Links + Other Products + Social)
+
+Calls to Action:      "Advertise with us" link, "Submit" tool button
+
+
+================================================================================
+SECTION 4: ALL CATEGORIES (7 Top-Level + 53 Subcategories)
+================================================================================
+
+CATEGORY                        SUBCATEGORIES
+------------------------------  -------------------------------------------------
+1. AI & Machine Learning        1. AI Development Platforms
+                                2. Machine Learning Infrastructure
+                                3. AI Security & Privacy
+                                4. AI Interaction & Interfaces
+
+2. Business Software            1. CRM & Sales
+                                2. ERP & Operations
+                                3. Finance & Accounting
+                                4. Human Resources (HR)
+                                5. Marketing & Customer Engagement
+                                6. Customer Support & Success
+                                7. E-commerce Platforms
+                                8. Project & Work Management
+                                9. Collaboration & Communication
+                                10. Scheduling & Event Management
+                                11. Document Management & E-Signatures
+                                12. Forms & Surveys
+                                13. Compliance & Risk Management
+                                14. Legal
+
+3. Community & Social           1. Social Networking
+                                2. Community Building Platforms
+                                3. Collaboration & Feedback
+
+4. Content & Publishing         1. Content Management Systems (CMS)
+                                2. Community Platforms
+                                3. Documentation & Knowledge Base
+                                4. Learning Management Systems (LMS)
+                                5. Digital Asset Management (DAM)
+                                6. Publishing
+                                7. Blogging & Personal Sites
+
+5. Data & Analytics             1. Web & Product Analytics
+                                2. Business Intelligence & Reporting
+                                3. Data Engineering & Integration
+                                4. Data Warehousing & Processing
+                                5. Data Extraction & Web Scraping
+
+6. Developer Tools              1. Website Builders
+                                2. IDEs & Code Editors
+                                3. Frameworks & Platforms
+                                4. API Development & Testing
+                                5. Testing & Quality Assurance
+                                6. Version Control & Collaboration
+                                7. Code Analysis & Transformation
+                                8. Build & Deployment
+                                9. Integration Platforms
+                                10. AI Assisted Coding
+                                11. Terminals
+
+7. Infrastructure & Operations  1. Search Engines
+                                2. Cloud Infrastructure Management
+                                3. Server & VM Management
+                                4. Monitoring & Observability
+                                5. Databases
+                                6. Networking & Connectivity
+                                7. Orchestration & Scheduling
+                                8. Messaging & Event Streaming
+                                9. Storage Solutions
+                                10. Backup & Recovery
+
+8. Miscellaneous                1. Finance & Fintech
+                                2. Design & Prototyping
+                                3. Cryptocurrency & Blockchain
+                                4. Gaming
+                                5. Internet of Things (IoT)
+                                6. Logistics & Supply Chain
+                                7. Media & Streaming
+                                8. Photo & Video Editors
+
+9. Productivity & Utilities     1. Note Taking & Knowledge Management
+                                2. Password & Secret Management
+                                3. Screen Capture & Recording
+                                4. File Management & Sync
+                                5. Email & Communication
+                                6. Automation
+                                7. Time & Task Management
+                                8. Personal Finance Management
+                                9. Design & Visualization
+                                10. Bookmark & Content Management
+                                11. Remote Desktop & Access
+                                12. Browsers & Extensions
+                                13. Input & Dictation
+
+10. Security & Privacy          1. Identity & Access Management (IAM)
+                                2. Secrets Management
+                                3. Threat Detection & Response
+                                4. Network Security
+                                5. Data Security & Privacy
+                                6. Application Security
+                                7. Fraud Prevention
+
+
+================================================================================
+SECTION 5: INDIVIDUAL TOOL PAGE COMPONENTS
+================================================================================
+
+Each tool listing page (/tool-name) contains:
+
+Component              Description
+--------------------  ---------------------------------------------------------
+Tool Name             e.g., "Aider", "n8n", "Ollama"
+Description           1-2 line tagline of what the tool does
+License               MIT, Apache-2.0, AGPL-3.0, GPL-3.0, BSD-3-Clause, etc.
+GitHub Stars          Star count + link to GitHub repo
+Category Tags         e.g., "AI Coding Assistant", "LLM", "Self Hosted"
+                      (each tag links to /tags/tag-name)
+Tech Stack Tags       e.g., "Python", "TypeScript", "Rust"
+Screenshot/Logo       Tool favicon or screenshot image
+Featured in           Which categories it appears under (breadcrumb)
+Visit Website         External link to tool's website
+Alternatives          "People also looked at" - related tools section
+Stats Info            Stars, Forks, Last Commit (pulled from GitHub API)
+
+
+================================================================================
+SECTION 6: FILTER & SORT OPTIONS
+================================================================================
+
+Filter by             Options
+--------------------  ---------------------------------------------------------
+Category              All 10 top-level categories + subcategories
+License               MIT, Apache-2.0, AGPL-3.0, GPL-3.0, BSD-3-Clause, MPL-2.0, etc.
+Self-hosted           Toggle: Show self-hosted only
+Tech Stack            Filter by tech stack (Python, JavaScript, Rust, Go, etc.)
+Tags                  Filter by topic tags
+
+Sort by               Recently Added, Most Stars, Name (A-Z), Last Commit
+
+
+================================================================================
+SECTION 7: OTHER PAGES
+================================================================================
+
+Page                  URL Slug              Description
+--------------------  --------------------  -----------------------------------
+Home                  /                     Hero, stats, sponsors, trending tools
+Tools                 /tools               Directory listing all tools
+Alternatives          /alternatives        Browse by proprietary tool name
+Categories            /categories          Browse by category tree
+Self-hosted           /self-hosted         Filtered: self-hostable tools only
+Tech Stacks           /tech-stacks         Browse by technology/stack
+Tags                  /tags                Browse by topic tags
+Licenses              /licenses            Browse by open-source license
+Discount Codes        /discount-codes      SaaS discount codes for tools
+Blog                  /blog                Articles and updates
+About Us              /about               About the project
+Contact Us            /contact             Contact form
+Advertise             /advertise           Sponsor/advertising info
+Submit                /submit              Submit a new tool form
+Sign In               /auth/sign-in        User authentication
+Tool Detail           /{tool-name}         Individual tool page (e.g., /n8n)
+
+
+================================================================================
+SECTION 8: SAMPLE TOOL DATA FORMAT (from GitHub README awesome-list)
+================================================================================
+
+Format:
+- **[Tool Name](https://openalternative.co/{tool-slug})** - Description `License` `⭐ Stars`
+
+Examples:
+- **[Aider](https://openalternative.co/aider)** - Terminal-based AI pair programmer `Apache-2.0` `⭐ 42K`
+- **[n8n](https://openalternative.co/n8n)** - Self-hosted workflow automation `⭐ 188K`
+- **[Ollama](https://openalternative.co/ollama)** - Run LLMs locally `⭐ 171K`
+- **[Open WebUI](https://openalternative.co/open-webui)** - Self-hosted AI interface `BSD-3-Clause` `⭐ 138K`
+
+Each listing in the directory includes:
+  - Name + slug (e.g., "aider" -> /aider)
+  - Short description (1 sentence)
+  - License tag (MIT, Apache-2.0, AGPL-3.0, etc.)
+  - GitHub Stars count
+  - Category tags (e.g., "AI Coding", "Self Hosted", "CLI")
+  - GitHub repo link (fork, star, last commit data)
+
+
+================================================================================
+SECTION 9: SITE TECH STACK (from GitHub repo)
+================================================================================
+
+Layer                 Technology
+--------------------  ---------------------------------------------------------
+Framework             Next.js (App Router)
+Monorepo              Turborepo
+Language              TypeScript
+Database              Neon (Serverless PostgreSQL)
+ORM/DB                Prisma / Drizzle
+Analytics             Plausible + PostHog
+Newsletter            Beehiiv
+Background Jobs       Inngest
+File Storage          AWS S3
+Payments              Stripe
+Screenshots           ScreenshotOne
+Auth                  NextAuth.js / Lucia
+Deployment            Vercel
+Project Structure:    /apps/app (Next.js)
+                          /app        - Routes & layouts
+                          /components - Reusable React components
+                          /lib        - Core utilities
+                          /actions    - Server actions
+                          /utils      - Helper functions
+                          /hooks      - React hooks
+                          /contexts   - React context providers
+
+================================================================================
+END OF SITE STRUCTURE MAP
+================================================================================

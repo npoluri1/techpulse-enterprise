@@ -1,0 +1,18 @@
+{
+  "email": {
+    "enabled": true,
+    "from_email": "npoluri1@gmail.com",
+    "password": "demo123",
+    "to_email": "npoluri5@gmail.com",
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "subject_prefix": "[AI News Pro]"
+  },
+  "whatsapp": {
+    "enabled": false,
+    "account_sid": "",
+    "auth_token": "",
+    "from_number": "",
+    "to_number": ""
+  }
+}

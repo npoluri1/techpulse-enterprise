@@ -1,0 +1,246 @@
+AI TECH STACK REFERENCE 2026 (Notepad++ Tabular Format)
+===============================================================================
+Organized by AI Topic Category
+===============================================================================
+
+
+================================================================================
+1. AI AGENTS - Frameworks & Tools
+================================================================================
+
+Tool                    Type            Free/OSS?       Stars       Description                                                                                 URL
+----                    ----            -----------     ------      -------------------------------------------------------------------------------------------    ------------------------------------------------------------
+LangGraph               Orchestration   Open Source     12k+        Stateful agent orchestration (LangChain team), cycles, branching, checkpointing              github.com/langchain-ai/langgraph
+CrewAI                  Framework       Open Source     25k+        Multi-agent role-playing teams, collaborative agents                                        github.com/crewAIInc/crewAI
+AutoGen                 Framework       Open Source     55k+        Microsoft multi-agent conversation framework, event-driven                                   github.com/microsoft/autogen
+OpenAI Agents SDK       Framework       Open Source     19k+        Lightweight multi-agent workflows, provider-agnostic                                          github.com/openai/openai-agents-python
+OpenHands (ex-OpenDevin) Agent Platform  Open Source     69k+        Autonomous coding agent platform, browser + terminal                                         github.com/OpenHands/OpenHands
+AutoGPT                 Agent           Open Source     170k+       Autonomous GPT-4 agent for task automation                                                    github.com/Significant-Gravitas/AutoGPT
+Cline                   VS Code Agent   Open Source     59k+        AI coding assistant with Plan/Act workflow, MCP support                                      github.com/cline/cline
+Roo Code                VS Code Agent   Open Source     23k+        Custom modes, multi-file reasoning, VS Code extension                                        github.com/RooCodeInc/Roo-Code
+Kilo Code               VS Code+JB     Open Source     1.5M users  Coding agent for VS Code, JetBrains, CLI, 500+ models                                        github.com/Kilo-Org/kilocode
+Hermes Agent            Agent           Open Source     -           Self-learning agent with persistent memory for long-term deployment                           github.com/HermesAgent
+Agency Swarm           Framework       Open Source     -           Multi-agent orchestration with autonomous agent teams                                         github.com/VRSEN/AgencySwarm
+Miniloop                Agent Framework Open Source     -           Lightweight AI agent loop framework                                                            github.com/miniloop
+
+
+================================================================================
+2. MCP (Model Context Protocol) - Servers & Gateways
+================================================================================
+
+Tool                    Type            Free/OSS?       Description                                                                                             URL
+----                    ----            -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+MCPX (Lunar.dev)        Gateway         Open Source     Enterprise MCP gateway: access control, audit trails, governance                                       github.com/lunar-dev/mcpx
+Docker MCP Gateway      Gateway         Open Source     Docker's MCP gateway for containerized agents                                                          github.com/docker/mcp-gateway
+Microsoft MCP Gateway   Gateway         Open Source     Microsoft's MCP gateway for Azure/AI agents                                                            github.com/microsoft/mcp-gateway
+IBM ContextForge        Gateway         Open Source     IBM's MCP gateway with context management                                                              github.com/ibm/contextforge
+MCPJungle               Gateway         Open Source     Lightweight MCP gateway for community servers                                                          github.com/mcpjungle
+Filesystem MCP Server   Server          Free/Local      Read/write/edit files/directories locally                                                               github.com/modelcontextprotocol/servers
+GitHub MCP Server       Server          Free            GitHub API integration via MCP                                                                          github.com/modelcontextprotocol/servers
+PostgreSQL MCP Server   Server          Free            Read/write PostgreSQL via MCP                                                                           github.com/modelcontextprotocol/servers
+Smithery                Server Registry Free/OSS        Registry of 7000+ MCP servers                                                                           smithery.ai
+FastMCP                 Framework       Open Source     Python framework to build MCP servers easily                                                            github.com/jlowin/fastmcp
+MCP SDK (Python)        SDK             Open Source     Official Anthropic MCP Python SDK                                                                       github.com/modelcontextprotocol/python-sdk
+MCP SDK (TS)            SDK             Open Source     Official Anthropic MCP TypeScript SDK                                                                   github.com/modelcontextprotocol/typescript-sdk
+OpenClaw                MCP Ecosystem   Open Source     Full-stack MCP agent ecosystem                                                                          github.com/openclaw
+
+
+================================================================================
+3. RAG (Retrieval-Augmented Generation) - Frameworks
+================================================================================
+
+Tool                    Stars           Free/OSS?       Description                                                                                             URL
+----                    ------          -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+LangChain               106k            Open Source     Component chaining + orchestration, largest ecosystem                                                   github.com/langchain-ai/langchain
+LlamaIndex              41k             Open Source     Modular data indexing, 100+ loaders, KnowledgeGraphIndex                                               github.com/run-llama/llama_index
+RAGFlow                 49k             Open Source     Deep document understanding engine, multimodal (text/images/video)                                      github.com/infiniflow/ragflow
+LightRAG                15k             Open Source     Performance-optimized lightweight retrieval                                                             github.com/HKUDS/LightRAG
+Haystack                20k             Open Source     Pipeline orchestration, production compliance, regulated industries                                    github.com/deepset-ai/haystack
+R2R                     6k              Open Source     Agent-based RAG with reasoning, knowledge graphs                                                         github.com/SciPhi-AI/R2R
+DSPy                    -               Open Source     Automated prompt optimization, programmatic prompting                                                   github.com/stanfordnlp/dspy
+Pathway                 -               Open Source     Real-time streaming RAG, 350+ connectors                                                                github.com/pathwaycom/pathway
+txtai                   11k             Open Source     All-in-one embeddings database, simple RAG                                                              github.com/neuml/txtai
+Quivr                   39k             Open Source     Full-stack RAG platform with GUI                                                                         github.com/QuivrHQ/quivr
+MegaParse               7k              Open Source     Document ingestion optimized for LLMs (PDF, DOCX, PPTX)                                                 github.com/QuivrHQ/MegaParse
+Embedchain              -               Open Source     Minimal RAG framework, one-liner ingestion, chat UI                                                    github.com/embedchain/embedchain
+Firecrawl               -               Open Source/Paid Web scraping tuned for LLMs, RAG ingestion                                                              firecrawl.dev
+
+
+================================================================================
+4. VECTOR DATABASES
+================================================================================
+
+Tool                    Type            Free/OSS?       Stars       Best Scale       Description                                                                 URL
+----                    ----            -----------     ------      ------------     ------------------------------------------------------------------------    ------------------------------------------------------------
+pgvector                Postgres ext    Open Source     13k+        Millions         Vector extension for PostgreSQL, same DB as app data                           github.com/pgvector/pgvector
+Milvus                  Dedicated       Open Source     21k+        Billions         GPU-accelerated, enterprise scale, LF AI Foundation                           github.com/milvus-io/milvus
+Qdrant                  Dedicated       Open Source     23k+        100s millions    Rust-based, payload filtering, high precision                                github.com/qdrant/qdrant
+Weaviate                Dedicated       Open Source     12k+        100s millions    Built-in vectorization modules, hybrid search                                 github.com/weaviate/weaviate
+Chroma                  Embedded        Open Source     17k+        100s thousands   Great developer experience, prototyping                                       github.com/chroma-core/chroma
+LanceDB                 Embedded        Open Source     5k+         Millions         Zero-copy, columnar storage, multi-modal AI                                  github.com/lancedb/lancedb
+Redis Stack             Multi-model     Open Source     68k+        Billions         Vector search + cache + session state in one system                           github.com/redis/redis
+OpenSearch              Search+Vector   Open Source     10k+        Billions         GPU acceleration (3.0), MCP support, hybrid search                            github.com/opensearch-project/OpenSearch
+Pinecone                Managed SaaS    Paid            -           Billions         Zero-ops serverless vector DB (not OSS)                                       pinecone.io
+FAISS                   Library         Open Source     32k+        Billions         Meta's vector similarity search library (no persistence)                       github.com/facebookresearch/faiss
+Annoy                   Library         Open Source     13k+        Millions         Spotify's ANN library, memory-mapped files                                    github.com/spotify/annoy
+
+
+================================================================================
+5. AI CODING - Terminal CLI Agents
+================================================================================
+
+Tool                    Maker           Free/OSS?       Stars       Context         Default Model           Price                   URL
+----                    ----            -----------     ------      -----------     ------------            -----                   ------------------------------------------------------------
+Claude Code             Anthropic       No              -           1M tokens      Opus 4.6                $20/mo+                 claude.ai
+Gemini CLI              Google          Open Source     -           1M tokens      Gemini 3.1 Pro          Free (1000/day)         github.com/google-gemini/gemini-cli
+Codex CLI               OpenAI          Open Source     -           Standard        GPT-5.4                 $20/mo+                 github.com/openai/codex
+Aider                   Community       Open Source     42k         Varies          Your choice             Free + API key          github.com/Aider-AI/aider
+OpenCode                Community       Open Source     95k+        Varies          75+ providers           Free + API key          github.com/opencode-ai/opencode
+Goose (Block)           Block/Square    Open Source     32k         Varies          Any LLM + MCP           Free + API key          github.com/block/goose
+Copilot CLI             GitHub/Microsoft No             -           128K tokens     GPT-5 mini              $10/mo+                 github.com/github/copilot-cli
+Kiro CLI                AWS             No              -           Standard        Claude Sonnet 4         $20/mo+                 -
+
+
+================================================================================
+6. MULTIMODAL AI & VIDEO/IMAGE GENERATION
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+PixVerse                Video Gen       Freemium        AI video generation platform                                                                           pixverse.ai
+Kling 3.0               Video Gen       Freemium        AI movie/video generation (high quality)                                                              klingai.com
+Veo 3 (Google)          Video Gen       Paid            Google's latest video generation model                                                                deepmind.google
+M Studio                Video Gen       -               Make movies based on scripts                                                                          -
+Higgsfield AI           Video Gen       -               AI movie creation from scripts                                                                         higgsfield.ai
+Sora (OpenAI)           Video Gen       Paid            OpenAI's text-to-video model                                                                          openai.com/sora
+Stable Video Diffusion  Video Gen       Open Source     Stability AI's open video model                                                                       github.com/Stability-AI/generative-models
+Midjourney              Image Gen       Paid            Best-in-class image generation                                                                        midjourney.com
+Stable Diffusion 3      Image Gen       Open Source     Stability AI's open image model                                                                       github.com/Stability-AI/StableDiffusion
+DALL-E 3                Image Gen       Paid            OpenAI's image generation                                                                             openai.com/dall-e
+Flux (Black Forest Labs) Image Gen      Open Source     State-of-the-art open image generation                                                                github.com/black-forest-labs/flux
+Modelslab               Image Gen       Freemium        Model serving / image generation API                                                                  modelslab.com
+Phot.AI                 Image Gen       -               AI image tool                                                                                         -
+
+
+================================================================================
+7. AI MUSIC & AUDIO
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+Suno                     Music Gen      Freemium        AI music generation with lyrics                                                                            suno.ai
+Udio                     Music Gen      Freemium        High-quality AI music generation                                                                          udio.com
+Meta MusicGen            Music Gen      Open Source     Meta's open music generation model                                                                        github.com/facebookresearch/audiocraft
+ElevenLabs               Voice/Audio    Freemium        Best text-to-speech, voice cloning                                                                        elevenlabs.io
+Whisper (OpenAI)         Speech-to-Text Open Source     State-of-the-art open speech recognition                                                                  github.com/openai/whisper
+
+
+================================================================================
+8. DEEPSEEK & OPEN-SOURCE LLMs
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+DeepSeek-V3             LLM             Open Source     MoE architecture, 685B total params, coding-focused                                                    github.com/deepseek-ai/DeepSeek-V3
+DeepSeek-R1             LLM (Reasoning) Open Source     Reasoning model with chain-of-thought, rivals o1                                                        github.com/deepseek-ai/DeepSeek-R1
+DeepSeek-Coder-V2       LLM (Coding)    Open Source     Code-specialized model, 338B params                                                                     github.com/deepseek-ai/DeepSeek-Coder-V2
+Llama 4 (Meta)          LLM             Open Source     Meta's latest open model, 10M context                                                                   github.com/meta-llama/llama
+Mistral / Mixtral       LLM             Open Source     Efficient open models, MoE architecture                                                                 github.com/mistralai/mistral-src
+Qwen 2.5 (Alibaba)      LLM             Open Source     Strong open model, multiple sizes                                                                       github.com/QwenLM/Qwen
+GLM-4 (Zhipu)           LLM             Open Source     Chinese open-source LLM, competitive coding                                                            github.com/THUDM/GLM-4
+Command R+ (Cohere)     LLM (RAG)       Open Source     Optimized for RAG, large context window                                                                 github.com/cohere-ai/Command-R
+
+
+================================================================================
+9. AI ROBOTICS
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+ROS 2                    Framework      Open Source     Robot Operating System, standard robotics middleware                                                     github.com/ros2
+NVIDIA Isaac Sim         Simulation     Free/Paid       Robotics simulation with AI integration                                                                 developer.nvidia.com/isaac-sim
+RT-2 (Google)           Model           Open weights    Vision-Language-Action model for robots                                                                - (DeepMind)
+Octo                    Model           Open Source     Open-source robotics foundation model                                                                    github.com/rail-berkeley/octo
+MuJoCo                  Physics Sim     Open Source     Physics engine for robotics research                                                                    github.com/google-deepmind/mujoco
+
+
+================================================================================
+10. AI SEARCH
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+Perplexica (Vane)       AI Search       Open Source     Open-source Perplexity-like search engine                                                               github.com/ItzCrazyKns/Perplexica
+SearXNG                 Meta-Search     Open Source     Privacy-respecting metasearch engine                                                                    github.com/searxng/searxng
+Perplexity              AI Search       Freemium        Best commercial AI search engine                                                                        perplexity.ai
+You.com                 AI Search       Freemium        AI search with citations                                                                                you.com
+Google Gemini Search    AI Search       Free            Google's AI-powered search                                                                              gemini.google.com
+
+
+================================================================================
+11. KEY RESOURCES & LEARNING
+================================================================================
+
+Tool                    Type            Free/OSS?       Description                                                                                             URL
+----                    ----            -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+Free LLM API Resources  API Key List    Open Source     Cheahjs curated list of free LLM API keys/resources                                                    github.com/Cheahjs/free-llm-api-resources
+CS249R Book             Textbook        Open Source     Harvard Edge: LLM design & deployment details                                                           github.com/harvard-edge/cs249r_book
+Awesome LLM Apps        Curated List    Open Source     Shubhamsboo: curated list of LLM applications                                                           github.com/Shubhamsboo/awesome-llm-apps
+AI Engineering Hub      Curated List    Open Source     patchy631/ai-engineering-hub: AI engineering resources                                                   github.com/patchy631/ai-engineering-hub
+Awesome Claude Code     Curated List    Open Source     Curated Claude Code tools, extensions, workflows                                                        github.com/awesome-claude-code
+Anthropic Prompt Eng    Tutorial        Open Source     Interactive prompt engineering tutorial                                                                  github.com/anthropics/prompt-eng-interactive-tutorial
+Awesome AI Agents 2026  Curated List    Open Source     caramaschiHG: 340+ agent tools across 20+ categories                                                    github.com/caramaschiHG/awesome-ai-agents-2026
+OpenAlternative         Tool Finder     Open Source     Find open-source alternatives to any tool                                                               openalternative.co
+
+
+================================================================================
+12. AI VOICE & MEETING TOOLS
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+Meetz AI                Meeting         -               AI meeting assistant                                                                                    -
+Otter.ai                Transcription   Freemium        AI meeting transcription                                                                                otter.ai
+Fireflies.ai            Meeting         Freemium        Meeting assistant, auto-notes                                                                           fireflies.ai
+Whisper (OpenAI)        STT             Open Source     Best open speech-to-text                                                                                github.com/openai/whisper
+Bark (Suno)             TTS             Open Source     Open-source text-to-speech model                                                                        github.com/suno-ai/bark
+
+
+================================================================================
+13. MCP TOOLS & COWORKING
+================================================================================
+
+Tool                    Category        Free/OSS?       Description                                                                                             URL
+----                    --------        -----------     ---------------------------------------------------------------------------------------------------    ------------------------------------------------------------
+Open Claude Cowork      Cowork Tool     Open Source     ComposioHQ: open-source Claude cowork (CLI)                                                             github.com/ComposioHQ/open-claude-cowork
+Eigent AI               AI Desktop      Open Source     Open-source AI cowork desktop                                                                           github.com/eigent-ai
+Openwork                Workflow Engine Open Source     End-to-end AI workflow engine                                                                           github.com/openwork
+Ruflo                   MCP Router      Open Source     Workflow/routing tool for MCP                                                                           github.com/ruflo
+Graphify                Knowledge Graph Open Source     Any input -> knowledge graph -> HTML/JSON output                                                         github.com/graphify
+Composio                Tool Platform   Open Source     Platform connecting AI agents to 200+ tools                                                             github.com/ComposioHQ/composio
+
+
+================================================================================
+SUMMARY: BEST-IN-CLASS PICKS BY CATEGORY
+================================================================================
+
+Category                Best Pick (Open Source)         Best Pick (Any)
+----------------------  ------------------------------  ---------------------------------
+AI Agent Framework      LangGraph / CrewAI              Claude Code
+MCP Gateway             MCPX (Lunar.dev)                - 
+MCP Server SDK          FastMCP (Python)                - 
+RAG Framework           LlamaIndex / LangChain           - 
+Vector Database         Milvus / Qdrant                 Pinecone
+CLI Coding Agent        Aider / OpenCode / Goose        Claude Code / Gemini CLI (free)
+AI Video Gen            Stable Video Diffusion          Kling 3.0 / PixVerse
+AI Image Gen            Stable Diffusion 3 / Flux       Midjourney
+AI Music Gen            Meta MusicGen                   Suno / Udio
+Voice TTS               Bark (Suno)                     ElevenLabs
+Speech-to-Text          Whisper (OpenAI)                Whisper (OpenAI) 
+AI Search Engine        Perplexica                      Perplexity
+Open LLM (Coding)       DeepSeek-Coder-V2 / Qwen 2.5    Claude / GPT-5
+LLM API Resources       Cheahjs/free-llm-api-resources  -
+
+================================================================================
+END OF REFERENCE
+================================================================================

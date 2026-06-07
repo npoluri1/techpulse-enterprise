@@ -38,3 +38,6 @@ chroma_data/
 
 # Notebooks (optional)
 *.ipynb
+
+# Windows reserved names
+nul

@@ -25,8 +25,44 @@ class EnterprisePipeline:
         self.rag = FreeRAGEngine(self.vector_store)
         self.curator = CurationAgent()
         self.reporter = ReportGenerator(self.rag)
+        self.use_langgraph = True
+        if self.use_langgraph:
+            try:
+                from enterprise_engine.langgraph_workflow import news_langgraph
+                self.langgraph = news_langgraph
+                logger.info("[Pipeline] Using LangGraph workflow")
+            except Exception as e:
+                logger.warning(f"[Pipeline] LangGraph not available: {e}")
+                self.use_langgraph = False
 
     def run_full(self, country: str = "Global") -> dict:
+        if self.use_langgraph:
+            return self._run_langgraph(country)
+        return self._run_classic(country)
+
+    def _run_langgraph(self, country: str = "Global") -> dict:
+        logger.info(f"[Pipeline] Starting LangGraph pipeline for {country}")
+        try:
+            result = self.langgraph.run(country=country)
+
+            session = get_session()
+            try:
+                for article in result.get("curated_articles", []):
+                    save_article(session, article)
+                for alert in result.get("alerts_list", []):
+                    save_alert(session, alert)
+                session.commit()
+            except Exception as e:
+                logger.warning(f"[Pipeline] DB save error: {e}")
+            finally:
+                session.close()
+
+            return result
+        except Exception as e:
+            logger.error(f"[Pipeline] LangGraph error: {e}", exc_info=True)
+            return self._run_classic(country)
+
+    def _run_classic(self, country: str = "Global") -> dict:
         run_id = f"run_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
         session = get_session()
         pipeline_run = PipelineRun(

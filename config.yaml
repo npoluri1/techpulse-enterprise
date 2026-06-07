@@ -1,7 +1,7 @@
 agent:
   curation_mode: relevance
-  max_sources_per_domain: 15
-  request_timeout: 30
+  max_sources_per_domain: 200
+  request_timeout: 10
   user_agent: AI-News-Tech-Agent/1.0 (Mozilla/5.0 compatible)
 domains:
   ai_agents:
@@ -22,6 +22,8 @@ domains:
     - GPT
     - deep learning
     - neural network
+    - AI coding agent
+    - enterprise AI agent
     sources:
     - rss: https://www.reddit.com/r/AI_Agents/.rss
     - rss: https://www.reddit.com/r/LocalLLaMA/.rss
@@ -32,6 +34,34 @@ domains:
     - rss: https://arstechnica.com/tag/artificial-intelligence/feed/
     - web: https://www.artificial-intelligence.blog/news
     - web: https://www.analyticsvidhya.com/blog/category/artificial-intelligence/
+    - web: https://www.datacamp.com/blog/best-ai-agents
+    - web: https://www.generative.inc/agentic-ai-in-2026-how-ai-went-from-chatting-to-doing
+    - web: https://www.cloudkeeper.com/insights/blog/top-agentic-ai-trends-watch-2026-how-ai-agents-are-redefining-enterprise-automation
+    - web: https://gurusup.com/blog/best-multi-agent-frameworks-2026
+    - web: https://www.omdena.com/blog/agentic-ai-frameworks
+    - web: https://www.alphamatch.ai/blog/top-agentic-ai-frameworks-2026
+    - web: https://www.insentragroup.com/us/insights/not-geek-speak/generative-ai/agentic-ai-takes-the-wheel-a-deep-dive-into-2026
+    - web: https://blogs.cisco.com/news/new-report-80-of-executives-view-agentic-ai-as-critical-to-company-survival-by-2027
+    - web: https://www.technologyreview.com/
+    - web: https://aiwire.ai/
+    - web: https://www.omniscient.media/
+    - web: https://www.hypernova.news/
+    - web: https://thenextweb.com/
+    - web: https://www.vox.com/artificial-intelligence
+    - web: https://agentic-news.ai/agentic-ai-news
+    - web: https://www.agenticbrew.ai/
+    - web: https://agentic.ai/news
+    - web: https://aiagentsdaily.org/news
+    - web: https://aiagentsfirst.com/
+    - web: https://agentmag.dev/
+    - web: https://ai-agent-news.com/
+    - web: https://subagentic.ai/
+    - rss: https://www.technologyreview.com/feed/
+    - rss: https://thenextweb.com/feed/
+    - rss: https://www.vox.com/rss/index.xml
+    - rss: https://aiwire.ai/feed/
+    - web: https://www.theverge.com/ai-artificial-intelligence
+    - web: https://www.wired.com/category/science/artificial-intelligence/
   automotive:
     enabled: true
     keywords:
@@ -381,6 +411,12 @@ domains:
     - quantum error correction
     - quantum cryptography
     - topological quantum
+    - quantum computer
+    - IonQ
+    - Rigetti
+    - D-Wave
+    - IBM quantum
+    - Google Willow
     sources:
     - rss: https://www.reddit.com/r/QuantumComputing/.rss
     - rss: https://www.sciencedaily.com/rss/computers_math/quantum_computers.xml
@@ -388,6 +424,15 @@ domains:
     - rss: https://techcrunch.com/tag/quantum-computing/feed/
     - rss: https://www.newscientist.com/subject/technology/quantum-computing/feed/
     - web: https://thequantuminsider.com/
+    - web: https://quantumzeitgeist.com/
+    - web: https://presenc.ai/research/quantum-computing-milestones-2026
+    - web: https://robocloud-dashboard.vercel.app/learn/blog/quantum-robotics-2026
+    - web: https://quantumnews.ai/
+    - web: https://quantum-brief.com/
+    - web: https://thequbitreport.com/
+    - web: https://www.qolour.io/news
+    - web: https://quantum-data.com/
+    - rss: https://quantumnews.ai/feed/
   semiconductor:
     enabled: true
     keywords:
@@ -459,6 +504,251 @@ domains:
     - serper: vibe coding AI development tools
     - web: https://aider.chat/blog/
     - web: https://cursor.sh/blog/
+  ai_models:
+    enabled: true
+    keywords:
+    - AI model
+    - AI breakthrough
+    - GPT
+    - Claude
+    - Gemini
+    - large language model
+    - foundation model
+    - AI release
+    - open source AI
+    - model benchmark
+    - AI research
+    - multimodal AI
+    - Llama
+    - Grok
+    - DeepSeek
+    - AI training
+    sources:
+    - web: https://blog.mean.ceo/
+    - web: https://aiweekly.co/learning-ai/artificial-intelligence/artificial-intelligence-news
+    - web: https://www.buildfastwithai.com/blogs/collection/ai-industry-news-trends
+    - web: https://www.crescendo.ai/news/ai-breakthroughs-and-latest-ai-news-2026
+    - web: https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-april-2026
+    - web: https://deepmind.google/blog
+    - web: https://blogs.nvidia.com/blog/
+    - web: https://openai.com/index/
+    - web: https://kersai.com/ai-breakthroughs-in-2026-march-update
+    - web: https://www.tldl.io/blog/ai-news-updates-2026
+    - web: https://aitoolsrecap.com/Blog/MayNews2026.aspx
+  robotics_humanoids:
+    enabled: true
+    keywords:
+    - robotics
+    - humanoid robot
+    - robot
+    - autonomous robot
+    - physical AI
+    - humanoid
+    - bipedal robot
+    - industrial robot
+    - soft robotics
+    - robotaxi
+    - automation
+    - embodied AI
+    - robotic arm
+    - collaborative robot
+    - cobot
+    - drone
+    sources:
+    - web: https://www.roboticstomorrow.com/content.php?post=25983
+    - web: https://blog.robozaps.com/b/future-of-humanoid-robots
+    - web: https://www.therobotreport.com/
+    - web: https://robodk.com/blog/top-robotics-trends-2026
+    - web: https://www.rdworldonline.com/
+    - web: https://srphm.ai/pages/robotics/robotics-trends-2026
+    - web: https://humanoid.press/
+    - web: https://www.bvp.com/atlas/bessemer-predicts-robotics-and-physical-ai
+    - web: https://www.robotics247.com/news/
+    - web: https://www.roboticsbusinessnews.com/
+    - web: https://robot.tv/
+    - web: https://newatlas.com/robotics/
+    - web: https://myautonomousrobots.com/
+    - web: https://robodaily.org/
+    - web: https://robotomated.com/intelligence
+    - web: https://www.roboticmagazine.com/
+    - rss: https://www.reddit.com/r/robotics/.rss
+    - rss: https://newatlas.com/robotics/feed/
+  agi_singularity:
+    enabled: true
+    keywords:
+    - AGI
+    - artificial general intelligence
+    - singularity
+    - superintelligence
+    - ASI
+    - artificial superintelligence
+    - AGI timeline
+    - AGI breakthrough
+    - general intelligence
+    - strong AI
+    - AI consciousness
+    sources:
+    - web: https://techxplore.com/news/2026-02-artificial-general-intelligence-case-today.html
+    - web: https://aimultiple.com/artificial-general-intelligence-singularity-timing
+    - web: https://lumichats.com/blog/agi-timeline-2026-expert-predictions-what-it-means
+    - web: https://www.nextbigfuture.com/2026/01/2026-is-the-year-of-the-singularity.html
+    - web: https://aws.amazon.com/what-is/artificial-general-intelligence/
+    - rss: https://www.reddit.com/r/singularity/.rss
+  india_tech:
+    enabled: true
+    keywords:
+    - India
+    - Indian tech
+    - Bengaluru
+    - India AI
+    - Indian startup
+    - India technology
+    - digital India
+    - Bharat
+    - India semiconductor
+    sources:
+    - web: https://bharatfast.com/english/start-up/india-ai-breakthroughs-2026/32653/
+    - web: https://newsestate.in/india-ai-impact-summit-2026-key-outcomes-tech/
+    - web: https://beatsinbrief.com/2026/02/07/top-tech-developments-india-2026-quantum-space-ai-semiconductor-health/
+    - rss: https://indianexpress.com/section/technology/artificial-intelligence/feed/
+  china_tech:
+    enabled: true
+    keywords:
+    - China
+    - Chinese AI
+    - Beijing
+    - Shenzhen
+    - DeepSeek
+    - Baidu
+    - Alibaba
+    - Tencent
+    - China quantum
+    - Chinese robot
+    - China semiconductor
+    - China chip
+    sources:
+    - web: https://postquantum.com/quantum-computing/china-quantum
+    - web: https://www.spinquanta.com/news-detail/quantum-computing-china-innovation-industry-leaders-and-future-prospects
+    - web: https://www.csis.org/analysis/understanding-chinas-quest-quantum-advancement
+    - web: https://medium.com/@angelosorte1/robot-and-ai-breakthroughs-in-2026-from-soft-robotics-to-quantum-linked-automation-6cda692e3ac8
+  canada_tech:
+    enabled: true
+    keywords:
+    - Canada
+    - Canadian AI
+    - Toronto
+    - Vancouver
+    - Montreal
+    - Canada quantum
+    - Canada technology
+    - Canadian startup
+    sources:
+    - web: https://ised-isde.canada.ca/site/national-quantum-strategy/en/quantum-canada
+    - web: https://www.canada.ca/en/pacific-economic-development/news/2026/05/accelerating-commercialization-and-adoption-of-ai-and-quantum-technologies-in-british-columbia.html
+    - web: https://www.bankofcanada.ca/2026/05/ai-is-knocking-canadas-next-productivity-story
+    - web: https://thelogic.co/news/artificial-intelligence-advanced-manufacturing
+  eu_regulation:
+    enabled: true
+    keywords:
+    - EU AI Act
+    - AI regulation
+    - AI governance
+    - AI policy
+    - AI compliance
+    - AI safety
+    - AI law
+    - AI ethics
+    - AI accountability
+    - EU regulation
+    - Europe AI
+    - AI liability
+    - AI copyright
+    sources:
+    - web: https://www.twobirds.com/en/insights/2026/smart-robots,-dual-regulations-navigating-the-ai-act-and-machinery-compliance
+    - web: https://carnegieendowment.org/posts/2026/03/europe-general-purpose-robotics-trade-economics
+    - web: https://cubbbix.com/blog/ai-regulation-news-2026-global-update
+    - web: https://axis-intelligence.com/eu-ai-act-news-2026/
+    - web: https://gdprlocal.com/eu-ai-act-summary
+    - web: https://www.intertek.com/blog/2025/07-17-changes-to-robots-part-1
+    - web: https://www.complianceandrisks.com/blog/new-eu-machinery-regulation-faces-implications-of-new-technologies
+  research_reports:
+    enabled: true
+    keywords:
+    - Gartner
+    - McKinsey
+    - Forrester
+    - IDC
+    - analyst report
+    - market research
+    - technology trends
+    - magic quadrant
+    - hype cycle
+    - technology forecast
+    - analyst
+    - research report
+    sources:
+    - web: https://www.gartner.com/en/articles/top-technology-trends-2026
+    - web: https://www.sigmacomputing.com/resources/analyst-reports/gartner-hype-cycle-agentic-ai
+    - web: https://openai.com/index/gartner-2026-agentic-coding-leader/
+    - web: https://www.itential.com/resource/analyst-report/gartner-predicts-2026-ai-agents-will-reshape-infrastructure-operations/
+    - web: https://www.cxtoday.com/customer-analytics-intelligence/gartner-magic-quadrant-cdp-2026
+    - web: https://joget.com/ai-agent-adoption-in-2026-what-the-analysts-data-shows
+    - web: https://www.mckinsey.com/featured-insights
+  product_dev:
+    enabled: true
+    keywords:
+    - product launch
+    - new product
+    - startup launch
+    - tech product
+    - product hunt
+    - MVP
+    - product release
+    - SaaS launch
+    sources:
+    - web: https://www.producthunt.com/
+    - web: https://launchsentinel.com/
+    - web: https://thelaunchindex.com/
+    - web: https://productwatch.io/
+    - rss: https://www.producthunt.com/feed
+  news_aggregators:
+    enabled: true
+    keywords:
+    - AI newsletter
+    - AI digest
+    - tech news
+    - AI briefing
+    - curated news
+    - AI roundup
+    - daily AI
+    sources:
+    - web: https://www.superhuman.ai/
+    - web: https://www.agenticbrew.ai/
+    - web: https://aiinnews.space/
+    - web: https://www.teahose.com/
+    - web: https://aibriefs.news/
+    - web: https://orangebot.ai/
+    - web: https://themata.ai/
+    - web: https://hellomarvisaitoday.com/
+  vc_funding:
+    enabled: true
+    keywords:
+    - venture capital
+    - VC funding
+    - AI investment
+    - startup funding
+    - funding round
+    - AI startup
+    - tech investment
+    - investment
+    - seed funding
+    - Series A
+    - growth funding
+    - private equity
+    - unicorn
+    sources:
+    - web: https://www.crescendo.ai/news/latest-vc-investment-deals-in-ai-startups
+    - web: https://www.moodys.com/web/en/us/insights/credit-risk/outlooks/artificial-intelligence-2026.html
 notifications:
   email:
     enabled: true
@@ -468,5 +758,5 @@ notifications:
 output:
   filename_prefix: techpulse-daily
   format: notepadpp_tables
-  max_items_per_section: 15
+  max_items_per_section: 100
   save_path: output

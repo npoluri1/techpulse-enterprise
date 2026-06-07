@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Blog - NovaPulse AI</title>
+</head>
+<body>
+{% set nav_active = 'blog' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/tags" class="nav-link{{ ' active' if nav_active == 'tags' else '' }}">Tags</a>
+<a href="/blog" class="nav-link{{ ' active' if nav_active == 'blog' else '' }}">Blog</a>
+<a href="/about" class="nav-link{{ ' active' if nav_active == 'about' else '' }}">About</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>📝 Blog</h1><p>Articles, guides, and insights about open source software and tools.</p></div>
+
+<div class="container-narrow">
+<div class="blog-list">
+{% for p in posts %}
+<a href="/blog/{{ p.slug }}" class="post-card">
+<div class="post-meta"><span>{{ p.date }}</span><span>{{ p.category }}</span></div>
+<div class="post-title">{{ p.title }}</div>
+<div class="post-excerpt">{{ p.excerpt }}</div>
+<div class="post-footer"><span>✍️ {{ p.author }}</span><span>📖 {{ p.read_time }}</span></div>
+</a>
+{% endfor %}
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+</script>
+</body>
+</html>

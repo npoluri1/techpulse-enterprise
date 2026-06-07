@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>{{ tool.name }} - NovaPulse AI</title>
+</head>
+<body>
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link">Browse</a>
+<a href="/categories" class="nav-link">Categories</a>
+<a href="/self-hosted" class="nav-link">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link">Tech Stacks</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>{{ tool.name }}</h1></div>
+
+<div class="container-narrow">
+<div class="tool-header">
+<div class="tool-favicon"><img src="https://www.google.com/s2/favicons?domain={{ tool.domain }}&sz=64" alt="" onerror="this.parentNode.textContent='{{ tool.name[0] }}'"></div>
+<div class="tool-header-info">
+<h2>{{ tool.name }}</h2>
+<div class="badges">
+<span class="badge badge-green">Open Source</span>
+{% if tool.category %}<span class="badge badge-blue">{{ tool.category }}</span>{% endif %}
+<span class="badge badge-orange">{{ tool.license }}</span>
+</div>
+</div>
+</div>
+
+<div class="tool-desc-card"><p>{{ tool.description }}</p></div>
+
+{% if tool.stars or tool.forks or tool.last_commit %}
+<div class="tool-stats-grid">
+{% if tool.stars %}<div class="tool-stat-box"><div class="num">{{ "{:,}".format(tool.stars) }}</div><div class="label">Stars</div></div>{% endif %}
+{% if tool.forks %}<div class="tool-stat-box"><div class="num">{{ "{:,}".format(tool.forks) }}</div><div class="label">Forks</div></div>{% endif %}
+{% if tool.last_commit %}<div class="tool-stat-box"><div class="num">{{ tool.last_commit }}</div><div class="label">Last Commit</div></div>{% endif %}
+</div>
+{% endif %}
+
+<div class="tool-actions">
+<a href="{{ tool.url }}" class="btn btn-primary" target="_blank" style="flex:1;padding:12px 20px;font-size:0.85rem;">Visit Website →</a>
+{% if tool.github %}<a href="https://github.com/{{ tool.github }}" class="btn btn-secondary" target="_blank" style="flex:1;padding:12px 20px;font-size:0.85rem;">GitHub</a>{% endif %}
+</div>
+
+{% if tool.alternatives %}
+<div class="tool-meta"><strong>Alternatives to:</strong> {{ tool.alternatives|join(", ") }}</div>
+{% endif %}
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+</script>
+</body>
+</html>

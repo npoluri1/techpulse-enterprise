@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ 'dark' if prefs.dark_mode else 'light' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<title>AI Tools - NovaPulse AI</title>
+<style>
+:root {
+  --bg-primary: #f5f5f7;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8ed;
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #aeaeb2;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-green: #34c759;
+  --accent-orange: #ff9500;
+  --accent-red: #ff3b30;
+  --accent-purple: #af52de;
+  --border-color: rgba(0,0,0,0.06);
+  --border-color-strong: rgba(0,0,0,0.12);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+  --card-bg: #ffffff;
+  --nav-bg: rgba(255,255,255,0.85);
+  --input-bg: #f5f5f7;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-display: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --font-text: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e;
+  --text-primary: #f5f5f7;
+  --text-secondary: #98989d;
+  --text-tertiary: #636366;
+  --border-color: rgba(255,255,255,0.08);
+  --border-color-strong: rgba(255,255,255,0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --card-bg: #1c1c1e;
+  --nav-bg: rgba(0,0,0,0.85);
+  --input-bg: #2c2c2e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: var(--font-text);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s, color 0.3s;
+  padding-top: 56px;
+}
+@media (min-width: 768px) { body { padding-top: 64px; } }
+@media (min-width: 1024px) { body { padding-top: 72px; } }
+
+/* === NAV === */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.3s;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  padding: 0 16px; height: 56px; gap: 12px;
+}
+@media (min-width: 768px) { .nav-inner { height: 64px; padding: 0 32px; } }
+@media (min-width: 1024px) { .nav-inner { height: 72px; max-width: 1400px; } }
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.nav-logo {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, #0071e3, #40a9ff);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,113,227,0.3);
+}
+@media (min-width: 768px) { .nav-logo { width: 32px; height: 32px; font-size: 15px; border-radius: 8px; } }
+.nav-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+.nav-title span { font-weight: 400; color: var(--text-secondary); }
+.nav-links { display: flex; gap: 2px; margin-left: auto; align-items: center; }
+.nav-link {
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 0.75rem; font-weight: 500; color: var(--text-secondary);
+  text-decoration: none; transition: all 0.2s; white-space: nowrap;
+}
+.nav-link:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.nav-link.active { color: var(--accent); font-weight: 600; }
+@media (min-width: 768px) { .nav-link { padding: 8px 16px; font-size: 0.8rem; } }
+.nav-auth { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+.nav-user {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #40a9ff);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: transform 0.2s;
+}
+.nav-user:hover { transform: scale(1.1); }
+.btn-theme {
+  background: none; border: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 1rem;
+  transition: all 0.2s;
+}
+.btn-theme:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+/* === CONTAINER === */
+.app-container { max-width: 1200px; margin: 0 auto; padding: 12px 16px; }
+@media (min-width: 768px) { .app-container { padding: 20px 32px; } }
+@media (min-width: 1024px) { .app-container { max-width: 1400px; padding: 28px 40px; } }
+
+/* === HERO === */
+.hero {
+  position: relative;
+  background: linear-gradient(135deg, #0a0a23, #1a1a3e, #0d2137);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  color: #fff;
+}
+@media (min-width: 768px) { .hero { padding: 48px 40px; border-radius: var(--radius-xl); margin-bottom: 32px; } }
+@media (min-width: 1024px) { .hero { padding: 56px 48px; } }
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(0,113,227,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 50%, rgba(175,82,222,0.1) 0%, transparent 50%);
+}
+.hero * { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  font-size: 0.65rem; font-weight: 600; color: rgba(255,255,255,0.8);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 12px; width: fit-content;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 800; line-height: 1.1;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+}
+.hero h1 span { background: linear-gradient(135deg, #40a9ff, #0071e3, #af52de); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+@media (min-width: 768px) { .hero h1 { font-size: 2.5rem; } }
+@media (min-width: 1024px) { .hero h1 { font-size: 3rem; } }
+.hero p { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 600px; }
+@media (min-width: 768px) { .hero p { font-size: 0.95rem; } }
+
+/* === SECTION HEADER === */
+.section { margin-bottom: 28px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+.section-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+.section-title::before {
+  content: ''; display: inline-block;
+  width: 3px; height: 16px;
+  background: linear-gradient(180deg, var(--accent), #40a9ff);
+  border-radius: 2px;
+}
+@media (min-width: 768px) { .section-title { font-size: 1.3rem; } }
+.section-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* === SEARCH BAR === */
+.search-bar {
+  position: relative; flex: 1; max-width: 320px;
+}
+.search-bar input {
+  width: 100%; padding: 10px 16px 10px 38px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px; font-size: 0.75rem;
+  background: var(--input-bg); color: var(--text-primary);
+  outline: none; font-family: inherit;
+  transition: all 0.2s;
+}
+.search-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.12); }
+.search-bar .search-icon {
+  position: absolute; left: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary); font-size: 0.8rem;
+  pointer-events: none;
+}
+
+/* === CATEGORY PILLS === */
+.pill-scroll {
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 4px 0; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; margin-bottom: 20px;
+}
+.pill-scroll::-webkit-scrollbar { display: none; }
+.pill {
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;
+  padding: 7px 16px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border-color);
+  background: var(--card-bg); color: var(--text-secondary);
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1); user-select: none;
+  white-space: nowrap;
+}
+.pill:hover { background: var(--bg-tertiary); border-color: var(--border-color-strong); }
+.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 12px rgba(0,113,227,0.25); }
+.pill .pill-icon { font-size: 0.9rem; }
+.pill .count {
+  font-size: 0.6rem; opacity: 0.5;
+  background: rgba(0,0,0,0.06); padding: 1px 6px;
+  border-radius: 10px; margin-left: 2px;
+}
+.pill.active .count { background: rgba(255,255,255,0.2); opacity: 0.9; color: rgba(255,255,255,0.9); }
+
+/* === TOOLS GRID === */
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 480px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+@media (min-width: 1024px) { .tools-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+@media (min-width: 1200px) { .tools-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
+
+.tool-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+.tool-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-color-strong);
+}
+.tool-card:active { transform: translateY(-1px); }
+@media (min-width: 768px) { .tool-card { padding: 24px; } }
+
+.tool-card .tool-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 10px; gap: 8px;
+}
+.tool-card .tool-name-area {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+}
+.tool-card .tool-icon-box {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(0,113,227,0.1), rgba(64,169,255,0.1));
+}
+.tool-card .tool-name {
+  font-family: var(--font-display);
+  font-size: 0.9rem; font-weight: 700; line-height: 1.3;
+  color: var(--text-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.tool-card .tool-badge {
+  flex-shrink: 0;
+  padding: 2px 8px; border-radius: 6px;
+  font-size: 0.55rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tool-badge.open-source { background: rgba(52,199,89,0.1); color: var(--accent-green); }
+.tool-badge.proprietary { background: rgba(255,149,0,0.1); color: var(--accent-orange); }
+
+.tool-card .tool-desc {
+  font-size: 0.78rem; color: var(--text-secondary);
+  line-height: 1.5; margin-bottom: 12px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  flex: 1;
+}
+
+.tool-card .tool-stats {
+  display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.tool-card .tool-stat {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.65rem; color: var(--text-secondary);
+}
+.tool-card .tool-stat .stat-icon { font-size: 0.7rem; }
+.tool-card .tool-stat .stat-val { font-weight: 600; color: var(--text-primary); }
+
+.tool-card .tool-tags {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.tool-card .tool-tag {
+  padding: 2px 8px; border-radius: 6px;
+  font-size: 0.58rem; font-weight: 500;
+  background: rgba(0,113,227,0.06); color: var(--accent);
+  transition: background 0.2s;
+}
+.tool-card .tool-tag:hover { background: rgba(0,113,227,0.12); }
+
+.tool-card .tool-alt {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.62rem; color: var(--text-tertiary);
+  padding-top: 8px; border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+.tool-card .tool-alt strong { font-weight: 600; color: var(--text-secondary); }
+.tool-card .tool-alt-item {
+  padding: 1px 6px; border-radius: 4px;
+  background: rgba(175,82,222,0.06); color: var(--accent-purple);
+  font-size: 0.6rem; font-weight: 500;
+}
+
+/* === TOOL CARD COLOR ACCENTS === */
+.tool-card.accent-blue .tool-icon-box { background: linear-gradient(135deg, rgba(0,113,227,0.12), rgba(64,169,255,0.08)); }
+.tool-card.accent-purple .tool-icon-box { background: linear-gradient(135deg, rgba(175,82,222,0.12), rgba(212,86,232,0.08)); }
+.tool-card.accent-green .tool-icon-box { background: linear-gradient(135deg, rgba(52,199,89,0.12), rgba(110,232,160,0.08)); }
+.tool-card.accent-orange .tool-icon-box { background: linear-gradient(135deg, rgba(255,149,0,0.12), rgba(255,204,0,0.08)); }
+.tool-card.accent-red .tool-icon-box { background: linear-gradient(135deg, rgba(255,59,48,0.12), rgba(255,107,107,0.08)); }
+.tool-card.accent-teal .tool-icon-box { background: linear-gradient(135deg, rgba(90,200,250,0.12), rgba(52,199,89,0.08)); }
+
+/* === EMPTY STATE === */
+.empty-state { text-align: center; padding: 60px 16px; color: var(--text-secondary); grid-column: 1 / -1; }
+.empty-state-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+.empty-state-text { font-size: 0.9rem; }
+.empty-state-sub { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 6px; }
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 4px; }
+
+/* === SORT DROPDOWN === */
+.sort-select {
+  padding: 8px 14px; padding-right: 28px;
+  border: 1px solid var(--border-color); border-radius: 20px;
+  font-size: 0.7rem; background: var(--input-bg);
+  color: var(--text-primary); outline: none; cursor: pointer;
+  font-family: inherit; min-width: 120px;
+  appearance: none; -webkit-appearance: none;
+}
+.sort-select:hover { border-color: var(--border-color-strong); }
+
+/* === RESPONSIVE STATS === */
+.quick-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  margin-bottom:28px;
+}
+@media(min-width:768px){.quick-stats{grid-template-columns:repeat(4,1fr);gap:14px;}}
+.quick-stat{
+  background:var(--card-bg);border-radius:var(--radius-md);
+  border:1px solid var(--border-color);padding:16px;
+  text-align:center;
+}
+.quick-stat-val{font-size:1.3rem;font-weight:800;letter-spacing:-0.03em;}
+.quick-stat-lbl{font-size:0.6rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">N</div>
+      <div class="nav-title">NovaPulse AI</div>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">News</a>
+      <a href="/tools" class="nav-link active">Tools</a>
+      <a href="/browse" class="nav-link">Browse</a>
+      <a href="/categories" class="nav-link">Categories</a>
+      <a href="/advertise" class="nav-link">Advertise</a>
+      <a href="/learn" class="nav-link">Learn</a>
+      <a href="/profile" class="nav-link">Profile</a>
+    </div>
+    <div class="nav-auth">
+      <button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      {% if user %}
+      <a href="/profile" class="nav-user" title="{{ user.username }}">{{ user.username[0].upper() }}</a>
+      {% else %}
+      <a href="/login" class="btn btn-primary btn-sm" style="padding:6px 14px;background:var(--accent);color:#fff;border-radius:8px;font-size:0.7rem;font-weight:600;text-decoration:none;">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="app-container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span>✦</span><span>AI Tools Catalog</span></div>
+    <h1>Discover the Best <span>Open Source AI Tools</span></h1>
+    <p>Curated catalog of the top open-source and proprietary AI tools, frameworks, and platforms. Find the perfect tool for your next AI project.</p>
+  </div>
+
+  <!-- QUICK STATS -->
+  <div class="quick-stats" id="quickStats">
+    <div class="quick-stat"><div class="quick-stat-val" style="color:var(--accent);">{{ tools|length }}</div><div class="quick-stat-lbl">Total Tools</div></div>
+    <div class="quick-stat"><div class="quick-stat-val" style="color:#34c759;">{{ open_source_count }}</div><div class="quick-stat-lbl">Open Source</div></div>
+    <div class="quick-stat"><div class="quick-stat-val" style="color:#af52de;">{{ categories|length }}</div><div class="quick-stat-lbl">Categories</div></div>
+    <div class="quick-stat"><div class="quick-stat-val" style="color:#ff9500;">{{ featured_count }}</div><div class="quick-stat-lbl">Featured</div></div>
+  </div>
+
+  <!-- SEARCH & FILTERS -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">AI Tools Catalog</h2>
+      <div class="section-actions">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search tools..." oninput="filterTools()">
+        </div>
+        <select class="sort-select" id="sortSelect" onchange="filterTools()">
+          <option value="stars">⭐ Stars (High-Low)</option>
+          <option value="name">📝 Name (A-Z)</option>
+          <option value="featured">✨ Featured First</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="pill-scroll" id="pillContainer">
+      <span class="pill active" data-category="" onclick="filterCategory(this)">
+        <span class="pill-icon">📋</span> All <span class="count">{{ tools|length }}</span>
+      </span>
+      {% for cat in categories %}
+      <span class="pill" data-category="{{ cat.name }}" onclick="filterCategory(this)">
+        <span class="pill-icon">{{ cat.icon }}</span> {{ cat.name }} <span class="count" data-cat-count="{{ cat.name }}">{{ cat.count }}</span>
+      </span>
+      {% endfor %}
+    </div>
+
+    <!-- Tools Grid -->
+    <div class="tools-grid" id="toolsGrid">
+      {% for t in tools %}
+      <div class="tool-card {{ 'accent-' + t.accent_class }}" data-category="{{ t.category }}" data-name="{{ t.name }}" data-stars="{{ t.stars }}" data-featured="{{ '1' if t.featured else '0' }}" onclick="openToolUrl('{{ t.url }}')">
+        <div class="tool-top">
+          <div class="tool-name-area">
+            <div class="tool-icon-box">{{ t.icon }}</div>
+            <div class="tool-name">{{ t.name }}</div>
+          </div>
+          <span class="tool-badge {{ 'open-source' if t.openSource else 'proprietary' }}">{{ 'Open Source' if t.openSource else 'Proprietary' }}</span>
+        </div>
+        <div class="tool-desc">{{ t.description }}</div>
+        <div class="tool-stats">
+          {% if t.stars > 0 %}
+          <span class="tool-stat"><span class="stat-icon">⭐</span><span class="stat-val">{{ '{:,}'.format(t.stars) }}</span></span>
+          {% endif %}
+          {% if t.forks > 0 %}
+          <span class="tool-stat"><span class="stat-icon">⑂</span><span class="stat-val">{{ '{:,}'.format(t.forks) }}</span></span>
+          {% endif %}
+          {% if t.featured %}
+          <span class="tool-stat"><span class="stat-icon">✨</span><span class="stat-val">Featured</span></span>
+          {% endif %}
+        </div>
+        <div class="tool-tags">
+          {% for tag in t.tags[:4] %}
+          <span class="tool-tag">#{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% if t.alternativeTo %}
+        <div class="tool-alt">
+          <strong>Alternatives to:</strong>
+          {% for alt in t.alternativeTo[:3] %}
+          <span class="tool-alt-item">{{ alt }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentCategory = '';
+let debounceTimer;
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  fetch('/api/auth/preferences', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dark_mode: next === 'dark' })
+  }).catch(() => {});
+}
+
+function filterCategory(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  currentCategory = el.dataset.category;
+  filterTools();
+}
+
+function filterTools() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const sort = document.getElementById('sortSelect').value;
+    const cards = Array.from(document.querySelectorAll('.tool-card'));
+
+    cards.forEach(c => {
+      const cat = c.dataset.category;
+      const name = c.dataset.name.toLowerCase();
+      const desc = (c.querySelector('.tool-desc')?.textContent || '').toLowerCase();
+      const tags = Array.from(c.querySelectorAll('.tool-tag')).map(t => t.textContent.toLowerCase()).join(' ');
+      const searchMatch = !q || name.includes(q) || desc.includes(q) || tags.includes(q);
+      const catMatch = !currentCategory || cat === currentCategory;
+      c.style.display = (searchMatch && catMatch) ? '' : 'none';
+    });
+
+    // Sort
+    const visible = cards.filter(c => c.style.display !== 'none');
+    visible.sort((a, b) => {
+      if (sort === 'name') {
+        return a.dataset.name.localeCompare(b.dataset.name);
+      } else if (sort === 'featured') {
+        const aFeat = a.dataset.featured === '1' ? 0 : 1;
+        const bFeat = b.dataset.featured === '1' ? 0 : 1;
+        if (aFeat !== bFeat) return aFeat - bFeat;
+        return parseInt(b.dataset.stars) - parseInt(a.dataset.stars);
+      } else {
+        return parseInt(b.dataset.stars) - parseInt(a.dataset.stars);
+      }
+    });
+
+    const grid = document.getElementById('toolsGrid');
+    visible.forEach(c => grid.appendChild(c));
+
+    // Show empty state if no results
+    let emptyEl = document.getElementById('emptyState');
+    if (visible.length === 0) {
+      if (!emptyEl) {
+        emptyEl = document.createElement('div');
+        emptyEl.id = 'emptyState';
+        emptyEl.className = 'empty-state';
+        emptyEl.innerHTML = '<div class="empty-state-icon">🔍</div><div class="empty-state-text">No tools found</div><div class="empty-state-sub">Try a different search or category</div>';
+        grid.appendChild(emptyEl);
+      }
+      emptyEl.style.display = '';
+    } else {
+      if (emptyEl) emptyEl.style.display = 'none';
+    }
+  }, 200);
+}
+
+function openToolUrl(url) {
+  if (url) window.open(url, '_blank');
+}
+</script>
+</body>
+</html>

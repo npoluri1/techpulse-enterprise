@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ 'dark' if prefs.dark_mode else 'light' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<title>AI Learning Hub - NovaPulse AI</title>
+<style>
+:root {
+  --bg-primary: #f5f5f7; --bg-secondary: #fff;
+  --bg-tertiary: #e8e8ed; --text-primary: #1d1d1f;
+  --text-secondary: #86868b; --accent: #0071e3;
+  --border-color: rgba(0,0,0,0.06); --card-bg: #fff;
+  --input-bg: #f5f5f7; --nav-bg: rgba(255,255,255,0.85);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+  --radius-md: 14px; --radius-lg: 20px;
+  --font-display: -apple-system,'SF Pro Display','Helvetica Neue',sans-serif;
+  --font-text: -apple-system,'SF Pro Text','Helvetica Neue',sans-serif;
+}
+[data-theme="dark"] {
+  --bg-primary: #000; --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e; --text-primary: #f5f5f7;
+  --text-secondary: #98989d; --border-color: rgba(255,255,255,0.08);
+  --card-bg: #1c1c1e; --input-bg: #2c2c2e;
+  --nav-bg: rgba(0,0,0,0.85); --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: var(--font-text); background: var(--bg-primary);
+  color: var(--text-primary); -webkit-font-smoothing: antialiased;
+  padding-top: 56px;
+}
+@media (min-width: 768px) { body { padding-top: 64px; } }
+
+.nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; padding:0 16px; height:56px; gap:12px; }
+@media (min-width:768px){.nav-inner{height:64px;padding:0 32px;}}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-logo{width:28px;height:28px;background:linear-gradient(135deg,#0071e3,#40a9ff);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;box-shadow:0 2px 8px rgba(0,113,227,0.3);}
+.nav-title{font-size:1rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em;}
+.nav-title span{font-weight:400;color:var(--text-secondary);}
+.nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;}
+.nav-link{padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.nav-link:hover{background:var(--bg-tertiary);color:var(--text-primary);}
+.nav-link.active{color:var(--accent);font-weight:600;}
+.nav-auth{display:flex;align-items:center;gap:8px;margin-left:8px;}
+.nav-user{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#40a9ff);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;cursor:pointer;text-decoration:none;}
+.btn-theme{background:none;border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:1rem;}
+
+.container{max-width:1200px;margin:0 auto;padding:12px 16px;}
+@media(min-width:768px){.container{padding:20px 32px;}}
+@media(min-width:1024px){.container{max-width:1400px;padding:28px 40px;}}
+
+.hero{
+  background: linear-gradient(135deg,#0a0a23,#1a1a3e,#0d2137);
+  border-radius: var(--radius-lg); padding: 40px 32px;
+  margin-bottom: 32px; color: #fff; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(0,113,227,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(175,82,222,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 50% 80%, rgba(52,199,89,0.08) 0%, transparent 50%);
+}
+.hero * { position: relative; z-index: 1; }
+.hero h1{font-family:var(--font-display);font-size:1.8rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px;}
+.hero h1 span { background: linear-gradient(135deg, #40a9ff, #0071e3, #af52de); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p{font-size:0.9rem;color:rgba(255,255,255,0.6);max-width:600px;}
+@media(min-width:768px){.hero h1{font-size:2.5rem;}.hero{padding:56px 48px;}}
+
+.ai-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.8);
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;width:fit-content;
+}
+
+.section{margin-bottom:32px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.section-title{font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;display:flex;align-items:center;gap:8px;}
+.section-title::before{content:'';display:inline-block;width:3px;height:16px;background:linear-gradient(180deg,var(--accent),#40a9ff);border-radius:2px;}
+@media(min-width:768px){.section-title{font-size:1.3rem;}}
+
+.section-subtitle{font-size:0.8rem;color:var(--text-secondary);margin-bottom:16px;margin-top:-8px;}
+
+.learn-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:480px){.learn-grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:768px){.learn-grid{grid-template-columns:repeat(3,1fr);gap:16px;}}
+@media(min-width:1200px){.learn-grid{grid-template-columns:repeat(4,1fr);gap:18px;}}
+
+.learn-card{
+  background: var(--card-bg); border-radius: var(--radius-md);
+  border: 1px solid var(--border-color); padding: 24px;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer; box-shadow: var(--shadow-md);
+  position: relative; overflow: hidden;
+}
+.learn-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.1);}
+.learn-card .card-accent{
+  position:absolute;top:0;left:0;right:0;height:3px;
+}
+.learn-card.blue .card-accent{background:linear-gradient(90deg,#0071e3,#40a9ff);}
+.learn-card.purple .card-accent{background:linear-gradient(90deg,#af52de,#d456e8);}
+.learn-card.green .card-accent{background:linear-gradient(90deg,#34c759,#6ee8a0);}
+.learn-card.orange .card-accent{background:linear-gradient(90deg,#ff9500,#ffcc00);}
+.learn-card.red .card-accent{background:linear-gradient(90deg,#ff3b30,#ff6b6b);}
+.learn-card.teal .card-accent{background:linear-gradient(90deg,#5ac8fa,#34c759);}
+
+.learn-icon{font-size:2rem;margin-bottom:12px;}
+.learn-card h3{font-size:0.95rem;font-weight:700;margin-bottom:6px;}
+.learn-card p{font-size:0.8rem;color:var(--text-secondary);line-height:1.6;}
+.learn-card .stats{display:flex;gap:12px;margin-top:10px;}
+.learn-card .stat{font-size:0.6rem;color:var(--text-tertiary);}
+.learn-tag{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:0.6rem;font-weight:600;background:rgba(0,113,227,0.08);color:var(--accent);margin-top:10px;}
+.learn-tag.green{background:rgba(52,199,89,0.08);color:#34c759;}
+.learn-tag.purple{background:rgba(175,82,222,0.08);color:#af52de;}
+.learn-tag.orange{background:rgba(255,149,0,0.08);color:#ff9500;}
+.learn-tag.red{background:rgba(255,59,48,0.08);color:#ff3b30;}
+
+.quick-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  margin-bottom:32px;
+}
+@media(min-width:768px){.quick-stats{grid-template-columns:repeat(4,1fr);gap:14px;}}
+.quick-stat{
+  background:var(--card-bg);border-radius:var(--radius-md);
+  border:1px solid var(--border-color);padding:16px;
+  text-align:center;
+}
+.quick-stat-val{font-size:1.4rem;font-weight:800;letter-spacing:-0.03em;}
+.quick-stat-lbl{font-size:0.6rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
+
+.resource-list{list-style:none;padding:0;}
+.resource-list li{
+  padding:10px 0;border-bottom:1px solid var(--border-color);
+  display:flex;align-items:center;gap:10px;
+}
+.resource-list li:last-child{border-bottom:none;}
+.resource-list a{color:var(--accent);text-decoration:none;font-size:0.85rem;font-weight:500;}
+.resource-list a:hover{text-decoration:underline;}
+.resource-list .res-icon{font-size:1.1rem;flex-shrink:0;}
+
+/* Code highlight section */
+.code-snip{
+  background:var(--input-bg);border-radius:8px;
+  padding:14px 16px;margin:10px 0;
+  font-family:'SF Mono','Menlo','Monaco','Courier New',monospace;
+  font-size:0.75rem;line-height:1.6;overflow-x:auto;
+  border:1px solid var(--border-color);
+  color:var(--text-primary);
+}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--text-tertiary);border-radius:4px;}
+</style>
+</head>
+<body>
+<nav class="nav" style="position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);backdrop-filter:saturate(180%)blur(20px);-webkit-backdrop-filter:saturate(180%)blur(20px);border-bottom:1px solid var(--border-color);">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">N</div>
+      <div class="nav-title">NovaPulse AI</div>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">News</a>
+      <a href="/tools" class="nav-link">Tools</a>
+      <a href="/browse" class="nav-link">Browse</a>
+      <a href="/categories" class="nav-link">Categories</a>
+      <a href="/advertise" class="nav-link">Advertise</a>
+      <a href="/learn" class="nav-link active">Learn</a>
+      <a href="/profile" class="nav-link">Profile</a>
+    </div>
+    <div class="nav-auth">
+      <button class="btn-theme" onclick="toggleTheme()">🌙</button>
+      {% if user %}
+      <a href="/profile" class="nav-user">{{ user.username[0].upper() }}</a>
+      {% else %}
+      <a href="/login" class="btn" style="padding:6px 14px;background:var(--accent);color:#fff;border-radius:8px;font-size:0.7rem;font-weight:600;text-decoration:none;">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="ai-badge"><span>✦</span><span>AI Learning Hub</span></div>
+    <h1>Master <span>AI, Quantum & Robotics</span></h1>
+    <p>Curated learning paths across artificial intelligence, quantum computing, robotics, and modern tech engineering. From fundamentals to cutting-edge research.</p>
+  </div>
+
+  <!-- QUICK STATS -->
+  <div class="quick-stats">
+    <div class="quick-stat"><div class="quick-stat-val" style="color:var(--accent);">20+</div><div class="quick-stat-lbl">AI Topics</div></div>
+    <div class="quick-stat"><div class="quick-stat-val" style="color:#af52de;">50+</div><div class="quick-stat-lbl">Resources</div></div>
+    <div class="quick-stat"><div class="quick-stat-val" style="color:#34c759;">15</div><div class="quick-stat-lbl">Countries</div></div>
+    <div class="quick-stat"><div class="quick-stat-val" style="color:#ff9500;">Free</div><div class="quick-stat-lbl">Access</div></div>
+  </div>
+
+  <!-- SECTION 1: AI TRENDS & INDUSTRY -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">AI Trends & Industry</h2>
+      <span style="font-size:0.7rem;color:var(--text-secondary);">Latest developments in AI</span>
+    </div>
+    <p class="section-subtitle">Stay ahead with the latest trends in AI — from agentic AI and multimodal models to AI regulation and enterprise adoption.</p>
+    <div class="learn-grid">
+      <div class="learn-card blue" onclick="window.open('https://www.stateof.ai/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">📈</div>
+        <h3>State of AI Report</h3>
+        <p>Annual comprehensive report on AI research, industry, safety, and politics. Tracks major breakthroughs, funding trends, and predictions.</p>
+        <span class="learn-tag">Trends · Research</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://www.gartner.com/en/topics/artificial-intelligence','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🏢</div>
+        <h3>AI Enterprise Adoption</h3>
+        <p>Gartner Hype Cycle for AI, enterprise AI maturity models, and ROI frameworks for AI implementation across industries.</p>
+        <span class="learn-tag">Enterprise · Strategy</span>
+      </div>
+      <div class="learn-card purple" onclick="window.open('https://www.anthropic.com/research','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🧬</div>
+        <h3>AI Safety & Alignment</h3>
+        <p>Research on constitutional AI, RLHF, interpretability, and ensuring AI systems behave safely and ethically. From Anthropic, DeepMind, and OpenAI.</p>
+        <span class="learn-tag purple">Safety · Ethics</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://platform.openai.com/docs/guides/function-calling','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">⚡</div>
+        <h3>Agentic AI & Tool Use</h3>
+        <p>How AI agents call external tools, APIs, and databases autonomously. Function calling, tool use patterns, and agentic workflows explained.</p>
+        <span class="learn-tag">Agents · Tool Use</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://github.com/openai/openai-cookbook','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🎯</div>
+        <h3>Fine-Tuning & Custom Models</h3>
+        <p>Techniques for fine-tuning LLMs on domain-specific data. LoRA, QLoRA, RLHF, and when to fine-tune vs. use RAG.</p>
+        <span class="learn-tag green">Fine-Tuning · MLOps</span>
+      </div>
+      <div class="learn-card orange" onclick="window.open('https://www.euaiact.com/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">⚖️</div>
+        <h3>AI Regulation & Governance</h3>
+        <p>EU AI Act, US Executive Orders on AI, global AI governance frameworks, and compliance requirements for AI systems.</p>
+        <span class="learn-tag orange">Regulation · Policy</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://modal.com/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🚀</div>
+        <h3>AI Infrastructure & Compute</h3>
+        <p>GPU clusters, serverless AI inference, model deployment at scale, and cost optimization for AI workloads on cloud platforms.</p>
+        <span class="learn-tag">Infra · DevOps</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://www.e2enetworks.com/blog/category/open-source-ai','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🌐</div>
+        <h3>Open Source AI Movement</h3>
+        <p>Llama, Mistral, Gemma, and the open-source LLM ecosystem. Community models, benchmarks, and when open-source beats proprietary.</p>
+        <span class="learn-tag green">Open Source · Community</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: QUANTUM COMPUTING -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Quantum Computing</h2>
+      <span style="font-size:0.7rem;color:var(--text-secondary);">The next computing paradigm</span>
+    </div>
+    <p class="section-subtitle">Explore quantum computing fundamentals, from qubits and quantum gates to quantum supremacy and error correction.</p>
+    <div class="learn-grid">
+      <div class="learn-card purple" onclick="window.open('https://quantum-computing.ibm.com/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🔬</div>
+        <h3>Quantum Computing Fundamentals</h3>
+        <p>Qubits, superposition, entanglement, and quantum gates. The mathematical foundations of quantum computation explained from scratch.</p>
+        <span class="learn-tag purple">Fundamentals · Theory</span>
+      </div>
+      <div class="learn-card purple" onclick="window.open('https://qiskit.org/learn/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">💻</div>
+        <h3>Qiskit & Quantum Programming</h3>
+        <p>IBM's Qiskit framework for building and running quantum circuits. Learn quantum programming with Python hands-on tutorials.</p>
+        <span class="learn-tag purple">Programming · Python</span>
+      </div>
+      <div class="learn-card orange" onclick="window.open('https://www.quantamagazine.org/tag/quantum-computing/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🧮</div>
+        <h3>Quantum Algorithms</h3>
+        <p>Shor's factoring algorithm, Grover's search, quantum Fourier transform, and variational quantum eigensolver (VQE) explained.</p>
+        <span class="learn-tag orange">Algorithms · Advanced</span>
+      </div>
+      <div class="learn-card purple" onclick="window.open('https://www.nature.com/subjects/quantum-information','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🛡️</div>
+        <h3>Quantum Error Correction</h3>
+        <p>Surface codes, stabilizer codes, fault-tolerant quantum computation, and the path to logical qubits with low error rates.</p>
+        <span class="learn-tag purple">Error Correction · Research</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://quantumai.google/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🧊</div>
+        <h3>Quantum Hardware</h3>
+        <p>Superconducting qubits, trapped ions, photonic quantum computing, topological qubits, and the latest hardware roadmaps from IBM, Google, IonQ.</p>
+        <span class="learn-tag green">Hardware · Physics</span>
+      </div>
+      <div class="learn-card orange" onclick="window.open('https://arxiv.org/list/quant-ph/recent','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">📄</div>
+        <h3>Quantum Research Papers</h3>
+        <p>Latest quantum computing research on arXiv. Follow breakthroughs in quantum supremacy, error correction, and quantum machine learning.</p>
+        <span class="learn-tag orange">Research · arXiv</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://pennylane.ai/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🤖</div>
+        <h3>Quantum Machine Learning</h3>
+        <p>Quantum neural networks, quantum kernels, and variational quantum algorithms for ML. PennyLane framework for QML.</p>
+        <span class="learn-tag">QML · Hybrid</span>
+      </div>
+      <div class="learn-card red" onclick="window.open('https://www.nist.gov/pqcrypto','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🔐</div>
+        <h3>Post-Quantum Cryptography</h3>
+        <p>NIST's post-quantum cryptography standardization. Lattice-based, hash-based, and code-based cryptography for the quantum era.</p>
+        <span class="learn-tag red">Security · Standards</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: ROBOTICS & AUTOMATION -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Robotics & AI Automation</h2>
+      <span style="font-size:0.7rem;color:var(--text-secondary);">Intelligent machines in the real world</span>
+    </div>
+    <p class="section-subtitle">From industrial robotics to AI-powered autonomous systems — learn how robots perceive, plan, and act in the physical world.</p>
+    <div class="learn-grid">
+      <div class="learn-card green" onclick="window.open('https://www.ros.org/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🤖</div>
+        <h3>ROS 2 & Robot Programming</h3>
+        <p>Robot Operating System (ROS 2) for building robot applications. Nodes, topics, services, actions, and simulation with Gazebo.</p>
+        <span class="learn-tag green">Programming · Simulation</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://www.deeplearning.ai/courses/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">👁️</div>
+        <h3>Computer Vision for Robotics</h3>
+        <p>Object detection, SLAM, visual odometry, depth estimation, and 3D scene understanding for autonomous robots.</p>
+        <span class="learn-tag green">Vision · Perception</span>
+      </div>
+      <div class="learn-card orange" onclick="window.open('https://www.nvidia.com/en-us/autonomous-machines/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🚗</div>
+        <h3>Autonomous Vehicles</h3>
+        <p>Self-driving car technology stack: perception, localization, planning, and control. Waymo, Tesla FSD, and the AV landscape.</p>
+        <span class="learn-tag orange">Autonomy · Vehicles</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://gym.openai.com/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🎮</div>
+        <h3>Reinforcement Learning for Robotics</h3>
+        <p>RL algorithms for robot control: PPO, SAC, DQN, and simulation-to-real transfer. Gymnasium and Isaac Gym frameworks.</p>
+        <span class="learn-tag green">RL · Control</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://www.universal-robots.com/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🏭</div>
+        <h3>Industrial Automation & Cobots</h3>
+        <p>Collaborative robots, PLC programming, Industry 4.0, digital twins, and smart factory automation with AI integration.</p>
+        <span class="learn-tag">Industrial · Manufacturing</span>
+      </div>
+      <div class="learn-card purple" onclick="window.open('https://spectrum.ieee.org/topic/robotics/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🦾</div>
+        <h3>Humanoid Robots & Embodied AI</h3>
+        <p>Boston Dynamics Atlas, Tesla Optimus, Figure AI, and the rise of general-purpose humanoid robots. Embodied AI research.</p>
+        <span class="learn-tag purple">Humanoid · Research</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://www.openai.com/research/#robotics','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🧠</div>
+        <h3>Robot Learning & Foundation Models</h3>
+        <p>RT-2, PaLM-E, and vision-language-action models for robotics. How large foundation models are being applied to robot control.</p>
+        <span class="learn-tag green">Foundation Models · Research</span>
+      </div>
+      <div class="learn-card orange" onclick="window.open('https://www.roboticsbusinessreview.com/','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">📊</div>
+        <h3>Robotics Industry & Markets</h3>
+        <p>Robotics market analysis, startup funding, robotics-as-a-service (RaaS), and the economic impact of automation worldwide.</p>
+        <span class="learn-tag orange">Industry · Markets</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: AI & ML FUNDAMENTALS -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">AI Agents & Frameworks</h2>
+      <span style="font-size:0.7rem;color:var(--text-secondary);">Building intelligent agents</span>
+    </div>
+    <p class="section-subtitle">Master the tools and frameworks for building production-grade AI agents, RAG systems, and LLM applications.</p>
+    <div class="learn-grid">
+      <div class="learn-card blue" onclick="window.open('https://python.langchain.com/docs','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">⛓️</div>
+        <h3>LangChain & LangGraph</h3>
+        <p>Build LLM-powered applications with chains, agents, and stateful graph-based workflows. RAG, tool use, and multi-agent systems.</p>
+        <span class="learn-tag">LangChain · Agents</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://docs.anthropic.com/en/docs/agents-and-tools/mcp','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🔌</div>
+        <h3>MCP (Model Context Protocol)</h3>
+        <p>Anthropic's open protocol for connecting AI models to external tools and data sources securely. Standardized tool integration.</p>
+        <span class="learn-tag">MCP · Protocol</span>
+      </div>
+      <div class="learn-card purple" onclick="window.open('https://www.trychroma.com','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">📊</div>
+        <h3>Vector Databases & RAG</h3>
+        <p>Embeddings, vector search, and semantic retrieval with ChromaDB, Pinecone, Weaviate, and Qdrant. Build production RAG pipelines.</p>
+        <span class="learn-tag purple">RAG · Vectors</span>
+      </div>
+      <div class="learn-card green" onclick="window.open('https://github.com/microsoft/autogen','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">👥</div>
+        <h3>Multi-Agent Orchestration</h3>
+        <p>AutoGen, CrewAI, and multi-agent systems. Design patterns for agent teams, task decomposition, and collaborative problem solving.</p>
+        <span class="learn-tag green">Multi-Agent · Advanced</span>
+      </div>
+      <div class="learn-card blue" onclick="window.open('https://huggingface.co/docs/transformers/index','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">🧠</div>
+        <h3>Transformers & LLMs Deep Dive</h3>
+        <p>Transformer architecture, attention mechanisms, tokenization, and fine-tuning LLMs. From GPT to Llama to Mistral architectures.</p>
+        <span class="learn-tag">Deep Learning · LLMs</span>
+      </div>
+      <div class="learn-card orange" onclick="window.open('https://fastapi.tiangolo.com','_blank')">
+        <div class="card-accent"></div>
+        <div class="learn-icon">⚡</div>
+        <h3>FastAPI for AI Services</h3>
+        <p>Build high-performance AI APIs with FastAPI, async processing, WebSocket streaming, and production deployment patterns.</p>
+        <span class="learn-tag orange">Backend · APIs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: RESOURCES & TOOLS -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Essential Resources</h2>
+      <span style="font-size:0.7rem;color:var(--text-secondary);">Tools & references</span>
+    </div>
+    <p class="section-subtitle">Curated collection of the best tools, papers, and communities for AI, quantum, and robotics engineering.</p>
+    <div class="learn-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="learn-card" style="cursor:default;">
+        <div class="card-accent"></div>
+        <h3 style="margin-bottom:12px;">📚 Top Learning Resources</h3>
+        <ul class="resource-list">
+          <li><span class="res-icon">📖</span><a href="https://www.deeplearning.ai/" target="_blank">DeepLearning.AI — Coursera Specializations</a></li>
+          <li><span class="res-icon">🎓</span><a href="https://www.fast.ai/" target="_blank">fast.ai — Practical Deep Learning</a></li>
+          <li><span class="res-icon">🏛️</span><a href="https://ocw.mit.edu/" target="_blank">MIT OpenCourseWare — AI & CS</a></li>
+          <li><span class="res-icon">📝</span><a href="https://arxiv.org/" target="_blank">arXiv — Latest Research Papers</a></li>
+          <li><span class="res-icon">🤗</span><a href="https://huggingface.co/" target="_blank">Hugging Face — Models & Datasets</a></li>
+          <li><span class="res-icon">💬</span><a href="https://stackoverflow.com/questions/tagged/machine-learning" target="_blank">Stack Overflow — ML Community</a></li>
+        </ul>
+      </div>
+      <div class="learn-card" style="cursor:default;">
+        <div class="card-accent"></div>
+        <h3 style="margin-bottom:12px;">🔧 Essential Tools</h3>
+        <ul class="resource-list">
+          <li><span class="res-icon">🐍</span><a href="https://pytorch.org/" target="_blank">PyTorch — Deep Learning Framework</a></li>
+          <li><span class="res-icon">🤖</span><a href="https://www.tensorflow.org/" target="_blank">TensorFlow — ML Platform</a></li>
+          <li><span class="res-icon">🐳</span><a href="https://www.docker.com/" target="_blank">Docker — Containerization</a></li>
+          <li><span class="res-icon">☸️</span><a href="https://kubernetes.io/" target="_blank">Kubernetes — ML Orchestration</a></li>
+          <li><span class="res-icon">📊</span><a href="https://mlflow.org/" target="_blank">MLflow — MLOps Platform</a></li>
+          <li><span class="res-icon">🔍</span><a href="https://www.sbert.net/" target="_blank">Sentence Transformers — Embeddings</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: CODE EXAMPLE -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Quick Start: AI Agents in Python</h2>
+      <span style="font-size:0.7rem;color:var(--text-secondary);">Get started with agentic AI</span>
+    </div>
+    <div class="learn-card" style="cursor:default;padding:20px;">
+      <div class="card-accent" style="background:linear-gradient(90deg,#0071e3,#40a9ff);"></div>
+      <p style="margin-bottom:12px;font-size:0.85rem;">Build a simple AI research agent using LangChain that can search the web and answer questions:</p>
+      <div class="code-snip">
+# pip install langchain langchain-openai chromadb<br><br>
+from langchain.agents import create_react_agent, AgentExecutor<br>
+from langchain.tools import Tool<br>
+from langchain_openai import ChatOpenAI<br>
+from langchain import hub<br><br>
+# Define tools<br>
+def search_tool(query: str) -> str:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"""Search for information online"""<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return f"Results for: {query}"<br><br>
+tools = [Tool(name="WebSearch", func=search_tool,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;description="Search the web")]<br><br>
+# Create agent<br>
+llm = ChatOpenAI(model="gpt-4", temperature=0)<br>
+prompt = hub.pull("hwchase17/react")<br>
+agent = create_react_agent(llm, tools, prompt)<br>
+agent_executor = AgentExecutor(agent=agent, tools=tools,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verbose=True)<br><br>
+response = agent_executor.invoke({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"input": "What are the latest AI breakthroughs?"<br>
+})<br>
+print(response["output"])
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  fetch('/api/auth/preferences', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({dark_mode: next === 'dark'}) }).catch(()=>{});
+}
+</script>
+</body>
+</html>

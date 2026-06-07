@@ -193,6 +193,12 @@ def get_entity_mentions(session, limit=15):
     return sorted(counts.items(), key=lambda x: x[1], reverse=True)[:limit]
 
 
+def get_top_articles(session, limit=50):
+    return session.query(Article).order_by(
+        Article.final_score.desc(), Article.published.desc().nullslast()
+    ).limit(limit).all()
+
+
 def get_alerts(session, limit=20, unsent_only=False):
     q = session.query(Alert).order_by(Alert.severity.desc(), Alert.created_at.desc())
     if unsent_only:

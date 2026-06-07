@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>About - NovaPulse AI</title>
+</head>
+<body>
+{% set nav_active = 'about' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/tech-stacks" class="nav-link{{ ' active' if nav_active == 'techstacks' else '' }}">Tech Stacks</a>
+<a href="/about" class="nav-link{{ ' active' if nav_active == 'about' else '' }}">About</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>About NovaPulse AI</h1><p>We help you discover the best open source alternatives to popular software — curated by the community, for the community.</p></div>
+
+<div class="container-narrow">
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-val" style="color:var(--accent);">750+</div><div class="stat-label">Listed Tools</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-green);">450K</div><div class="stat-label">Monthly Views</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-purple);">10K</div><div class="stat-label">Newsletter</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent-orange);">53</div><div class="stat-label">Categories</div></div>
+</div>
+
+<div class="section">
+<h2 class="section-title" style="margin-bottom:12px;">Our Mission</h2>
+<p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">NovaPulse AI is a community-driven directory of the best open source alternatives to proprietary software. We believe that powerful tools should be accessible to everyone, not locked behind expensive subscriptions.</p>
+<p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">Our platform helps developers, startups, and enterprises discover, compare, and adopt open source tools that can replace expensive SaaS products — saving thousands of dollars while maintaining full control over their data and infrastructure.</p>
+</div>
+
+<div class="section">
+<h2 class="section-title" style="margin-bottom:12px;">Why NovaPulse AI?</h2>
+<p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text-primary);">Curated Quality</strong> — Every tool on our platform is hand-picked and reviewed by our community. We don't list everything; we list the best.</p>
+<p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text-primary);">Comprehensive Data</strong> — Star counts, fork counts, last commit dates, license types, and alternative comparisons — all the data you need to make informed decisions.</p>
+<p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text-primary);">Community Driven</strong> — NovaPulse AI is built by and for the open source community. Anyone can submit a tool or suggest changes.</p>
+</div>
+
+<div class="section">
+<h2 class="section-title" style="margin-bottom:12px;">Team</h2>
+<div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+<div class="card" style="text-align:center;cursor:default;"><div style="width:56px;height:56px;border-radius:28px;background:linear-gradient(135deg,var(--accent),#40a9ff);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;margin:0 auto 8px;">N</div><div style="font-weight:600;font-size:0.9rem;">NovaPulse AI Team</div><div style="font-size:0.75rem;color:var(--text-secondary);">Open Source Advocates</div></div>
+<div class="card" style="text-align:center;cursor:default;"><div style="width:56px;height:56px;border-radius:28px;background:linear-gradient(135deg,var(--accent-purple),#d456e8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;margin:0 auto 8px;">C</div><div style="font-weight:600;font-size:0.9rem;">Community</div><div style="font-size:0.75rem;color:var(--text-secondary);">Contributors & Reviewers</div></div>
+</div>
+</div>
+
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+</script>
+</body>
+</html>

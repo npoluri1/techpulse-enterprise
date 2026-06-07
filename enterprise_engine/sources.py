@@ -118,6 +118,31 @@ class FreeSourceFetcher:
                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             "Accept-Language": "en-US,en;q=0.9",
         })
+        self._firecrawl_client = None
+        self._tavily_client = None
+
+    @property
+    def firecrawl(self):
+        if self._firecrawl_client is None:
+            api_key = os.getenv("FIRECRAWL_API_KEY", "")
+            if api_key:
+                try:
+                    from firecrawl import FirecrawlApp
+                    self._firecrawl_client = FirecrawlApp(api_key=api_key)
+                except Exception as e:
+                    logger.warning(f"[Firecrawl] Init failed: {e}")
+        return self._firecrawl_client
+
+    @property
+    def tavily(self):
+        if self._tavily_client is None:
+            try:
+                from tavily import TavilyClient
+                api_key = os.getenv("TAVILY_API_KEY", os.getenv("SERPER_API_KEY", ""))
+                self._tavily_client = TavilyClient(api_key=api_key) if api_key else None
+            except Exception as e:
+                logger.debug(f"[Tavily] Not available: {e}")
+        return self._tavily_client
 
     def fetch_all(self, country: str = "Global") -> List[dict]:
         items = []
@@ -125,8 +150,129 @@ class FreeSourceFetcher:
         items.extend(self.fetch_newsapi(country=country))
         if config.SERPER_API_KEY:
             items.extend(self.fetch_serper())
+        items.extend(self.fetch_google_news_rss())
         items.extend(self.fetch_reddit_trending())
+        if self.firecrawl:
+            items.extend(self.fetch_firecrawl_trending())
+        if self.tavily:
+            items.extend(self.fetch_tavily_news())
         logger.info(f"[Sources] Total fetched: {len(items)}")
+        return items
+
+    def fetch_google_news_rss(self) -> List[dict]:
+        items = []
+        topics = [
+            "AI", "artificial+intelligence", "machine+learning", "quantum+computing",
+            "cybersecurity", "robotics", "semiconductor", "space+technology",
+            "climate+tech", "biotechnology", "autonomous+vehicles",
+            "agentic+AI", "AI+agents", "multi-agent+systems",
+            "humanoid+robot", "AGI", "artificial+general+intelligence",
+            "AI+model+release", "large+language+model",
+            "EU+AI+Act", "AI+regulation", "AI+governance",
+            "AI+coding+agent", "physical+AI", "embodied+AI",
+            "generative+AI+video", "multimodal+AI", "AI+startup+funding",
+        ]
+        for topic in topics:
+            try:
+                url = f"https://news.google.com/rss/search?q={topic}+when:1d&hl=en-US&gl=US&ceid=US:en"
+                parsed = feedparser.parse(url)
+                for entry in parsed.entries[:5]:
+                    title = entry.get("title", "").strip()
+                    link = entry.get("link", "")
+                    if not title or not link:
+                        continue
+                    source_name = entry.get("source", {}).get("title", "Google News") if hasattr(entry, "source") else "Google News"
+                    summary = entry.get("summary", "")[:300]
+                    if summary:
+                        soup = BeautifulSoup(summary, "html.parser")
+                        summary = soup.get_text(strip=True)[:300]
+                    published = entry.get("published", "")
+                    item = NewsItem(
+                        title=title, url=link,
+                        source=f"GoogleNews:{source_name}",
+                        source_type="rss",
+                        summary=summary,
+                        published=published,
+                    )
+                    items.append(item.to_dict())
+                logger.debug(f"[GoogleNews] {topic}: {len(parsed.entries)} items")
+            except Exception as e:
+                logger.debug(f"[GoogleNews] {topic} failed: {e}")
+        return items
+
+    def fetch_firecrawl_trending(self) -> List[dict]:
+        if not self.firecrawl:
+            return []
+        items = []
+        urls = [
+            "https://techcrunch.com",
+            "https://www.theverge.com/tech",
+            "https://arstechnica.com",
+            "https://venturebeat.com",
+        ]
+        today = datetime.utcnow().strftime("%Y-%m-%d")
+        for url in urls:
+            try:
+                result = self.firecrawl.scrape_url(url, params={"formats": ["markdown"]})
+                content = ""
+                if isinstance(result, dict):
+                    content = result.get("data", {}).get("content", "") or result.get("markdown", "") or str(result)
+                else:
+                    content = str(result)
+                lines = content.split("\n")
+                headlines = []
+                for line in lines:
+                    line = line.strip()
+                    if line.startswith("## ") or line.startswith("# ") or line.startswith("### "):
+                        headline = line.lstrip("#").strip()
+                        if len(headline) > 20 and headline not in headlines:
+                            headlines.append(headline)
+                for hl in headlines[:8]:
+                    item = NewsItem(
+                        title=hl,
+                        url=url,
+                        source=f"Firecrawl:{url.split('//')[1].split('/')[0]}",
+                        source_type="web",
+                        summary=f"Trending from {url}",
+                        published=today,
+                    )
+                    items.append(item.to_dict())
+                logger.debug(f"[Firecrawl] {url}: {len(headlines)} headlines")
+            except Exception as e:
+                logger.debug(f"[Firecrawl] {url} failed: {e}")
+        return items
+
+    def fetch_tavily_news(self) -> List[dict]:
+        if not self.tavily:
+            return []
+        items = []
+        queries = [
+            "latest AI technology news today",
+            "quantum computing breakthrough 2026",
+            "cybersecurity threat intelligence",
+            "semiconductor chip manufacturing",
+            "agentic AI enterprise automation 2026",
+            "humanoid robot physical AI breakthrough",
+            "AGI artificial general intelligence timeline",
+            "AI model release latest GPT Claude Gemini Grok DeepSeek",
+            "EU AI Act regulation compliance 2026",
+            "AI startup funding venture capital investment",
+        ]
+        for query in queries:
+            try:
+                result = self.tavily.search(query, search_depth="advanced", max_results=8, include_domains=None)
+                for r in result.get("results", []):
+                    item = NewsItem(
+                        title=r.get("title", ""),
+                        url=r.get("url", ""),
+                        source=f"Tavily:{r.get('source', 'web')}",
+                        source_type="api",
+                        summary=r.get("content", "")[:300],
+                    )
+                    items.append(item.to_dict())
+                logger.debug(f"[Tavily] {query}: {len(result.get('results', []))} results")
+            except Exception as e:
+                logger.debug(f"[Tavily] {query} failed: {e}")
         return items
 
     def fetch_rss_feeds(self) -> List[dict]:
@@ -230,6 +376,12 @@ class FreeSourceFetcher:
             "AI artificial intelligence news", "quantum computing breakthrough",
             "robotics automation latest", "tech investment funding startup",
             "cybersecurity threat intelligence", "semiconductor chip news",
+            "agentic AI frameworks tools 2026", "AI agents enterprise automation",
+            "humanoid robot latest 2026", "AGI breakthrough singularity",
+            "EU AI Act regulation compliance", "AI model release GPT Claude Gemini Grok",
+            "AI coding agent software engineering", "multimodal AI generative video",
+            "AI startup funding venture capital", "China AI quantum breakthrough",
+            "India technology AI news", "Canada AI quantum investment",
         ]
         headers = {"X-API-KEY": config.SERPER_API_KEY, "Content-Type": "application/json"}
         for query in queries:

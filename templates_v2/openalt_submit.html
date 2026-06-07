@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>Submit a Tool - NovaPulse AI</title>
+<style>
+.section-title{font-size:0.95rem;font-weight:700;margin:28px 0 14px;display:flex;align-items:center;gap:8px}
+.alt-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:16px;transition:all 0.15s;text-decoration:none;display:block;margin-bottom:8px}
+.alt-card:hover{box-shadow:var(--shadow-sm);border-color:var(--accent)}
+.alt-card .name{font-weight:600;font-size:0.85rem;color:var(--text-primary)}
+.alt-card .desc{font-size:0.74rem;color:var(--text-secondary);line-height:1.4;margin-top:4px}
+.alt-card .meta{font-size:0.65rem;color:var(--text-tertiary);margin-top:6px;display:flex;gap:10px;align-items:center}
+.alt-card .tag{padding:2px 8px;border-radius:4px;background:rgba(0,113,227,0.08);font-size:0.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.03em}
+.pop-sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin-bottom:14px}
+.pop-sw-item{background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:10px 12px;font-size:0.72rem;font-weight:500;color:var(--text-primary);text-decoration:none;transition:all 0.12s;display:flex;align-items:center;gap:10px}
+.pop-sw-item:hover{border-color:var(--accent);color:var(--accent)}
+.pop-sw-item .sw-count{font-size:0.6rem;color:var(--text-tertiary);background:var(--bg-tertiary);padding:1px 7px;border-radius:10px}
+.pop-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+.pop-cat-item{background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:10px 12px;font-size:0.72rem;font-weight:500;color:var(--text-primary);text-decoration:none;transition:all 0.12s}
+.pop-cat-item:hover{border-color:var(--accent);color:var(--accent)}
+.pop-cat-item .cat-count{font-size:0.6rem;color:var(--text-tertiary);margin-top:2px}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.alternative-to-group{margin-top:12px}
+.alternative-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.alternative-tag{padding:4px 12px;border-radius:20px;border:1px solid var(--border-color);background:var(--card-bg);font-size:0.7rem;color:var(--text-secondary);cursor:pointer;transition:all 0.12s}
+.alternative-tag:hover,.alternative-tag.selected{border-color:var(--accent);color:var(--accent);background:rgba(0,113,227,0.05)}
+</style>
+</head>
+<body>
+{% set nav_active = 'submit' %}
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link{{ ' active' if nav_active == 'browse' else '' }}">Browse</a>
+<a href="/alternatives" class="nav-link{{ ' active' if nav_active == 'alternatives' else '' }}">Alternatives</a>
+<a href="/categories" class="nav-link{{ ' active' if nav_active == 'categories' else '' }}">Categories</a>
+<a href="/tech-stacks" class="nav-link{{ ' active' if nav_active == 'techstacks' else '' }}">Tech Stacks</a>
+<a href="/self-hosted" class="nav-link{{ ' active' if nav_active == 'selfhosted' else '' }}">Self-Hosted</a>
+<a href="/advertise" class="nav-link{{ ' active' if nav_active == 'advertise' else '' }}">Advertise</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>Submit your Open Source Software</h1><p>Help us grow the list of open source alternatives to proprietary software. Contribute to NovaPulse AI by submitting a new open source alternative.</p></div>
+
+<div class="app-container" style="display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start">
+
+<div>
+<div class="form-card">
+<div class="alert" id="alertMsg"></div>
+<form id="submitForm" onsubmit="handleSubmit(event)">
+<div class="form-group"><label>Tool Name *</label><input class="form-control" id="name" placeholder="e.g. PostHog" required></div>
+<div class="form-group"><label>Repository / Website URL *</label><input type="url" class="form-control" id="url" placeholder="https://github.com/..." required></div>
+<div class="form-group"><label>Description *</label><textarea class="form-control" id="description" placeholder="Brief description of what the tool does" rows="3" required></textarea></div>
+<div class="form-row-2">
+<div class="form-group"><label>Category</label><select class="form-select" id="category">
+{% for c in categories %}
+<option value="{{ c.name }}">{{ c.name }}</option>
+{% endfor %}
+</select></div>
+<div class="form-group"><label>License</label><input class="form-control" id="license" placeholder="MIT, Apache-2.0, AGPL-3.0..."></div>
+</div>
+<div class="alternative-to-group">
+<label style="font-size:0.78rem;font-weight:600;color:var(--text-primary)">Which well-known tool is this an alternative to? *</label>
+<select class="form-select" id="alternativeTo" style="margin-top:6px" required>
+<option value="">Select proprietary tool...</option>
+{% for sw in popular_software_list %}
+<option value="{{ sw.name }}">{{ sw.name }}</option>
+{% endfor %}
+</select>
+</div>
+<div style="margin:16px 0;padding:12px;background:var(--bg-primary);border-radius:var(--radius-sm);font-size:0.72rem;color:var(--text-secondary);line-height:1.6">
+<strong style="color:var(--text-primary)">Submission guidelines:</strong><br>
+We review all submissions to ensure high quality.<br>
+• <strong>Public Repository</strong> — Must be hosted on GitHub, GitLab, Codeberg, or Bitbucket.<br>
+• <strong>Custom Domain</strong> — No temporary subdomains (vercel.app, netlify.app, etc.).<br>
+• <strong>Real Application</strong> — Full applications only, not CLIs, scripts, libraries or AI wrappers.<br>
+• <strong>Available Now</strong> — No waitlist or "coming soon" products.<br>
+• <strong>Clear Alternative</strong> — Must be an alternative to proprietary software.
+</div>
+<button class="btn btn-primary" type="submit" style="width:100%;padding:14px;font-size:0.9rem;">Submit</button>
+</form>
+</div>
+
+<!-- Popular Alternatives -->
+{% if popular_alternatives %}
+<div class="section-title">⭐ Popular Open Source Alternatives</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+{% for alt in popular_alternatives[:6] %}
+<a href="/browse?q={{ alt.name | urlencode }}" class="alt-card">
+<div class="name">{{ alt.name }}</div>
+<div class="desc">{{ alt.description[:120] }}{% if alt.description|length > 120 %}...{% endif %}</div>
+<div class="meta">
+<span>⭐ {{ alt.stars }}k</span>
+<span class="tag">{{ alt.category }}</span>
+</div>
+</a>
+{% endfor %}
+</div>
+{% endif %}
+</div>
+
+<!-- Sidebar -->
+<div>
+{% if data and data.0 %}
+<div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:16px;margin-bottom:16px">
+<div style="font-size:0.65rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Ad</div>
+<div style="display:flex;gap:12px">
+<img src="https://www.google.com/s2/favicons?domain={{ (data.0.url | replace('https://','') | replace('http://','')).split('/')[0] }}&sz=32" style="width:28px;height:28px;border-radius:6px;flex-shrink:0" alt="">
+<div>
+<div style="font-weight:600;font-size:0.78rem;color:var(--text-primary)">{{ data.0.name }}</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);line-height:1.4;margin-top:4px">{{ data.0.description[:120] }}...</div>
+<a href="{{ data.0.url }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;font-size:0.7rem;color:var(--accent)">Learn More →</a>
+</div>
+</div>
+</div>
+{% endif %}
+
+<!-- Popular Proprietary Software -->
+<div class="section-title" style="margin-top:0">📊 Popular Proprietary Software</div>
+<div class="pop-sw-grid">
+{% for sw in popular_software_list[:10] %}
+<a href="/browse?q={{ sw.name | urlencode }}" class="pop-sw-item">
+<span>{{ sw.name }}</span>
+<span class="sw-count">{{ sw.count }} alt</span>
+</a>
+{% endfor %}
+</div>
+
+<!-- Popular Categories -->
+<div class="section-title">📂 Popular Categories</div>
+<div class="pop-cat-grid">
+{% for c in popular_categories_list[:14] %}
+<a href="/categories" class="pop-cat-item">
+<div>{{ c.name }}</div>
+<div class="cat-count">{{ c.count }} tools</div>
+</a>
+{% endfor %}
+</div>
+</div>
+
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+async function handleSubmit(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('.btn-primary');
+  btn.disabled=true; btn.textContent='Submitting...';
+  try {
+    const r=await fetch('/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      name:document.getElementById('name').value,
+      url:document.getElementById('url').value,
+      description:document.getElementById('description').value,
+      category:document.getElementById('category').value,
+      license:document.getElementById('license').value,
+      alternative_to:document.getElementById('alternativeTo').value
+    })});
+    const d=await r.json();
+    const a=document.getElementById('alertMsg');
+    a.textContent=d.message; a.className='alert show '+(d.status==='ok'?'alert-success':'alert-error');
+    if(d.status==='ok') e.target.reset();
+  } catch(e) {
+    const a=document.getElementById('alertMsg');
+    a.textContent='Failed to submit. Try again.'; a.className='alert show alert-error';
+  } finally {
+    btn.disabled=false; btn.textContent='Submit';
+  }
+}
+</script>
+</body>
+</html>

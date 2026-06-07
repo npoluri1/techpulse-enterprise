@@ -36,8 +36,7 @@ class NewsTechAgent:
 
         keywords = domain_config.get("keywords", [])
         sources = domain_config.get("sources", [])
-        max_src = self.config.get("agent", {}).get("max_sources_per_domain", 5)
-        sources = sources[:max_src]
+        max_src = self.config.get("agent", {}).get("max_sources_per_domain", 200)
 
         all_items = self.fetcher.fetch_all(sources)
         curated = self.curator.curate(all_items, keywords)

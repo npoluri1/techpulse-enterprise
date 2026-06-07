@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ 'dark' if prefs.dark_mode else 'light' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>NovaPulse AI</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+:root {
+  --bg-primary: #f5f5f7;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8ed;
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #aeaeb2;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-green: #34c759;
+  --accent-orange: #ff9500;
+  --accent-red: #ff3b30;
+  --accent-purple: #af52de;
+  --border-color: rgba(0,0,0,0.06);
+  --border-color-strong: rgba(0,0,0,0.12);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+  --blur-bg: rgba(255,255,255,0.8);
+  --card-bg: #ffffff;
+  --nav-bg: rgba(255,255,255,0.85);
+  --input-bg: #f5f5f7;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --font-display: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --font-text: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e;
+  --text-primary: #f5f5f7;
+  --text-secondary: #98989d;
+  --text-tertiary: #636366;
+  --border-color: rgba(255,255,255,0.08);
+  --border-color-strong: rgba(255,255,255,0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --blur-bg: rgba(28,28,30,0.85);
+  --card-bg: #1c1c1e;
+  --nav-bg: rgba(0,0,0,0.85);
+  --input-bg: #2c2c2e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: var(--font-text);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s, color 0.3s;
+  padding-top: 56px;
+}
+
+@media (min-width: 768px) { body { padding-top: 64px; } }
+@media (min-width: 1024px) { body { padding-top: 72px; } }
+
+/* === NAV === */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.3s;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  padding: 0 16px; height: 56px; gap: 12px;
+}
+@media (min-width: 768px) { .nav-inner { height: 64px; padding: 0 32px; } }
+@media (min-width: 1024px) { .nav-inner { height: 72px; max-width: 1400px; } }
+
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.nav-logo {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, #0071e3, #40a9ff);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,113,227,0.3);
+}
+@media (min-width: 768px) { .nav-logo { width: 32px; height: 32px; font-size: 15px; border-radius: 8px; } }
+.nav-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+.nav-title span { font-weight: 400; color: var(--text-secondary); }
+@media (min-width: 768px) { .nav-title { font-size: 1.15rem; } }
+
+.nav-links { display: flex; gap: 2px; margin-left: auto; align-items: center; }
+.nav-link {
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 0.75rem; font-weight: 500; color: var(--text-secondary);
+  text-decoration: none; transition: all 0.2s; white-space: nowrap;
+}
+.nav-link:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.nav-link.active { color: var(--accent); font-weight: 600; }
+@media (min-width: 768px) { .nav-link { padding: 8px 16px; font-size: 0.8rem; } }
+
+.nav-auth { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+.nav-user {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #40a9ff);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: transform 0.2s;
+}
+.nav-user:hover { transform: scale(1.1); }
+@media (min-width: 768px) { .nav-user { width: 34px; height: 34px; font-size: 0.8rem; } }
+
+.btn-theme {
+  background: none; border: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 1rem;
+  transition: all 0.2s;
+}
+.btn-theme:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* === LAYOUT === */
+.app-container { max-width: 1200px; margin: 0 auto; padding: 12px 16px; }
+@media (min-width: 768px) { .app-container { padding: 20px 32px; } }
+@media (min-width: 1024px) { .app-container { max-width: 1400px; padding: 28px 40px; } }
+
+/* === HERO === */
+.hero {
+  position: relative;
+  background: linear-gradient(135deg, #000000, #1a1a2e, #16213e);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  color: #fff;
+}
+@media (min-width: 768px) { .hero { padding: 48px 40px; border-radius: var(--radius-xl); margin-bottom: 32px; } }
+@media (min-width: 1024px) { .hero { padding: 64px 56px; } }
+
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(0,113,227,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 50%, rgba(175,82,222,0.1) 0%, transparent 50%);
+}
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 1; }
+@media (min-width: 768px) { .hero-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+
+.hero-content { display: flex; flex-direction: column; justify-content: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  font-size: 0.65rem; font-weight: 600; color: rgba(255,255,255,0.8);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 12px; width: fit-content;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 800; line-height: 1.1;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+}
+.hero h1 span { background: linear-gradient(135deg, #40a9ff, #0071e3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+@media (min-width: 768px) { .hero h1 { font-size: 2.5rem; } }
+@media (min-width: 1024px) { .hero h1 { font-size: 3.2rem; } }
+
+.hero p { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 480px; }
+@media (min-width: 768px) { .hero p { font-size: 0.95rem; } }
+
+.hero-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (min-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+.hero-stat {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md); padding: 16px;
+  text-align: center;
+}
+@media (min-width: 768px) { .hero-stat { padding: 20px; } }
+.hero-stat-val { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+@media (min-width: 768px) { .hero-stat-val { font-size: 2rem; } }
+@media (min-width: 1024px) { .hero-stat-val { font-size: 2.4rem; } }
+.hero-stat-lbl { font-size: 0.6rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+@media (min-width: 768px) { .hero-stat-lbl { font-size: 0.65rem; } }
+
+/* === SECTION === */
+.section { margin-bottom: 28px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+.section-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+.section-title::before {
+  content: ''; display: inline-block;
+  width: 3px; height: 16px;
+  background: linear-gradient(180deg, var(--accent), #40a9ff);
+  border-radius: 2px;
+}
+@media (min-width: 768px) { .section-title { font-size: 1.3rem; } }
+
+.section-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* === CATEGORY PILLS === */
+.pill-scroll {
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 4px 0; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; margin-bottom: 16px;
+}
+.pill-scroll::-webkit-scrollbar { display: none; }
+.pill {
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border-color);
+  background: var(--card-bg); color: var(--text-secondary);
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1); user-select: none;
+}
+.pill:hover { background: var(--bg-tertiary); border-color: var(--border-color-strong); }
+.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 12px rgba(0,113,227,0.25); }
+.pill .count { font-size: 0.6rem; opacity: 0.5; }
+.pill.active .count { opacity: 0.8; color: rgba(255,255,255,0.8); }
+
+/* === ARTICLE GRID === */
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 480px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .article-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+@media (min-width: 1024px) { .article-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+@media (min-width: 1200px) { .article-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
+
+.article-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 18px;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer;
+  position: relative;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+.article-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-color-strong);
+}
+.article-card:active { transform: translateY(-1px); }
+@media (min-width: 768px) { .article-card { padding: 22px; } }
+@media (min-width: 1024px) { .article-card { padding: 24px; } }
+
+.article-category {
+  display: inline-flex;
+  padding: 2px 8px; border-radius: 6px;
+  font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 10px;
+  background: rgba(0,113,227,0.08); color: var(--accent);
+  width: fit-content;
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem; font-weight: 600; line-height: 1.5;
+  color: var(--text-primary); flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+@media (min-width: 768px) { .article-title { font-size: 0.9rem; } }
+
+.article-meta {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.65rem; color: var(--text-secondary);
+}
+.article-source { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+.article-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-tertiary); flex-shrink: 0; }
+.article-time { flex-shrink: 0; }
+
+.article-actions {
+  display: flex; gap: 4px; margin-left: auto;
+}
+.article-btn {
+  width: 26px; height: 26px; border-radius: 6px;
+  border: none; background: transparent;
+  color: var(--text-tertiary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; transition: all 0.2s;
+}
+.article-btn:hover { background: var(--bg-tertiary); color: var(--accent); }
+.article-btn.saved { color: var(--accent); }
+
+/* === CHAT === */
+#chatFab {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 52px; height: 52px;
+  background: var(--accent);
+  border: none; border-radius: 50%;
+  color: #fff; font-size: 1.2rem;
+  cursor: pointer; box-shadow: 0 4px 20px rgba(0,113,227,0.35);
+  z-index: 99;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+#chatFab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,113,227,0.5); }
+@media (min-width: 768px) { #chatFab { width: 56px; height: 56px; bottom: 28px; right: 28px; } }
+
+#chatPanel {
+  position: fixed; bottom: 84px; right: 20px;
+  width: 360px; max-height: 520px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  display: flex; flex-direction: column;
+  z-index: 99;
+  opacity: 0; transform: translateY(20px) scale(0.95);
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+  overflow: hidden;
+}
+#chatPanel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+@media (max-width: 420px) { #chatPanel { right: 12px; left: 12px; width: auto; bottom: 80px; } }
+
+#chatHeader {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px 10px;
+}
+#chatHeader .chat-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #40a9ff);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 0.65rem; font-weight: 700; flex-shrink: 0;
+}
+#chatHeader .chat-title { font-size: 0.85rem; font-weight: 600; flex: 1; }
+#chatHeader .chat-close {
+  background: none; border: none; color: var(--text-tertiary);
+  cursor: pointer; font-size: 1.1rem; padding: 4px; border-radius: 6px;
+  transition: all 0.2s;
+}
+#chatHeader .chat-close:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+#chatMessages {
+  flex: 1; overflow-y: auto; padding: 8px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  min-height: 200px; max-height: 300px;
+}
+.chat-msg { display: flex; }
+.chat-msg.ai { justify-content: flex-start; }
+.chat-msg.user { justify-content: flex-end; }
+.chat-bubble {
+  max-width: 88%; padding: 10px 14px;
+  border-radius: 14px; font-size: 0.78rem; line-height: 1.5;
+  white-space: pre-wrap; word-wrap: break-word;
+}
+.chat-msg.ai .chat-bubble {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+.chat-msg.user .chat-bubble {
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-msg.ai .chat-bubble a { color: var(--accent); }
+
+#chatInputRow {
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--border-color);
+}
+#chatInput {
+  flex: 1; padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px; font-size: 0.8rem;
+  outline: none; font-family: inherit; resize: none;
+  line-height: 1.4; max-height: 100px;
+  background: var(--input-bg); color: var(--text-primary);
+  transition: border 0.2s;
+}
+#chatInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.12); }
+#chatInputRow button {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--accent); color: #fff; border: none;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+  transition: background 0.2s;
+}
+#chatInputRow button:hover { background: var(--accent-hover); }
+.chat-loading { display: flex; gap: 4px; padding: 10px 14px; }
+.chat-loading span { width: 6px; height: 6px; background: var(--text-tertiary); border-radius: 50%; animation: bounce 1.2s infinite; }
+.chat-loading span:nth-child(2) { animation-delay: 0.2s; }
+.chat-loading span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+/* === BUTTONS === */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 18px; border-radius: var(--radius-sm);
+  font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  text-decoration: none; white-space: nowrap;
+  font-family: inherit;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); transform: scale(1.02); box-shadow: 0 4px 16px rgba(0,113,227,0.3); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary { background: var(--input-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+.btn-secondary:hover { background: var(--bg-tertiary); }
+.btn-green { background: var(--accent-green); color: #fff; }
+.btn-green:hover { background: #2db84d; box-shadow: 0 4px 16px rgba(52,199,89,0.3); }
+.btn-sm { padding: 6px 14px; font-size: 0.7rem; }
+.btn-xs { padding: 4px 10px; font-size: 0.6rem; border-radius: 6px; }
+
+/* === MODAL === */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 200; display: none;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card-bg); border-radius: var(--radius-lg);
+  padding: 24px; max-width: 600px; width: 90%;
+  max-height: 80vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-title { font-size: 1.1rem; font-weight: 700; }
+.modal-close { background: none; border: none; font-size: 1.3rem; color: var(--text-tertiary); cursor: pointer; padding: 4px; }
+.modal-body { font-size: 0.85rem; line-height: 1.7; color: var(--text-secondary); }
+.modal-body a { color: var(--accent); }
+
+/* === EMPTY STATE === */
+.empty-state { text-align: center; padding: 48px 16px; color: var(--text-secondary); }
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.empty-state-text { font-size: 0.85rem; }
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 4px; }
+
+/* === TOAST === */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  padding: 10px 24px; border-radius: var(--radius-sm);
+  font-size: 0.8rem; font-weight: 500; color: #fff;
+  opacity: 0; transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  z-index: 300; pointer-events: none;
+  box-shadow: var(--shadow-md);
+}
+.toast.show { opacity: 1; }
+.toast-success { background: var(--accent-green); }
+.toast-error { background: var(--accent-red); }
+.toast-info { background: var(--accent); }
+
+/* === TOOL CARDS IN DASHBOARD === */
+.tool-card-small {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+.tool-card-small:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-color-strong);
+}
+.tool-card-small .tool-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.tool-card-small .tool-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(0,113,227,0.1), rgba(64,169,255,0.1));
+}
+.tool-card-small .tool-name {
+  font-size: 0.85rem; font-weight: 700; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.tool-card-small .tool-desc {
+  font-size: 0.72rem; color: var(--text-secondary); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; margin-bottom: 8px;
+}
+.tool-card-small .tool-tags {
+  display: flex; gap: 4px; flex-wrap: wrap;
+}
+.tool-card-small .tool-tag {
+  padding: 1px 6px; border-radius: 4px;
+  font-size: 0.55rem; font-weight: 500;
+  background: rgba(0,113,227,0.06); color: var(--accent);
+}
+.tool-card-small .tool-stars {
+  font-size: 0.65rem; color: var(--text-secondary);
+  display: flex; align-items: center; gap: 3px;
+}
+
+/* === RESPONSIVE === */
+@media (min-width: 1024px) {
+  .article-card.featured { grid-column: span 2; grid-row: span 2; }
+  .article-card.featured .article-title { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">N</div>
+      <div class="nav-title">NovaPulse AI</div>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">News</a>
+      <a href="/tools" class="nav-link">Tools</a>
+      <a href="/browse" class="nav-link">Browse</a>
+      <a href="/categories" class="nav-link">Categories</a>
+      <a href="/advertise" class="nav-link">Advertise</a>
+      <a href="/learn" class="nav-link">Learn</a>
+      <a href="/profile" class="nav-link">Profile</a>
+    </div>
+    <div class="nav-auth">
+      <button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      {% if user %}
+      <a href="/profile" class="nav-user" title="{{ user.username }}">{{ user.username[0].upper() }}</a>
+      {% else %}
+      <a href="/login" class="btn btn-primary btn-sm">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="app-container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span>✦</span>
+          <span>AI-Powered News Intelligence</span>
+        </div>
+        <h1>Where AI Meets<br><span>Tomorrow's News</span></h1>
+        <p>Real-time AI-curated news across 20+ technology domains. Powered by RAG, vector search, and intelligent agents.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="statArticles">{{ total_articles }}</div>
+          <div class="hero-stat-lbl">Articles Curated</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="statCategories">{{ categories|length }}</div>
+          <div class="hero-stat-lbl">Categories</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="statCountry">🌍</div>
+          <div class="hero-stat-lbl" id="statCountryLbl">Country: US</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="statAI">AI</div>
+          <div class="hero-stat-lbl">RAG Powered</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH & FILTERS -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Latest Headlines</h2>
+      <div class="section-actions">
+        <div style="position:relative;">
+          <input type="text" id="searchInput" placeholder="Search articles..." style="padding:8px 14px;padding-left:34px;border:1px solid var(--border-color);border-radius:20px;font-size:0.75rem;background:var(--input-bg);color:var(--text-primary);outline:none;width:160px;font-family:inherit;transition:all 0.2s;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);font-size:0.75rem;">🔍</span>
+        </div>
+        <!-- Country Selector -->
+        <div style="position:relative;">
+          <select id="countrySelect" onchange="changeCountry(this.value)" style="padding:8px 14px;padding-right:28px;border:1px solid var(--border-color);border-radius:20px;font-size:0.7rem;background:var(--input-bg);color:var(--text-primary);outline:none;cursor:pointer;font-family:inherit;min-width:130px;appearance:none;-webkit-appearance:none;">
+            <option value="Global">🌐 Global</option>
+            <option value="US" selected>🇺🇸 United States</option>
+            <option value="UK">🇬🇧 United Kingdom</option>
+            <option value="India">🇮🇳 India</option>
+            <option value="China">🇨🇳 China</option>
+            <option value="Japan">🇯🇵 Japan</option>
+            <option value="South Korea">🇰🇷 South Korea</option>
+            <option value="Germany">🇩🇪 Germany</option>
+            <option value="France">🇫🇷 France</option>
+            <option value="Canada">🇨🇦 Canada</option>
+            <option value="Australia">🇦🇺 Australia</option>
+            <option value="Singapore">🇸🇬 Singapore</option>
+            <option value="UAE">🇦🇪 UAE</option>
+            <option value="Israel">🇮🇱 Israel</option>
+            <option value="Brazil">🇧🇷 Brazil</option>
+          </select>
+          <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);font-size:0.5rem;pointer-events:none;">▼</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="fetchNews()" id="fetchBtn" style="font-weight:700;box-shadow:0 2px 8px rgba(0,113,227,0.25);position:relative;overflow:hidden;">🔄 Fetch News</button>
+        <button class="btn btn-secondary btn-sm" onclick="openScheduleModal()">⏰ Schedule</button>
+        <button class="btn btn-secondary btn-sm" onclick="openNotifModal()">🔔 Notifications</button>
+      </div>
+    </div>
+    
+    <!-- Fetch Status Bar -->
+    <div id="fetchStatus" style="display:none;padding:10px 16px;border-radius:var(--radius-sm);margin-bottom:12px;font-size:0.75rem;transition:all 0.3s;"></div>
+
+    <!-- Article Counter & Auto-refresh -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+      <span style="font-size:0.7rem;color:var(--text-secondary);" id="articleCounter">{{ total_articles }} articles</span>
+      <span style="font-size:0.65rem;color:var(--text-tertiary);" id="lastUpdated"></span>
+      <span style="font-size:0.65rem;color:var(--text-tertiary);" id="countdownTimer"></span>
+      <button class="btn btn-secondary btn-xs" onclick="toggleAutoRefresh()" id="autoRefreshBtn">🔄 Live OFF</button>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="pill-scroll" id="pillContainer">
+      <span class="pill active" onclick="filterCategory(this, '')">All <span class="count">{{ total_articles }}</span></span>
+      {% for cat in categories %}
+      <span class="pill" data-category="{{ cat }}" onclick="filterCategory(this, '{{ cat }}')">{{ cat.replace('_', ' ').title() }}</span>
+      {% endfor %}
+    </div>
+
+    <!-- Article Grid -->
+    <div class="article-grid" id="articleGrid">
+      {% for a in articles %}
+      <div class="article-card" data-category="{{ a.category }}" onclick="openArticle({{ a.id }})">
+        <div class="article-category">{{ a.category.replace('_', ' ').title() }}</div>
+        <div class="article-title">{{ a.title }}</div>
+        <div class="article-meta">
+          <span class="article-source">📰 {{ a.source[:25] }}</span>
+          <span class="article-dot"></span>
+          <span class="article-time">{{ a.published }}</span>
+          <div class="article-actions">
+            <button class="article-btn" onclick="event.stopPropagation();toggleBookmark(this, {{ a.id }}, '{{ a.title|escape }}', '{{ a.url|escape }}', '{{ a.source|escape }}', '{{ a.category }}')" title="Bookmark">🔖</button>
+            <button class="article-btn" onclick="event.stopPropagation();window.open('{{ a.url }}','_blank')" title="Open">↗</button>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state" style="grid-column:1/-1;">
+        <div class="empty-state-icon">📡</div>
+        <div class="empty-state-text">No articles yet. Fetch news to get started!</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- POPULAR AI TOOLS SECTION -->
+  <div class="section" id="toolsSection">
+    <div class="section-header">
+      <h2 class="section-title">🔧 Popular AI Tools</h2>
+      <div class="section-actions">
+        <a href="/tools" class="btn btn-secondary btn-sm">View All Tools →</a>
+      </div>
+    </div>
+    <div class="article-grid" id="toolsPreviewGrid">
+      <div class="tool-card-placeholder" style="grid-column:1/-1;padding:32px;text-align:center;color:var(--text-secondary);">
+        <span style="font-size:1.2rem;">Loading featured tools...</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CHAT FAB -->
+<button id="chatFab" onclick="toggleChat()">💬</button>
+
+<!-- CHAT PANEL -->
+<div id="chatPanel">
+  <div id="chatHeader">
+    <div class="chat-avatar">AI</div>
+    <div class="chat-title">NovaPulse AI Assistant</div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="chatMessages">
+    <div class="chat-msg ai">
+      <div class="chat-bubble">👋 Hi! I'm your AI news assistant. Ask me about the latest tech news, AI developments, or any topic in today's headlines!</div>
+    </div>
+  </div>
+  <div id="chatInputRow">
+    <textarea id="chatInput" placeholder="Ask about the news..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+    <button onclick="sendChat()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ARTICLE MODAL -->
+<div class="modal-overlay" id="articleModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Article</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">Loading...</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SCHEDULE MODAL -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">⏰ News Fetch Schedule</div>
+      <button class="modal-close" onclick="closeScheduleModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px;">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border:1px solid var(--border-color);border-radius:12px;background:var(--input-bg);">
+          <input type="checkbox" id="schedEnabled" style="width:18px;height:18px;accent-color:var(--accent);">
+          <span style="font-weight:600;color:var(--text-primary);font-size:0.85rem;">Enable Daily News Fetch</span>
+        </label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div>
+          <label style="display:block;font-size:0.7rem;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Hour (UTC)</label>
+          <select id="schedHour" style="width:100%;padding:10px;border:1px solid var(--border-color);border-radius:10px;background:var(--input-bg);color:var(--text-primary);font-size:0.85rem;">
+            <option value="0">00:00 (Midnight)</option><option value="1">01:00</option><option value="2">02:00</option><option value="3">03:00</option><option value="4">04:00</option><option value="5">05:00</option><option value="6" selected>06:00</option><option value="7">07:00</option><option value="8">08:00</option><option value="9">09:00</option><option value="10">10:00</option><option value="11">11:00</option><option value="12">12:00 (Noon)</option><option value="13">13:00</option><option value="14">14:00</option><option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option><option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option><option value="22">22:00</option><option value="23">23:00</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.7rem;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Minute</label>
+          <select id="schedMinute" style="width:100%;padding:10px;border:1px solid var(--border-color);border-radius:10px;background:var(--input-bg);color:var(--text-primary);font-size:0.85rem;">
+            <option value="0">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option>
+          </select>
+        </div>
+      </div>
+      <div style="background:var(--input-bg);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px;">
+          <span style="color:var(--text-secondary);">Status:</span>
+          <span id="schedActive" style="font-weight:600;">⏸️ Inactive</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;">
+          <span style="color:var(--text-secondary);">Next Run:</span>
+          <span id="schedNextRun" style="font-weight:500;">Not scheduled</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="saveSchedule()" id="schedSaveBtn" style="flex:1;justify-content:center;padding:12px;">💾 Save Schedule</button>
+        <button class="btn btn-green" onclick="fetchNowFromSchedule()" id="schedFetchNowBtn" style="justify-content:center;padding:12px;" title="Fetch news immediately">🚀 Fetch Now</button>
+      </div>
+      <p style="font-size:0.65rem;color:var(--text-tertiary);text-align:center;margin-top:10px;">Notifications will be sent automatically when scheduled fetch completes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS MODAL -->
+<div class="modal-overlay" id="notifModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <div class="modal-title">🔔 Notification Settings</div>
+      <button class="modal-close" onclick="closeNotifModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Email Section -->
+      <div id="notifEmailSection" style="margin-bottom:20px;padding:16px;border:1px solid var(--border-color);border-radius:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h3 style="font-size:0.9rem;font-weight:700;">📧 Email (SMTP)</h3>
+          <label style="display:flex;align-items:center;gap:6px;font-size:0.7rem;cursor:pointer;">
+            <input type="checkbox" id="notifEmailEnabled" style="accent-color:var(--accent);"> Enable
+          </label>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">From Email</label>
+            <input type="email" id="notifFromEmail" placeholder="you@gmail.com" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">To Email</label>
+            <input type="email" id="notifToEmail" placeholder="recipient@email.com" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">SMTP Server</label>
+            <input type="text" id="notifSmtpServer" placeholder="smtp.gmail.com" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Port</label>
+            <input type="number" id="notifSmtpPort" placeholder="587" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">App Password</label>
+            <input type="password" id="notifEmailPassword" placeholder="App password / SMTP password" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Subject Prefix</label>
+            <input type="text" id="notifSubjectPrefix" placeholder="[NovaPulse AI]" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span id="notifEmailStatus" style="font-size:0.65rem;color:var(--text-secondary);"></span>
+          <button class="btn btn-primary btn-sm" onclick="saveEmailNotif()" style="margin-left:auto;">💾 Save Email</button>
+          <button class="btn btn-secondary btn-sm test-btn" onclick="testNotif('email')">📨 Send Test</button>
+        </div>
+        <p style="font-size:0.6rem;color:var(--text-tertiary);margin-top:8px;">💡 For Gmail, use an <a href="https://support.google.com/accounts/answer/185833" target="_blank" style="color:var(--accent);">App Password</a>, not your regular password.</p>
+      </div>
+
+      <!-- WhatsApp Section -->
+      <div id="notifWaSection" style="padding:16px;border:1px solid var(--border-color);border-radius:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h3 style="font-size:0.9rem;font-weight:700;">💬 WhatsApp (Twilio)</h3>
+          <label style="display:flex;align-items:center;gap:6px;font-size:0.7rem;cursor:pointer;">
+            <input type="checkbox" id="notifWaEnabled" style="accent-color:var(--accent);"> Enable
+          </label>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Account SID</label>
+            <input type="text" id="notifAccountSid" placeholder="AC..." style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Auth Token</label>
+            <input type="password" id="notifAuthToken" placeholder="Twilio auth token" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">From Number</label>
+            <input type="text" id="notifFromNumber" placeholder="+14155238886" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+          <div>
+            <label style="font-size:0.65rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">To Number</label>
+            <input type="text" id="notifToNumber" placeholder="+1762XXXXXXX" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:0.75rem;">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span id="notifWaStatus" style="font-size:0.65rem;color:var(--text-secondary);"></span>
+          <button class="btn btn-primary btn-sm" onclick="saveWhatsAppNotif()" style="margin-left:auto;">💾 Save WhatsApp</button>
+          <button class="btn btn-secondary btn-sm test-btn" onclick="testNotif('whatsapp')">📨 Send Test</button>
+        </div>
+        <p style="font-size:0.6rem;color:var(--text-tertiary);margin-top:8px;">💡 Your Twilio Account SID and Auth Token are available on the <a href="https://console.twilio.com" target="_blank" style="color:var(--accent);">Twilio Console</a> dashboard.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentCategory = '';
+let debounceTimer;
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  if ({{ 1 if user else 0 }}) {
+    fetch('/api/auth/preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dark_mode: next === 'dark' })
+    }).catch(() => {});
+  }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-' + (type || 'success') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Country & Fetch State
+let selectedCountry = localStorage.getItem('selectedCountry') || 'US';
+let statusPollTimer = null;
+
+// Initialize country selector from stored preference
+document.addEventListener('DOMContentLoaded', function() {
+  const sel = document.getElementById('countrySelect');
+  if (sel) {
+    sel.value = selectedCountry;
+    updateCountryStat(selectedCountry);
+  }
+  // Check fetch status on load
+  checkFetchStatus();
+  // Auto-refresh enabled by default
+  toggleAutoRefresh();
+});
+
+function changeCountry(country) {
+  selectedCountry = country;
+  localStorage.setItem('selectedCountry', country);
+  updateCountryStat(country);
+  // Clear and refresh
+  showToast('🌍 Switched to ' + country + ' — fetching latest news...', 'info');
+  const bar = document.getElementById('fetchStatus');
+  if (bar) {
+    bar.style.display = 'block';
+    bar.style.background = 'rgba(0,113,227,0.1)';
+    bar.style.border = '1px solid rgba(0,113,227,0.2)';
+    bar.style.color = 'var(--accent)';
+    bar.innerHTML = '🌍 <strong>Country changed to ' + country + '</strong> — Fetching news...';
+  }
+  fetchNews();
+}
+
+function updateCountryStat(country) {
+  const el = document.getElementById('statCountry');
+  const lbl = document.getElementById('statCountryLbl');
+  const emojis = {
+    'Global': '🌐', 'US': '🇺🇸', 'UK': '🇬🇧', 'India': '🇮🇳',
+    'China': '🇨🇳', 'Japan': '🇯🇵', 'South Korea': '🇰🇷',
+    'Germany': '🇩🇪', 'France': '🇫🇷', 'Canada': '🇨🇦',
+    'Australia': '🇦🇺', 'Singapore': '🇸🇬', 'UAE': '🇦🇪',
+    'Israel': '🇮🇱', 'Brazil': '🇧🇷'
+  };
+  if (el) el.textContent = emojis[country] || '🌍';
+  if (lbl) lbl.textContent = 'Country: ' + country;
+}
+
+function checkFetchStatus() {
+  fetch('/api/fetch-status')
+    .then(r => r.json())
+    .then(status => {
+      const bar = document.getElementById('fetchStatus');
+      if (!bar) return;
+      const btn = document.getElementById('fetchBtn');
+      if (status.status === 'running') {
+        bar.style.display = 'block';
+        bar.style.background = 'rgba(0,113,227,0.1)';
+        bar.style.border = '1px solid rgba(0,113,227,0.2)';
+        bar.style.color = 'var(--accent)';
+        bar.innerHTML = `<span style="font-weight:600;">⏳ ${status.message}</span>`;
+        if (statusPollTimer) clearTimeout(statusPollTimer);
+        statusPollTimer = setTimeout(checkFetchStatus, 2000);
+        if (btn) { btn.disabled = true; btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> Fetching...'; btn.style.boxShadow = '0 0 20px rgba(0,113,227,0.4)'; }
+      } else if (status.status === 'completed') {
+        bar.style.display = 'block';
+        bar.style.background = 'rgba(52,199,89,0.1)';
+        bar.style.border = '1px solid rgba(52,199,89,0.2)';
+        bar.style.color = 'var(--accent-green)';
+        const details = status.details || {};
+        const saved = details.saved || 0;
+        const fetched = details.fetched || 0;
+        bar.innerHTML = `✅ <strong>${status.message}</strong>` +
+          (fetched ? ` <span style="opacity:0.7;">(${fetched} fetched, ${saved} new)</span>` : '');
+        setTimeout(() => {
+          bar.style.display = 'none';
+        }, 10000);
+        if (btn) { btn.disabled = false; btn.innerHTML = '🔄 Fetch News'; btn.style.boxShadow = ''; }
+        if (statusPollTimer) { clearTimeout(statusPollTimer); statusPollTimer = null; }
+        // Refresh after short delay
+        setTimeout(() => location.reload(), 300000);
+      } else if (status.status === 'error') {
+        bar.style.display = 'block';
+        bar.style.background = 'rgba(255,59,48,0.1)';
+        bar.style.border = '1px solid rgba(255,59,48,0.2)';
+        bar.style.color = 'var(--accent-red)';
+        bar.innerHTML = `❌ ${status.message}`;
+        setTimeout(() => { bar.style.display = 'none'; }, 12000);
+        if (btn) { btn.disabled = false; btn.innerHTML = '🔄 Fetch News'; btn.style.boxShadow = ''; }
+        if (statusPollTimer) { clearTimeout(statusPollTimer); statusPollTimer = null; }
+      } else {
+        // idle
+        if (btn) { btn.disabled = false; btn.innerHTML = '🔄 Fetch News'; btn.style.boxShadow = ''; }
+      }
+    })
+    .catch(() => {});
+}
+
+function filterCategory(el, cat) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  currentCategory = cat;
+  const cards = document.querySelectorAll('.article-card');
+  cards.forEach(c => {
+    if (!cat || c.dataset.category === cat) {
+      c.style.display = '';
+    } else {
+      c.style.display = 'none';
+    }
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const q = this.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.article-card');
+    cards.forEach(c => {
+      const title = c.querySelector('.article-title').textContent.toLowerCase();
+      const cat = c.dataset.category.toLowerCase();
+      if (!q || title.includes(q) || cat.includes(q)) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  }, 300);
+});
+
+function openArticle(id) {
+  const modal = document.getElementById('articleModal');
+  const title = document.getElementById('modalTitle');
+  const body = document.getElementById('modalBody');
+  title.textContent = 'Loading...';
+  body.textContent = 'Fetching article...';
+  modal.classList.add('open');
+  fetch('/api/articles/' + id)
+    .then(r => r.json())
+    .then(a => {
+      title.textContent = a.title;
+      const summary = a.summary ? '<p><strong>Summary:</strong> ' + escapeHtml(a.summary) + '</p>' : '';
+      const content = a.content ? '<p><strong>Content:</strong></p><p>' + escapeHtml(a.content).substring(0, 1500) + '</p>' : '';
+      body.innerHTML = `
+        <div style="margin-bottom:12px;">
+          <span style="font-size:0.65rem;color:var(--text-tertiary);">${escapeHtml(a.source)} · ${a.published || ''}</span>
+        </div>
+        ${summary}
+        ${content}
+        ${a.content && a.content.length > 1500 ? '<p style="color:var(--text-tertiary);font-size:0.75rem;">Content truncated...</p>' : ''}
+        <div style="margin-top:16px;">
+          <a href="${a.url}" target="_blank" class="btn btn-primary btn-sm" style="display:inline-flex;">↗ Read Original</a>
+          <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText('${a.url}').then(()=>showToast('Link copied!','success'))" style="margin-left:8px;">📋 Copy Link</button>
+        </div>
+      `;
+    })
+    .catch(() => {
+      body.textContent = 'Failed to load article.';
+    });
+}
+
+function closeModal() {
+  document.getElementById('articleModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('scheduleModal').classList.contains('open')) closeScheduleModal();
+    else if (document.getElementById('notifModal').classList.contains('open')) closeNotifModal();
+    else closeModal();
+  }
+});
+
+function toggleBookmark(btn, id, title, url, source, category) {
+  btn.classList.toggle('saved');
+  if (btn.classList.contains('saved')) {
+    fetch('/api/bookmarks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, url, source, category, summary: '' })
+    }).then(r => r.json()).then(d => {
+      if (d.status === 'ok') showToast('Bookmarked!', 'success');
+      else if (d.status === 'already_exists') showToast('Already bookmarked', 'info');
+    }).catch(() => showToast('Sign in to bookmark', 'error'));
+  }
+}
+
+function fetchNews() {
+  const btn = document.getElementById('fetchBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> Fetching...';
+    btn.style.boxShadow = '0 0 20px rgba(0,113,227,0.4)';
+  }
+  const country = document.getElementById('countrySelect')?.value || selectedCountry || 'US';
+  showToast('⏳ Fetching latest news for ' + country + '...', 'info');
+  fetch('/api/fetch-news', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ country: country })
+  })
+    .then(r => r.json())
+    .then(d => {
+      showToast(d.message, 'info');
+      checkFetchStatus();
+    })
+    .catch(() => {
+      showToast('⚠️ Failed to start fetch. Is the server running?', 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '🔄 Fetch News';
+        btn.style.boxShadow = '';
+      }
+    });
+}
+
+function toggleChat() {
+  document.getElementById('chatPanel').classList.toggle('open');
+  if (document.getElementById('chatPanel').classList.contains('open')) {
+    document.getElementById('chatInput').focus();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  input.style.height = 'auto';
+  addChatMsg('user', msg);
+  addChatLoading();
+  const mode = 'report';
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question: msg, mode })
+  })
+  .then(r => r.json())
+  .then(d => {
+    removeChatLoading();
+    const answer = d.answer || d.response || "I couldn't process that.";
+    addChatMsg('ai', answer);
+    if (d.sources && d.sources.length > 0) {
+      const src = d.sources.slice(0, 3).map(s => `<a href="${s.url || '#'}" target="_blank">📄 ${s.title || s.source || 'Source'}</a>`).join('<br>');
+      addChatMsg('ai', '📚 **Sources:**<br>' + src);
+    }
+  })
+  .catch(() => {
+    removeChatLoading();
+    addChatMsg('ai', 'Sorry, I encountered an error. Please try again.');
+  });
+}
+
+function addChatMsg(role, content) {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.innerHTML = '<div class="chat-bubble">' + content.replace(/\n/g, '<br>') + '</div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function addChatLoading() {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ai';
+  div.id = 'chatLoading';
+  div.innerHTML = '<div class="chat-loading"><span></span><span></span><span></span></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeChatLoading() {
+  const el = document.getElementById('chatLoading');
+  if (el) el.remove();
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text || '';
+  return d.innerHTML;
+}
+
+// Load featured tools for dashboard
+function loadFeaturedTools() {
+  const grid = document.getElementById('toolsPreviewGrid');
+  if (!grid) return;
+  fetch('/api/tools?sort=featured')
+    .then(r => r.json())
+    .then(tools => {
+      const featured = tools.filter(t => t.featured).slice(0, 8);
+      if (featured.length === 0) {
+        const section = document.getElementById('toolsSection');
+        if (section) section.style.display = 'none';
+        return;
+      }
+      grid.innerHTML = '';
+      featured.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'tool-card-small';
+        card.onclick = () => window.open(t.url, '_blank');
+        const stars = t.stars > 0 ? `<span class="tool-stars" style="margin-top:6px;">⭐ ${t.stars.toLocaleString()}</span>` : '';
+        card.innerHTML = `
+          <div class="tool-head">
+            <div class="tool-icon">${t.icon || '🔧'}</div>
+            <div class="tool-name">${t.name}</div>
+          </div>
+          <div class="tool-desc">${t.description}</div>
+          <div class="tool-tags">${t.tags.slice(0, 3).map(tg => `<span class="tool-tag">#${tg}</span>`).join('')}</div>
+          ${stars}
+        `;
+        grid.appendChild(card);
+      });
+    })
+    .catch(() => {
+      const section = document.getElementById('toolsSection');
+      if (section) section.style.display = 'none';
+    });
+}
+
+// ==== SCHEDULE MODAL ====
+function openScheduleModal() {
+  const overlay = document.getElementById('scheduleModal');
+  if (!overlay) return;
+  // Load current config
+  fetch('/api/schedule')
+    .then(r => r.json())
+    .then(cfg => {
+      document.getElementById('schedEnabled').checked = cfg.enabled || false;
+      document.getElementById('schedHour').value = cfg.hour || 6;
+      document.getElementById('schedMinute').value = cfg.minute || 0;
+      document.getElementById('schedNextRun').textContent = cfg.next_run_display || 'Not scheduled';
+      document.getElementById('schedActive').textContent = cfg.active ? '✅ Active' : '⏸️ Inactive';
+      overlay.classList.add('open');
+    })
+    .catch(() => { showToast('Failed to load schedule config', 'error'); });
+}
+
+function saveSchedule() {
+  const enabled = document.getElementById('schedEnabled').checked;
+  const hour = parseInt(document.getElementById('schedHour').value);
+  const minute = parseInt(document.getElementById('schedMinute').value);
+  const btn = document.getElementById('schedSaveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  fetch('/api/schedule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled, hour, minute })
+  })
+    .then(r => r.json())
+    .then(d => {
+      showToast(d.message, d.active ? 'success' : 'info');
+      closeScheduleModal();
+    })
+    .catch(() => { showToast('Failed to save schedule', 'error'); })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = '💾 Save Schedule';
+    });
+}
+
+function closeScheduleModal() {
+  document.getElementById('scheduleModal').classList.remove('open');
+}
+
+function fetchNowFromSchedule() {
+  closeScheduleModal();
+  showToast('🚀 Starting manual news fetch...', 'info');
+  fetchNews();
+}
+
+// ==== NOTIFICATIONS MODAL ====
+function openNotifModal() {
+  const overlay = document.getElementById('notifModal');
+  if (!overlay) return;
+  fetch('/api/notifications')
+    .then(r => r.json())
+    .then(cfg => {
+      // Email
+      document.getElementById('notifEmailEnabled').checked = cfg.email?.enabled || false;
+      document.getElementById('notifFromEmail').value = cfg.email?.from_email || '';
+      document.getElementById('notifToEmail').value = cfg.email?.to_email || '';
+      document.getElementById('notifSmtpServer').value = cfg.email?.smtp_server || 'smtp.gmail.com';
+      document.getElementById('notifSmtpPort').value = cfg.email?.smtp_port || 587;
+      document.getElementById('notifSubjectPrefix').value = cfg.email?.subject_prefix || '[NovaPulse AI]';
+      document.getElementById('notifEmailStatus').textContent = cfg.email?.password_configured ? '✅ Password set' : '⚠️ No password';
+      // WhatsApp
+      document.getElementById('notifWaEnabled').checked = cfg.whatsapp?.enabled || false;
+      document.getElementById('notifFromNumber').value = cfg.whatsapp?.from_number || '';
+      document.getElementById('notifToNumber').value = cfg.whatsapp?.to_number || '';
+      document.getElementById('notifWaStatus').textContent = cfg.whatsapp?.credentials_configured ? '✅ Credentials set' : '⚠️ Missing credentials';
+      overlay.classList.add('open');
+    })
+    .catch(() => { showToast('Failed to load notification config', 'error'); });
+}
+
+function saveEmailNotif() {
+  const data = {
+    channel: 'email',
+    enabled: document.getElementById('notifEmailEnabled').checked,
+    from_email: document.getElementById('notifFromEmail').value,
+    to_email: document.getElementById('notifToEmail').value,
+    password: document.getElementById('notifEmailPassword').value,
+    smtp_server: document.getElementById('notifSmtpServer').value,
+    smtp_port: parseInt(document.getElementById('notifSmtpPort').value),
+    subject_prefix: document.getElementById('notifSubjectPrefix').value
+  };
+  const btn = document.querySelector('#notifEmailSection .btn-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+  fetch('/api/notifications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+    .then(r => r.json())
+    .then(d => {
+      showToast(d.message, 'success');
+      document.getElementById('notifEmailPassword').value = '';
+      openNotifModal(); // Refresh
+    })
+    .catch(() => { showToast('Failed to save email settings', 'error'); })
+    .finally(() => {
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Save Email Settings'; }
+    });
+}
+
+function saveWhatsAppNotif() {
+  const data = {
+    channel: 'whatsapp',
+    enabled: document.getElementById('notifWaEnabled').checked,
+    account_sid: document.getElementById('notifAccountSid').value,
+    auth_token: document.getElementById('notifAuthToken').value,
+    from_number: document.getElementById('notifFromNumber').value,
+    to_number: document.getElementById('notifToNumber').value
+  };
+  const btn = document.querySelector('#notifWaSection .btn-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+  fetch('/api/notifications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+    .then(r => r.json())
+    .then(d => {
+      showToast(d.message, 'success');
+      document.getElementById('notifAuthToken').value = '';
+      openNotifModal(); // Refresh
+    })
+    .catch(() => { showToast('Failed to save WhatsApp settings', 'error'); })
+    .finally(() => {
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Save WhatsApp Settings'; }
+    });
+}
+
+function testNotif(channel) {
+  const btn = channel === 'email' ? document.querySelector('#notifEmailSection button.test-btn') : document.querySelector('#notifWaSection button.test-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+  fetch('/api/notifications/test', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ channel })
+  })
+    .then(r => r.json())
+    .then(d => {
+      showToast(d.message || (d.status === 'ok' ? 'Test sent!' : 'Test failed'), d.status === 'ok' ? 'success' : 'error');
+    })
+    .catch(() => { showToast('Test failed', 'error'); })
+    .finally(() => {
+      if (btn) { btn.disabled = false; btn.textContent = '📨 Send Test'; }
+    });
+}
+
+function closeNotifModal() {
+  document.getElementById('notifModal').classList.remove('open');
+}
+
+// ==== AUTO REFRESH ====
+const REFRESH_INTERVAL = 300; // 5 minutes
+let autoRefreshTimer = null;
+let autoRefreshEnabled = false;
+let countdownInterval = null;
+let countdownSeconds = 0;
+
+function toggleAutoRefresh() {
+  autoRefreshEnabled = !autoRefreshEnabled;
+  const btn = document.getElementById('autoRefreshBtn');
+  if (autoRefreshEnabled) {
+    btn.innerHTML = '⏹️ Live ON';
+    btn.className = 'btn btn-green btn-xs';
+    countdownSeconds = REFRESH_INTERVAL;
+    updateCountdown();
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = setInterval(() => {
+      countdownSeconds--;
+      updateCountdown();
+      if (countdownSeconds <= 0) {
+        countdownSeconds = REFRESH_INTERVAL;
+        updateCountdown();
+        refreshLiveStats();
+      }
+    }, 1000);
+    refreshLiveStats();
+  } else {
+    btn.innerHTML = '🔄 Live OFF';
+    btn.className = 'btn btn-secondary btn-xs';
+    clearInterval(autoRefreshTimer);
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    var el = document.getElementById('countdownTimer');
+    if (el) el.textContent = '';
+  }
+}
+
+function updateCountdown() {
+  var el = document.getElementById('countdownTimer');
+  if (!el) return;
+  if (countdownSeconds == null || isNaN(countdownSeconds) || countdownSeconds < 0) {
+    el.textContent = '';
+    return;
+  }
+  var mins = Math.floor(countdownSeconds / 60);
+  var secs = countdownSeconds % 60;
+  el.textContent = '⏱️ Next refresh in ' + mins + 'm ' + secs + 's';
+}
+
+function refreshLiveStats() {
+  fetch('/api/stats')
+    .then(r => r.json())
+    .then(stats => {
+      document.getElementById('statArticles').textContent = stats.articles;
+      document.getElementById('statCategories').textContent = stats.categories;
+      // Update country stat from last fetch
+      if (stats.last_fetch && stats.last_fetch.details && stats.last_fetch.details.country) {
+        updateCountryStat(stats.last_fetch.details.country);
+      }
+      if (stats.current_country) {
+        selectedCountry = stats.current_country;
+        const sel = document.getElementById('countrySelect');
+        if (sel) sel.value = stats.current_country;
+      }
+      const now = new Date().toLocaleString();
+      let statusText = 'Live: ' + now;
+      if (stats.last_fetch && stats.last_fetch.time) {
+        const fetchTime = new Date(stats.last_fetch.time);
+        const mins = Math.round((Date.now() - fetchTime.getTime()) / 60000);
+        statusText += ' | Last fetch: ' + mins + 'm ago';
+      }
+      document.getElementById('lastUpdated').textContent = statusText;
+      checkFetchStatus();
+    })
+    .catch(() => {});
+}
+
+// Stats counter animation & initial data load
+function initDashboard() {
+  loadFeaturedTools();
+  // Stats counter animation for hero stats
+  const observed = document.querySelectorAll('.hero-stat-val');
+  observed.forEach(el => {
+    const text = el.textContent;
+    const num = parseInt(text);
+    if (!isNaN(num) && num > 0) {
+      let current = 0;
+      const step = Math.max(1, Math.floor(num / 30));
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= num) {
+          current = num;
+          clearInterval(interval);
+        }
+        el.textContent = current;
+      }, 30);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+</body>
+</html>

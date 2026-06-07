@@ -79,10 +79,15 @@ class SourceFetcher:
 
     def _fetch_clean_content(self, url: str) -> Optional[str]:
         try:
-            crawl_result = self.firecrawl.scrape_url(url, params={"formats": ["markdown"]})
-            return crawl_result.get("markdown", "")
+            if hasattr(self.firecrawl, "scrape_url"):
+                crawl_result = self.firecrawl.scrape_url(url, params={"formats": ["markdown"]})
+                return crawl_result.get("markdown", "")
+            elif hasattr(self.firecrawl, "scrape"):
+                crawl_result = self.firecrawl.scrape(url)
+                if isinstance(crawl_result, dict):
+                    return crawl_result.get("markdown", crawl_result.get("content", ""))
+            return None
         except Exception as e:
-            logger.warning(f"Firecrawl failed for {url}: {e}")
             return None
 
     def fetch_rss(self, url: str) -> List[NewsItem]:
@@ -90,7 +95,7 @@ class SourceFetcher:
         try:
             logger.info(f"Fetching RSS: {url}")
             parsed = feedparser.parse(url)
-            for entry in parsed.entries[:25]:
+            for entry in parsed.entries[:100]:
                 title = entry.get("title", "").strip()
                 link = entry.get("link", "")
                 summary = entry.get("summary", entry.get("description", ""))
@@ -153,6 +158,24 @@ class SourceFetcher:
                 items.extend(self._parse_aitrends(soup, base_url, domain_hint))
             elif "analyticsvidhya.com" in domain:
                 items.extend(self._parse_analyticsvidhya(soup, base_url, domain_hint))
+            elif "blog.mean.ceo" in domain:
+                items.extend(self._parse_blog_mean_ceo(soup, base_url, domain_hint))
+            elif "techxplore.com" in domain:
+                items.extend(self._parse_techxplore(soup, base_url, domain_hint))
+            elif "nextbigfuture.com" in domain:
+                items.extend(self._parse_nextbigfuture(soup, base_url, domain_hint))
+            elif "openai.com" in domain:
+                items.extend(self._parse_openai_blog(soup, base_url, domain_hint))
+            elif "blog.google" in domain or "deepmind.google" in domain:
+                items.extend(self._parse_google_blog(soup, base_url, domain_hint))
+            elif "blogs.nvidia.com" in domain:
+                items.extend(self._parse_nvidia_blog(soup, base_url, domain_hint))
+            elif "technologyreview.com" in domain:
+                items.extend(self._parse_mit_techreview(soup, base_url, domain_hint))
+            elif "newatlas.com" in domain:
+                items.extend(self._parse_newatlas(soup, base_url, domain_hint))
+            elif "producthunt.com" in domain:
+                items.extend(self._parse_producthunt(soup, base_url, domain_hint))
             else:
                 items.extend(self._parse_generic(soup, base_url, domain_hint))
 
@@ -205,7 +228,7 @@ class SourceFetcher:
                 if len(items) >= 20:
                     break
 
-        return items[:20]
+        return items
 
     def _parse_mit_news(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -225,7 +248,7 @@ class SourceFetcher:
                             domain=domain, summary=summary
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_wired(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -244,7 +267,7 @@ class SourceFetcher:
                             domain=domain, summary=title
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_quanta(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -263,7 +286,7 @@ class SourceFetcher:
                         domain=domain, summary=title
                     ))
                     seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_nature(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -283,7 +306,7 @@ class SourceFetcher:
                             domain=domain, summary=summary
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_therobotreport(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -306,7 +329,7 @@ class SourceFetcher:
         if len(items) < 5:
             for a in soup.find_all("a", class_=re.compile(r"post|article", re.I)):
                 self._extract_link_items(a, items, seen_urls, base, domain)
-        return items[:20]
+        return items
 
     def _parse_rbr(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -324,7 +347,7 @@ class SourceFetcher:
                             domain=domain, summary=title
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_quantum_insider(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -344,7 +367,7 @@ class SourceFetcher:
                             domain=domain, summary=title
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_quantum_zeitgeist(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -362,7 +385,7 @@ class SourceFetcher:
                             domain=domain, summary=title
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_humanoid_press(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -380,7 +403,7 @@ class SourceFetcher:
                             domain=domain, summary=title
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_aitrends(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -400,7 +423,7 @@ class SourceFetcher:
                             domain=domain, summary=summary
                         ))
                         seen_urls.add(link)
-        return items[:20]
+        return items
 
     def _parse_analyticsvidhya(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -431,7 +454,270 @@ class SourceFetcher:
                         seen_urls.add(link)
                 if len(items) >= 20:
                     break
-        return items[:20]
+        return items
+
+    def _parse_blog_mean_ceo(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find(["h2", "h3"])
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    summary_el = article.find("p")
+                    summary = summary_el.get_text(strip=True)[:300] if summary_el else ""
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(
+                            title=title, url=link, source=f"WEB:{domain}",
+                            domain=domain, summary=summary
+                        ))
+                        seen_urls.add(link)
+        for tag in soup.find_all(["h2", "h3"]):
+            a = tag.find("a", href=True)
+            if a:
+                title = a.get_text(strip=True)
+                link = urljoin(base, a["href"])
+                if title and len(title) > 15 and link not in seen_urls:
+                    items.append(NewsItem(
+                        title=title, url=link, source=f"WEB:{domain}",
+                        domain=domain, summary=title
+                    ))
+                    seen_urls.add(link)
+            if len(items) >= 20:
+                break
+        return items
+
+    def _parse_techxplore(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find("h2")
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    desc = article.find("p", class_=re.compile(r"desc|summary|text", re.I))
+                    summary = desc.get_text(strip=True)[:300] if desc else ""
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(
+                            title=title, url=link, source=f"WEB:{domain}",
+                            domain=domain, summary=summary
+                        ))
+                        seen_urls.add(link)
+        for div in soup.find_all("div", class_=re.compile(r"post|article|story|teaser", re.I)):
+            a = div.find("a", href=True)
+            if a:
+                title = a.get_text(strip=True)
+                link = urljoin(base, a["href"])
+                if title and len(title) > 15 and link not in seen_urls and link not in [i.url for i in items]:
+                    items.append(NewsItem(
+                        title=title, url=link, source=f"WEB:{domain}",
+                        domain=domain, summary=title
+                    ))
+                    seen_urls.add(link)
+        return items
+
+    def _parse_nextbigfuture(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find("h2")
+            if not h2:
+                h2 = article.find("h3")
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(
+                            title=title, url=link, source=f"WEB:{domain}",
+                            domain=domain, summary=title
+                        ))
+                        seen_urls.add(link)
+        for h2 in soup.find_all("h2"):
+            a = h2.find("a", href=True)
+            if a:
+                title = a.get_text(strip=True)
+                link = urljoin(base, a["href"])
+                if title and len(title) > 15 and link not in seen_urls:
+                    items.append(NewsItem(
+                        title=title, url=link, source=f"WEB:{domain}",
+                        domain=domain, summary=title
+                    ))
+                    seen_urls.add(link)
+            if len(items) >= 15:
+                break
+        return items
+
+    def _parse_openai_blog(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find(["h2", "h3"])
+            if not h2:
+                h2 = article.find(["h4", "h5"])
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(
+                            title=title, url=link, source=f"WEB:{domain}",
+                            domain=domain, summary=title
+                        ))
+                        seen_urls.add(link)
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            if "/index/" in href or "/blog/" in href or "/research/" in href:
+                title = a.get_text(strip=True)
+                link = urljoin(base, href)
+                if title and len(title) > 15 and link not in seen_urls:
+                    items.append(NewsItem(
+                        title=title, url=link, source=f"WEB:{domain}",
+                        domain=domain, summary=title
+                    ))
+                    seen_urls.add(link)
+            if len(items) >= 20:
+                break
+        return items
+
+    def _parse_google_blog(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find(["h2", "h3"])
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    desc = article.find("p")
+                    summary = desc.get_text(strip=True)[:300] if desc else ""
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(
+                            title=title, url=link, source=f"WEB:{domain}",
+                            domain=domain, summary=summary
+                        ))
+                        seen_urls.add(link)
+        for section in soup.find_all("section"):
+            for a in section.find_all("a", href=True):
+                href = a["href"]
+                title = a.get_text(strip=True)
+                if title and len(title) > 15 and "/blog/" in href and link not in seen_urls:
+                    link = urljoin(base, href)
+                    items.append(NewsItem(
+                        title=title, url=link, source=f"WEB:{domain}",
+                        domain=domain, summary=title
+                    ))
+                    seen_urls.add(link)
+                if len(items) >= 20:
+                    break
+        return items
+
+    def _parse_nvidia_blog(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find(["h2", "h3"])
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    summary_el = article.find("p")
+                    summary = summary_el.get_text(strip=True)[:300] if summary_el else ""
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(
+                            title=title, url=link, source=f"WEB:{domain}",
+                            domain=domain, summary=summary
+                        ))
+                        seen_urls.add(link)
+        for div in soup.find_all("div", class_=re.compile(r"card|post|blog|item", re.I)):
+            a = div.find("a", href=True)
+            if a:
+                title = a.get_text(strip=True)
+                link = urljoin(base, a["href"])
+                if title and len(title) > 15 and link not in seen_urls:
+                    items.append(NewsItem(
+                        title=title, url=link, source=f"WEB:{domain}",
+                        domain=domain, summary=title
+                    ))
+                    seen_urls.add(link)
+        return items
+
+    def _parse_mit_techreview(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all(["article", "div"], class_=re.compile(r"post|card|item|story", re.I)):
+            h = article.find(["h2", "h3", "h4"])
+            if h:
+                a = h.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    p = article.find("p")
+                    summary = p.get_text(strip=True)[:300] if p else ""
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(title=title, url=link, source=f"WEB:{domain}", domain=domain, summary=summary))
+                        seen_urls.add(link)
+        for h2 in soup.find_all("h2"):
+            a = h2.find("a", href=True)
+            if a:
+                title = a.get_text(strip=True)
+                link = urljoin(base, a["href"])
+                if title and len(title) > 15 and link not in seen_urls:
+                    items.append(NewsItem(title=title, url=link, source=f"WEB:{domain}", domain=domain, summary=title))
+                    seen_urls.add(link)
+            if len(items) >= 20:
+                break
+        return items
+
+    def _parse_newatlas(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for article in soup.find_all("article"):
+            h2 = article.find("h2")
+            if h2:
+                a = h2.find("a", href=True)
+                if a:
+                    title = a.get_text(strip=True)
+                    link = urljoin(base, a["href"])
+                    p = article.find("p")
+                    summary = p.get_text(strip=True)[:300] if p else ""
+                    if title and len(title) > 10 and link not in seen_urls:
+                        items.append(NewsItem(title=title, url=link, source=f"WEB:{domain}", domain=domain, summary=summary))
+                        seen_urls.add(link)
+        for a in soup.find_all("a", class_=re.compile(r"story|article|title", re.I)):
+            title = a.get_text(strip=True)
+            href = a.get("href", "")
+            if title and len(title) > 15 and href:
+                link = urljoin(base, href)
+                if link not in seen_urls:
+                    items.append(NewsItem(title=title, url=link, source=f"WEB:{domain}", domain=domain, summary=title))
+                    seen_urls.add(link)
+            if len(items) >= 20:
+                break
+        return items
+
+    def _parse_producthunt(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
+        items = []
+        seen_urls = set()
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            title = a.get_text(strip=True)
+            if title and len(title) > 10 and "/posts/" in href:
+                link = urljoin(base, href)
+                if link not in seen_urls:
+                    items.append(NewsItem(title=title, url=link, source=f"WEB:{domain}", domain=domain, summary=title))
+                    seen_urls.add(link)
+            if len(items) >= 25:
+                break
+        return items
 
     def _parse_generic(self, soup: BeautifulSoup, base: str, domain: str) -> List[NewsItem]:
         items = []
@@ -483,7 +769,7 @@ class SourceFetcher:
                 if len(items) >= 15:
                     break
 
-        return items[:20]
+        return items
 
     def _extract_link_items(self, element, items: list, seen: set, base: str, domain: str):
         a = element.find("a", href=True)

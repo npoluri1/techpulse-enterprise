@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+{% include 'openalt_shared_styles.html' %}
+<title>{{ post.title }} - NovaPulse AI</title>
+</head>
+<body>
+<nav class="nav">
+<div class="nav-inner">
+<a href="/oa" class="nav-brand"><div class="nav-logo">N</div><div class="nav-title">NovaPulse AI</div></a>
+<div class="nav-links">
+<a href="/browse" class="nav-link">Browse</a>
+<a href="/categories" class="nav-link">Categories</a>
+<a href="/blog" class="nav-link active">Blog</a>
+<a href="/about" class="nav-link">About</a>
+</div>
+<div class="nav-auth">
+<button class="btn-theme" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+<a href="/" class="btn btn-primary btn-sm" style="padding:6px 14px;">← News</a>
+</div>
+</div>
+</nav>
+
+<div class="hero-light"><h1>{{ post.title }}</h1><p>{{ post.date }} · {{ post.category }} · {{ post.read_time }} · By {{ post.author }}</p></div>
+
+<div class="container-narrow">
+<div class="content-card">
+<p>This is a placeholder article for <strong>{{ post.title }}</strong>. In a production environment, this would contain the full blog post content with rich formatting, code snippets, images, and more.</p>
+<p>{{ post.excerpt }}</p>
+<p>NovaPulse AI is your comprehensive directory of open source alternatives. We curate the best tools across 50+ categories to help you find the perfect open source solution for your needs.</p>
+<p>Stay tuned for more articles, tutorials, and guides about open source software, self-hosting, and building with community-driven tools.</p>
+<div style="margin-top:20px;"><a href="/blog" class="btn btn-primary">← Back to Blog</a></div>
+</div>
+</div>
+
+{% include 'openalt_shared_footer.html' %}
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+}
+</script>
+</body>
+</html>

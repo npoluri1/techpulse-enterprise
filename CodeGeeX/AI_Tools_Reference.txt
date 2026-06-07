@@ -1,0 +1,130 @@
+AI / Coding Tools Reference (Notepad++ Tabular Format)
+===============================================================================
+Last Updated: 2026-05-24
+===============================================================================
+
+#       Name                    Category            Free/OSS?       Description                                                                                             URL/Link                                                        Importance
+----    --------------------    ----------------    -----------     ---------------------------------------------------------------------------------------------------    ----------------------------------------------------------------    ------------
+
+1       FreeBuff                AI Platform         Free (ads)      Free AI model with ads                                                                                 -                                                               Medium
+2       Grok Build              AI Coding           -               Build tool by Grok                                                                                     -                                                               Medium
+3       spe-kit                 AI Agent/Employee   Open Source     Digital employee: Spec -> Plan -> Tasks -> Implement                                                    github.com/spe-kit                                              High
+4       Subquadratic AI Tools   AI/SSA             -               Subquadratic/Sparse Subspace Attention (SSA) design                                                       -                                                               Medium
+5       Clicky AI Tool          AI Tool             Free            Clicky free AI tool                                                                                     -                                                               Medium
+6       Softrr                  Full-Stack Builder  -               Build production apps with DBs and full setup                                                           -                                                               High
+7       TimesFM                 Time Series AI      Open Source     Google's Time Series Foundation Model (timeseries forecasting)                                         github.com/google-research/timesfm                              High
+8       Xynth                   Personal Finance    -               Personal quantitative analyst (trading/investing)                                                        -                                                               Medium
+9       Naive                   Business Builder    -               Build & run business (marketing, sales, content, outreach)                                               -                                                               Medium
+10      Jcode (1jehuang)        Coding Agent        Open Source     Coding agent harness (Rust, multi-session, 14ms boot)                                                   github.com/1jehuang/jcode                                        High
+11      Miniloop                AI Agents           Open Source     Actual AI agents framework                                                                              github.com/miniloop                                              High
+12      PixVerse                Video Generation    Free/Freemium   AI platform to create videos                                                                           pixverse.ai                                                     Medium
+13      CoTester AI Agent       Testing             -               AI agent for Selenium test cases                                                                        -                                                               Medium
+14      Y Combinator            Startup Accelerator -               Startup accelerator / funding                                                                          ycombinator.com                                                 Medium
+15      MemPalace               Memory/MCP          Open Source     Memory/palace tool                                                                                      github.com/MemPalace                                            Medium
+16      Claude Mem (GitHub)     Memory for Claude   Open Source     Memory system for Claude                                                                                github.com (Claude Mem)                                         Medium
+17      PaperClip               Business Builder    -               Prompt to build a complete company                                                                       -                                                               Medium
+18      Openspace (GitHub)      Open Source Code    Open Source     Openspace code repository                                                                               github.com/openspace                                            Medium
+19      Graphify                Knowledge Graph     Open Source     Any input -> knowledge graph -> communities -> HTML/JSON                                                 github.com/graphify                                             High
+20      Muse Spark              AI Tool             Meta AI         Meta AI's Muse Spark                                                                                    -                                                               Medium
+21      Goose                   AI Coding Agent     Open Source     Open-source AI coding agent (CLI)                                                                        github.com/block/goose                                          High
+22      Code Review Graphify    Code Review         -               Code review with graphify                                                                               -                                                               Medium
+23      Ruflo                   Workflow Router     Open Source     MCP workflow/routing tool                                                                               github.com/ruflo                                                High
+24      Hermes Agent            AI Agent            -               Hermes AI agent                                                                                          -                                                               Medium
+25      Lovable                 App Builder         Freemium        AI app builder (like Bolt)                                                                              lovable.dev                                                     High
+26      Verdent AI              AI Platform         -               Verdent AI                                                                                              -                                                               Medium
+27      Awesome Claude Code     Resource List       Open Source     Curated list of Claude Code resources                                                                  github.com/awesome-claude-code                                 High
+28      UI UX MAX Pro           Design Tool         -               UI/UX design tool                                                                                       -                                                               Medium
+29      Rocket.new              App Builder         -               India-based app builder (like Bolt.new)                                                                 rocket.new                                                      High
+30      Cursor                  AI Editor           Freemium        AI-native code editor (forked from VS Code)                                                             cursor.com                                                      High
+31      Miro Fish               -                   -               Mirofish                                                                                                -                                                               Low
+32      Nemo Claw               AI Tool             -               Nemo Claw                                                                                               -                                                               Low
+33      Sarvam AI               AI Platform         Indian           Indian AI platform                                                                                     sarvam.ai                                                       Medium
+34      Convey                  -                   -               Convey                                                                                                  -                                                               Low
+35      Fake Door Test          Testing             -               Fake door test methodology                                                                              -                                                               Low
+36      Pico Claw               AI Coding           -               Pico Claw (IMPORTANT)                                                                                   -                                                               High
+37      Free LLM API Resources  API Keys            Open Source     Cheahjs/free-llm-api-resources: free LLM API keys list                                                   github.com/Cheahjs/free-llm-api-resources                     Very High
+38      CS249R Book             LLM Design          Open Source     Harvard Edge: LLM design details book                                                                   github.com/harvard-edge/cs249r_book                            Very High
+39      M Studio                Movie Generation    -               Make movies based on scripts                                                                            -                                                               Medium
+40      Higgsfield AI           Movie Generation    -               Make movies based on scripts                                                                             higgsfield.ai                                                   Medium
+41      Lovable / Bolt.new / Webuild App Builder   Freemium        AI app builders (Lovable, Bolt.new, WeBuild)                                                             lovable.dev / bolt.new                                          High
+42      MoltHub                 -                   -               MoltHub                                                                                                 -                                                               Low
+43      Awesome LLM Apps        Resource List       Open Source     Shubhamsboo/awesome-llm-apps: curated LLM app list                                                      github.com/Shubhamsboo/awesome-llm-apps                        Very High
+44      CTO.new                 AI Tool             -               CTO.new                                                                                                 cto.new                                                         Medium
+55      Kling 3.0               Video Generation    -               AI movie/video generation                                                                               klingai.com                                                     High
+56      Moltmatch               Adult Content       -               Nudity-related content                                                                                  -                                                               Low
+57      Only Molts              Adult Content       -               Adult content platform                                                                                  -                                                               Low
+58      Veo 3 / Kling 3.0       Video Generation    -               Movie making (Google Veo 3, Kling 3.0)                                                                  -                                                               High
+59      Versecrafter            Content Tool        -               Verse/content crafting                                                                                  -                                                               Low
+60      Claudebolt              App Builder         -               Moltbook variant (Claude + Bolt)                                                                        -                                                               Medium
+61      Sume                    Interactive AI      -               Interactive intelligence                                                                                -                                                               Medium
+62      Prompt Eng Interactive  Learning Resource   Open Source     Anthropic's interactive prompt engineering tutorial                                                     github.com/anthropics/prompt-eng-interactive-tutorial           High
+63      Open Claude Cowork      AI Coding           Open Source     ComposioHQ/open-claude-cowork: open-source Claude cowork (CLI)                                           github.com/ComposioHQ/open-claude-cowork                        High
+64      Meet Blink              AI Tool             -               Meet Blink (IMPORTANT)                                                                                  -                                                               High
+65      Lovart                  Design Tool         -               Lovart (design)                                                                                         -                                                               Medium
+66      Openwork                Workflow Engine     Open Source     End-to-end workflows (IMPORTANT)                                                                        github.com/openwork                                            Very High
+67      Timely                  Time Tracking       -               Time tracking tool                                                                                      -                                                               Low
+68      Emergent                AI Platform         -               Emergent AI                                                                                             -                                                               Medium
+69      Compteley               -                   -               Compteley                                                                                               -                                                               Low
+70      Reka                    AI Platform         -               Reka AI                                                                                                 reka.ai                                                         Medium
+71      Meetz AI                Meeting AI          -               AI meeting assistant                                                                                    -                                                               Medium
+72      Eigent AI               AI Desktop          Open Source     Open-source cowork desktop                                                                              github.com/eigent-ai                                           High
+73      Perplexica (Vane)       Search/AI           Open Source     ItzCrazyKns/Perplexica: open-source Perplexity-like search                                               github.com/ItzCrazyKns/Perplexica                              Very High
+74      IQUEST Coder            Coding Agent        -               IQUEST coding agent                                                                                     -                                                               Medium
+75      OWL AI Agents           AI Agents           Open Source     Multi-agent framework (CLI)                                                                             github.com/owl-ai-agents                                       High
+76      Uncensored ChatGPT Alt  AI Chat             Various         List of uncensored ChatGPT alternatives                                                                -                                                               Medium
+77      Modelslab               AI Image            Freemium        AI image generation/model serving                                                                       modelslab.com                                                   Medium
+78      Pickle 1                Smart Computing      -              Smart computer experts                                                                                  -                                                               Medium
+79      AI Engineering Hub      Resource List       Open Source     patchy631/ai-engineering-hub: curated AI engineering resources                                           github.com/patchy631/ai-engineering-hub                        Very High
+80      Z.AI                    AI Platform         -               Z.AI                                                                                                    -                                                               Low
+81      Phot.AI                 AI Image            -               Phot.AI image tool                                                                                      -                                                               Low
+82      OpenAlternative         Tool Finder         Open Source     Open-source alternative to everything (POWERFUL)                                                        openalternative.co                                             Very High
+83      CodeFlying.app          App Builder         -               Prompt to complete app builder (IMPORTANT)                                                              codeflying.app                                                 Very High
+84      Reflit                  AI Tool             -               Reflit                                                                                                  -                                                               Low
+
+===============================================================================
+KEY CATEGORIES
+===============================================================================
+
+CATEGORY                    TOOLS
+------------------------    --------------------------------------------------------------------------------
+AI Coding Agents (CLI)      Jcode, Goose, Open Claude Cowork, OWL AI Agents, IQUEST Coder, Miniloop
+App Builders                Lovable, Bolt.new, Rocket.new, Softrr, CodeFlying.app, CTO.new
+Video/Movie Gen             PixVerse, Kling 3.0, Veo 3, M Studio, Higgsfield AI
+Resources (Very High)       Free LLM API Resources, CS249R Book, Awesome LLM Apps, Perplexica,
+                            AI Engineering Hub, OpenAlternative, Openwork
+Workflow                    Openwork, Ruflo, Graphify
+Learning                    Anthropic Prompt Eng Tutorial, AI Engineering Hub
+Open Source Coding CLI      Jcode, Goose, OWL AI Agents, Open Claude Cowork, Miniloop
+
+===============================================================================
+MOST IMPORTANT (Very High / High)
+===============================================================================
+
+Rank    Tool                    Why
+----    --------------------    ----------------------------------------------------------------------------
+VH      Free LLM API Resources  Centralized list of free LLM API keys
+VH      CS249R Book             Harvard Edge LLM design textbook
+VH      Awesome LLM Apps        Curated list of LLM applications
+VH      Perplexica              Open-source Perplexity-like search engine
+VH      AI Engineering Hub      Curated AI engineering resources
+VH      OpenAlternative         Find open-source alternatives to any tool
+VH      CodeFlying.app          Prompt-to-app builder
+VH      Openwork                End-to-end workflow engine
+High    Jcode                   Rust-based coding agent harness (multi-session)
+High    OWL AI Agents           Multi-agent framework
+High    Goose                   Open-source coding agent CLI
+High    Open Claude Cowork      Open-source Claude coworking
+High    Ruflo                   MCP routing/workflow
+High    Graphify                Input-to-knowledge-graph
+High    Miniloop                AI agent framework
+High    Awesome Claude Code     Curated Claude Code tools
+High    Pico Claw               Important (user noted)
+High    Meet Blink              Important (user noted)
+High    Eigent AI               Open-source AI desktop
+High    Softrr                  Full production app builder
+High    TimesFM                 Google time series foundation model
+High    Cursor                  AI-native code editor
+High    Lovable / Bolt.new      AI app builders
+High    Prompt Eng Tutorial     Anthropic's official interactive tutorial
+
+===============================================================================
