@@ -107,5 +107,22 @@ def main():
     else:
         run_agent(config, env_vars)
 
+def run_dashboard(host: str = "0.0.0.0", port: int = 8501):
+    """Start enterprise dashboard server (FastAPI)."""
+    import uvicorn
+    from fastapi import FastAPI
+    from dashboard_plugin import mount_dashboard
+
+    dashboard_app = FastAPI(title="TechPulse Enterprise Dashboard")
+    mount_dashboard(dashboard_app, "techpulse-enterprise", "TechPulse Enterprise AI Dashboard")
+    print(f"  Dashboard: http://{host}:{port}/dashboard")
+    print(f"  API:       http://{host}:{port}/api/dashboard/health")
+    uvicorn.run(dashboard_app, host=host, port=port)
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--dashboard" in sys.argv:
+        run_dashboard()
+    else:
+        main()
