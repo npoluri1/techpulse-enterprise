@@ -53,3 +53,7 @@ history.json
 .notifications.json
 .schedule.json
 .streamlit/
+*.err
+*.err.txt
+*_err.txt
+server_err*.log
