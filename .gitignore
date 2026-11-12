@@ -57,3 +57,7 @@ history.json
 *.err.txt
 *_err.txt
 server_err*.log
+
+server_*.txt
+server_*.log
+
