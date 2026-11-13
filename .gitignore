@@ -41,3 +41,23 @@ chroma_data/
 
 # Windows reserved names
 nul
+
+# Generated runtime state (not source)
+ai_news.db
+ai_news.db-*
+chroma_db/
+*.log
+server_*.log
+__pycache__/
+history.json
+.notifications.json
+.schedule.json
+.streamlit/
+*.err
+*.err.txt
+*_err.txt
+server_err*.log
+
+server_*.txt
+server_*.log
+
